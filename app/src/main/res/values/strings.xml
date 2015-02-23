@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AutoTanslate</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="classify">请输入分类名称</string>\
+    <string name="waiting">请稍候正在加载。。。</string>
+    <string name="action_settings">返回</string>
+
+    <color name="black">#ff070508</color>
+    <color name="white">#ffffffff</color>
+    <color name="red">#ffff0000</color>
+    <color name="grey">#161b1531</color>
+
+    <string name="title_activity_classify">Classify</string>
+    <string name="title_activity_listview">Listview</string>
+    <string name="title_activity_message">Message</string>
+
+</resources>

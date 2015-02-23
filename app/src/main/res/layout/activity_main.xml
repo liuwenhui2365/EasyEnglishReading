@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpage"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_marginBottom="15dp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_dot"
+        android:layout_below="@+id/vpage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/iv_01"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/blue"/>
+        <ImageView
+            android:id="@+id/iv_02"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/gray"/>
+        <ImageView
+            android:id="@+id/iv_03"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/gray"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
