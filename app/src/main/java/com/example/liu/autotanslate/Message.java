@@ -73,9 +73,7 @@ public class Message extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent();
-            intent.setClass(Message.this,Listview.class);
-            startActivity(intent);
+//           添加相关事件
             return true;
         }
 

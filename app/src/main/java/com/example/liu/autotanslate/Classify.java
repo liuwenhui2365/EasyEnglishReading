@@ -1,127 +1,42 @@
 package com.example.liu.autotanslate;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
+
+import java.util.ArrayList;
 
 
 public class Classify extends ActionBarActivity {
 
-    private MyImageButton btDataConfig = null;
-    private MyImageButton btDataConfig1 = null;
-    private MyImageButton btDataConfig2 = null;
-    private MyImageButton btDataConfig3 = null;
-    private MyImageButton btDataConfig4 = null;
-    private MyImageButton btDataConfig5 = null;
-    private MyImageButton btDataConfig6 = null;
-    private MyImageButton btDataConfig7 = null;
-
-
-
-
-    private LinearLayout llbtDataConfig = null;  //main布局中包裹本按钮的容器
-    private LinearLayout llbtDataConfig1 = null;
-    private LinearLayout llbtDataConfig2 = null;
-    private LinearLayout llbtDataConfig3 = null;
-    private LinearLayout llbtDataConfig4 = null;
-    private LinearLayout llbtDataConfig5 = null;
-    private LinearLayout llbtDataConfig6 = null;
-    private LinearLayout llbtDataConfig7 = null;
+    private ActionBar actionbar;
+    private ViewPager Viewpage;
+    private Button button;
+    /**ViewPager包含的Fragment集合**/
+//    private ArrayList<Fragment> fragments;
+    /**ActionBar上的Tab集合**/
+    private ArrayList<ActionBar.Tab> tabs;
+    /**当前页**/
+    protected int currentPage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classify);
 
-        btDataConfig = new MyImageButton(this, R.drawable.ic_launcher, R.string.classify);
-        btDataConfig1 = new MyImageButton(this,R.drawable.ic_launcher,R.string.classify);
-        btDataConfig2 = new MyImageButton(this, R.drawable.ic_launcher, R.string.classify);
-        btDataConfig3 = new MyImageButton(this,R.drawable.ic_launcher,R.string.classify);
-        btDataConfig4 = new MyImageButton(this, R.drawable.ab, R.string.classify);
-        btDataConfig5 = new MyImageButton(this,R.drawable.ab,R.string.classify);
-        btDataConfig6 = new MyImageButton(this, R.drawable.ab, R.string.classify);
-        btDataConfig7 = new MyImageButton(this,R.drawable.ab,R.string.classify);
-        //获取包裹本按钮的容器
-        llbtDataConfig = (LinearLayout) findViewById(R.id.textView);
-        llbtDataConfig1 = (LinearLayout) findViewById(R.id.textView1);
-        llbtDataConfig2 = (LinearLayout) findViewById(R.id.textView2);
-        llbtDataConfig3 = (LinearLayout) findViewById(R.id.textView3);
-        llbtDataConfig4 = (LinearLayout) findViewById(R.id.textView5);
-        llbtDataConfig5 = (LinearLayout) findViewById(R.id.textView6);
-        llbtDataConfig6 = (LinearLayout) findViewById(R.id.textView7);
-        llbtDataConfig7 = (LinearLayout) findViewById(R.id.textView8);
-
-
-        //将我们自定义的Button添加进这个容器
-        llbtDataConfig.addView(btDataConfig);
-        llbtDataConfig1.addView(btDataConfig1);
-        llbtDataConfig2.addView(btDataConfig2);
-        llbtDataConfig3.addView(btDataConfig3);
-        llbtDataConfig4.addView(btDataConfig4);
-        llbtDataConfig5.addView(btDataConfig5);
-        llbtDataConfig6.addView(btDataConfig6);
-        llbtDataConfig7.addView(btDataConfig7);
-        //设置按钮的监听
-        btDataConfig.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btDataConfig.setText("按钮被点击过了");
-                Intent intent = new Intent();
-                intent.setClass(Classify.this,Listview.class);
-                startActivity(intent);
-            }
-        });
-
-        btDataConfig1.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btDataConfig1.setText("按钮被点击过了");
-            }
-        });
-        btDataConfig2.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btDataConfig2.setText("按钮被点击过了");
-            }
-        });
-
-        btDataConfig3.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btDataConfig3.setText("按钮被点击过了");
-            }
-        });
-        btDataConfig4.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btDataConfig4.setText("按钮被点击过了");
-            }
-        });
-
-        btDataConfig5.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btDataConfig5.setText("按钮被点击过了");
-            }
-        });
-        btDataConfig6.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btDataConfig6.setText("按钮被点击过了");
-            }
-        });
-
-        btDataConfig7.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btDataConfig7.setText("按钮被点击过了");
-            }
-        });
+//        Utils.showOverflowMenu(this);//如果手机有menu键也显示flowMenu
+        initViewPager();//初始化ViewPager要在初始化initTab之前，否则会出错
+        initTab();
+        //   ton.setOnClickListener(listener);
     }
+
 
 
     @Override
@@ -140,9 +55,187 @@ public class Classify extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+//            Utils.showToast(this, "您点击了刷新菜单", Toast.LENGTH_SHORT);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * 初始化ViewPager
+     */
+    private void initViewPager() {
+        // TODO Auto-generated method stub
+        LayoutInflater inflater=getLayoutInflater();
+        Viewpage = (ViewPager) findViewById(R.id.vpage);
+
+//      为每个Tab标签添加相应的布局文件
+        ArrayList<View> views=new ArrayList<View>();
+        views.add(inflater.inflate(R.layout.classifyitem1, null));
+        views.add(inflater.inflate(R.layout.classifyitem2, null));
+        views.add(inflater.inflate(R.layout.classifyitem3, null));
+        Viewpage.setAdapter(new ViewPagerAdapter(views));
+//        viewPager.setOnPageChangeListener(new ViewPagerChangeListener());
+        //初始化ViewPager显示的页面集合
+//        fragments = new ArrayList<Fragment>();
+//        BaseFragment fragment1=BaseFragment.newInstance(BaseFragment.LOAD_FRAGMENT_1);
+//        BaseFragment fragment2=BaseFragment.newInstance(BaseFragment.LOAD_FRAGMENT_2);
+//        fragments.add(fragment1);
+//        fragments.add(fragment2);
+//        //设置ViewPager adapter
+//        BaseFragmentPagerAdapter adapter=new BaseFragmentPagerAdapter(getSupportFragmentManager(), fragments);
+//        vpContent.setAdapter(adapter);
+        Viewpage.setCurrentItem(0);//默认显示第一个页面
+        //监听ViewPager事件
+        Viewpage.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            position表示第几页从0开始
+            @Override
+            public void onPageScrolled(int position, float positionOffset,
+                                       int positionOffsetPixels) {
+                if(position==0) {
+                    getLayoutInflater().inflate(R.layout.classifyitem1, null);
+                    button = (Button) findViewById(R.id.button1);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button2);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button3);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button4);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button5);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button6);
+                    button.setOnClickListener(listener);
+                }else if(position==1){
+                    getLayoutInflater().inflate(R.layout.classifyitem2, null);
+                    button = (Button) findViewById(R.id.button21);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button22);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button23);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button24);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button25);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button26);
+                    button.setOnClickListener(listener);
+                }else{
+//                    获取当前页面的VIew
+                    getLayoutInflater().inflate(R.layout.classifyitem3, null);
+                    button = (Button) findViewById(R.id.button31);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button32);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button33);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button34);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button35);
+                    button.setOnClickListener(listener);
+                    button = (Button) findViewById(R.id.button36);
+                    button.setOnClickListener(listener);
+                }
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentPage = position;
+                actionbar.selectTab(tabs.get(position));//当滑动页面结束让ActionBar选择指定的Tab
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+    }
+
+    /**
+     * 初始化Tab
+     */
+    private void initTab() {
+        tabs = new ArrayList<ActionBar.Tab>();
+        actionbar = getSupportActionBar();//获取v7兼容包中的ActionBar
+        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        ActionBar.Tab tab1 = actionbar.newTab();//创建一个tab实例
+        ActionBar.Tab tab2 = actionbar.newTab();
+        ActionBar.Tab tab3 = actionbar.newTab();
+        tab1.setTag(0);//为Tab设置Tag，用于标识Tab的位置
+        tab1.setText("初级");
+        tab2.setTag(1);
+        tab2.setText("中级");
+        tab3.setTag(2);
+        tab3.setText("高级");
+        tab1.setTabListener(tabListener);//为Tab设置监听(这一步是必须的，不然系统会不报错)
+        tab2.setTabListener(tabListener);
+        tab3.setTabListener(tabListener);
+//      添加到链表里面
+        tabs.add(tab1);
+        tabs.add(tab2);
+        tabs.add(tab3);
+        actionbar.addTab(tab1);//将Tab添加ActionBar上
+        actionbar.addTab(tab2);
+        actionbar.addTab(tab3);
+    }
+
+    /**
+     * ActionBar的Tab监听器
+     */
+    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+        @Override
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+            //当选中了指定的Tab后让VeiwPager滑动到指定页面
+            Viewpage.setCurrentItem((Integer) tab.getTag());
+        }
+
+        @Override
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+        }
+
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+        }
+    };
+
+    View.OnClickListener listener = new View.OnClickListener()
+    {
+        public void onClick(View v)
+        {
+            button = (Button)v;
+            switch(button.getId())
+            {
+                case R.id.button1:
+                case R.id.button2:
+                case R.id.button3:
+                case R.id.button4:
+                case R.id.button5:
+                case R.id.button6:
+
+                case R.id.button21:
+                case R.id.button22:
+                case R.id.button23:
+                case R.id.button24:
+                case R.id.button25:
+                case R.id.button26:
+
+                case R.id.button31:
+                case R.id.button32:
+                case R.id.button33:
+                case R.id.button34:
+                case R.id.button35:
+                case R.id.button36:
+                    Intent intent = new Intent();
+                    intent.setClass(Classify.this,Listview.class);
+                    startActivity(intent);
+                break;
+            }
+        }
+    };
 }

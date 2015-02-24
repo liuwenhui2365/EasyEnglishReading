@@ -23,15 +23,15 @@
         <activity
             android:name=".Listview"
             android:label="@string/title_activity_listview"
-            android:parentActivityName=".Classify">
+            android:parentActivityName=".Classify" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Classify"/>
+                android:value=".Classify" />
         </activity>
         <activity
             android:name=".Message"
             android:label="@string/title_activity_message"
-            android:parentActivityName=".Listview">
+            android:parentActivityName=".Listview" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.liu.autotanslate.Listview" />

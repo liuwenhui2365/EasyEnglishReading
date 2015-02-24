@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_marginTop="50dp"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true">
+    <TableRow
+        android:layout_weight="1"
+        android:layout_height="100dp"
+        android:layout_width="match_parent">
+
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_launcher"
+            android:text="@string/waiting"/>
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_launcher"
+            android:text="@string/classify"/>
+
+    </TableRow>
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/button3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_launcher"
+            android:text="@string/waiting"/>
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_launcher"
+            android:text="@string/classify"/>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_launcher"
+            android:text="@string/waiting"/>
+
+        <Button
+            android:id="@+id/button6"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_launcher"
+            android:text="@string/classify"/>
+
+    </TableRow>
+</TableLayout>
