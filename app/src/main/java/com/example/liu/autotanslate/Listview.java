@@ -31,6 +31,9 @@ public class Listview extends ActionBarActivity {
         Date curDate = new Date(System.currentTimeMillis());
         String str = formatter.format(curDate);
 
+//        获取类别和级别
+        String message = this.getIntent().getAction();
+
 //          实现每行显示两行文本和图片
 
         lv = (ListView)findViewById(R.id.lv);
@@ -41,7 +44,7 @@ public class Listview extends ActionBarActivity {
             HashMap<String, Object> map = new HashMap<String, Object>();
             if(i==1 || i==3 || i==5){
                 map.put("ItemImage", null);//加入图片
-                map.put("title", "标题"+i);
+                map.put("title", message);
                 map.put("date", str);
                 listItem.add(map);
             }else {

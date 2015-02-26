@@ -10,7 +10,7 @@
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="450dp"
-        android:layout_marginBottom="15dp"/>
+        android:layout_marginBottom="5dp"/>
 
     <LinearLayout
         android:id="@+id/ll_dot"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="20dp">
 
         <ImageView
             android:id="@+id/iv_01"

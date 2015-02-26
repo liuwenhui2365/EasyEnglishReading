@@ -16,5 +16,11 @@
     <string name="title_activity_listview">Listview</string>
     <string name="title_activity_message">Message</string>
     <string name="title_activity_classify_item2">classifyItem2</string>
-
+    
+    <string name="keji">科技</string>
+    <string name="licai">理财</string>
+    <string name="jiankang">健康</string>
+    <string name="yule">娱乐</string>
+    <string name="jingji">经济</string>
+    <string name="history">历史</string>
 </resources>
