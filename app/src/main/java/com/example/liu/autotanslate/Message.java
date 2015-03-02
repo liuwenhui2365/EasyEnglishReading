@@ -1,25 +1,31 @@
 package com.example.liu.autotanslate;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.wenhuiliu.EasyEnglishReading.Article;
+import com.wenhuiliu.EasyEnglishReading.SpiderArticle;
+
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 
 public class Message extends ActionBarActivity {
 
+    private Article article = null;
+    private TextView textView = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,29 +37,52 @@ public class Message extends ActionBarActivity {
         Date curDate = new Date();
         String time = simpleDateFormat.format(curDate);
 
-        TextView textView = (TextView)findViewById(R.id.date);
+        textView = (TextView)findViewById(R.id.date);
         textView.setText(time);
 
-        textView = (TextView)findViewById(R.id.title);
-        textView.setText("显示文章标题");
+        final Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(android.os.Message msg) {
+                if (msg.what == 1) {
+                    article = (Article) msg.obj;
+                    textView = (TextView) findViewById(R.id.title);
+                    //        textView.setText("显示文章标题");
+                    textView.setText(article.getTitle());
+                    textView = (TextView) findViewById(R.id.content);
+                    StringBuilder sbd = new StringBuilder(article.getBody());
+                    //      从文件读取涉及到路径问题
 
-        textView = (TextView)findViewById(R.id.message);
-        StringBuilder sbd = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("../passage.txt"));
-            String line = null;
-            while((line = reader.readLine()) != null){
-                sbd.append(line);
+                    textView.setText(sbd);
+                    textView = (TextView)findViewById(R.id.article);
+                    textView.setMovementMethod(ScrollingMovementMethod.getInstance());
+
+                }
             }
-            reader.close();
+        };
 
-        //} catch (FileNotFoundException e) {
-        //    e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        final SpiderArticle spiderArticle = new SpiderArticle();
+        Thread articleTask = new Thread() {
+            @Override
+            public void run() {
+                try {
+                      article = spiderArticle.getPassage("http://www.51voa.com/VOA_Special_English/animal-weapons-offer-lesons-for-human-arms-race-61556.html");
+                }catch (NullPointerException e){
+//                    Log.e("empty!","network wroong");
+//                    //TODO 增加网络错误提示窗口
+                    Intent intent = new Intent();
+                    intent.setClass(Message.this,Listview.class);
+                    startActivity(intent);
+                }
 
-        textView.setText(sbd);
+                android.os.Message msg = new android.os.Message();
+                msg.what = 1;
+//                mDownloadCount ++;
+                msg.obj = article;
+                mHandler.sendMessage(msg);
+            }
+        };
+        articleTask.start();
+
     }
 
 

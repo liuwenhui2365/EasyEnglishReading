@@ -7,11 +7,6 @@
 
     tools:context="com.example.liu.autotanslate.Listview">
 
-    <TextView android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
     <ListView
         android:fastScrollEnabled="true"
         android:background="@color/white"
