@@ -9,8 +9,8 @@
         android:id="@+id/vpage"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_marginBottom="5dp"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"/>
 
     <LinearLayout
         android:id="@+id/ll_dot"

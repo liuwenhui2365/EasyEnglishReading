@@ -4,7 +4,7 @@
     <string name="app_name">AutoTanslate</string>
     <string name="hello_world">Hello world!</string>
     <string name="classify">请输入分类名称</string>
-\    <string name="waiting">请稍候正在加载。。。</string>
+\        <string name="waiting">请稍候正在加载。。。</string>
     <string name="action_settings">返回</string>
 
     <color name="black">#ff070508</color>
@@ -16,11 +16,15 @@
     <string name="title_activity_listview">Listview</string>
     <string name="title_activity_message">Message</string>
     <string name="title_activity_classify_item2">classifyItem2</string>
-    
     <string name="keji">科技</string>
     <string name="licai">理财</string>
     <string name="jiankang">健康</string>
     <string name="yule">娱乐</string>
     <string name="jingji">经济</string>
     <string name="history">历史</string>
+    <string name="refresh">正在刷新</string>
+    <string name="uprefresh">上滑刷新</string>
+    <string name="downrefresh">下拉刷新</string>
+    <string name="title_activity_refresh">Refresh</string>
+
 </resources>

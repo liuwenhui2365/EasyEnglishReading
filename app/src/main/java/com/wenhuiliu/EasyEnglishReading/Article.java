@@ -129,6 +129,14 @@ public class Article {
         this.level = Level.valueOf("高级");
     }
 
+    public Article(){
+        this.title = "title";
+        this.body = new StringBuilder("body");
+        this.catalogy = Catalogy.valueOf("科技");
+        this.time=new Date().toString();
+        this.difficultRatio = 100;
+        this.level = Level.valueOf("高级");
+    }
     public ArrayList<String> getWords(){
         ArrayList<String> words = new ArrayList<String>();
         //Pattern expression = Pattern.compile("[a-zA-Z,."';:]+");  //定义正则表达式匹配单词

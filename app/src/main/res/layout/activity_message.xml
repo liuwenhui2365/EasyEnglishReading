@@ -9,13 +9,7 @@
     android:background="@color/white"
     tools:context="com.example.liu.autotanslate.Message">
 
-    <
-        android:id="@+id/article"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:singleLine="false"
-        android:scrollbars="vertical">
+
         <TextView
             android:id="@+id/title"
             android:textSize="20sp"
@@ -40,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/waiting"
+            android:scrollbars="vertical"
             android:singleLine="false"/>
-    </TextView>
+
 </RelativeLayout>

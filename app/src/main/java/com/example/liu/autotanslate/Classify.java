@@ -213,7 +213,7 @@ public class Classify extends ActionBarActivity {
             {
                 case R.id.button1:
                     Intent intent = new Intent(Intent.ACTION_SEND);
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("初级科技");
                     startActivity(intent);
                     break;

@@ -1,9 +1,18 @@
 package com.wenhuiliu.EasyEnglishReading;
 
+import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SpiderArticle {
+public class SpiderArticle implements ISpiderArticle{
+
+    public ArrayList<String> getUrl(String url){
+        ArrayList<String> urls = new ArrayList<String>();
+
+        return urls;
+    }
 
     public String getMessage(String url){
         String message = null;
@@ -15,6 +24,7 @@ public class SpiderArticle {
     Pattern pat = null;
     Matcher mat = null;
 
+    @Override
     public String getTitle(String message){
         String title = null;
         if(message != null) {
@@ -28,6 +38,7 @@ public class SpiderArticle {
         return title;
     }
 
+    @Override
     public StringBuilder getContent(String message){
         StringBuilder content = new StringBuilder();
         pat = Pattern.compile("<P>([^<_]*?)</P>", Pattern.MULTILINE|Pattern.DOTALL);
@@ -39,6 +50,7 @@ public class SpiderArticle {
         return content;
     }
 
+    @Override
     public String getTime(String message){
         String time = null;
         pat = Pattern.compile("<SPAN class=datetime>(.*)</SPAN>", Pattern.CASE_INSENSITIVE);
@@ -49,6 +61,7 @@ public class SpiderArticle {
         return time;
     }
 
+    @Override
     public String getCatalogy(String message){
         String catalogy = null;
         pat = Pattern.compile("<div id=\"nav\">.*title=.*?title=\"(.*?)\">");

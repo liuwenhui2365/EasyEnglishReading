@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.liu.autotanslate" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -36,7 +38,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.liu.autotanslate.Listview" />
         </activity>
+        <activity android:name=".RefreshActivity" />
+        <activity
+            android:name=".Refresh"
+            android:label="@string/title_activity_refresh" >
+        </activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -53,7 +54,6 @@ public class Message extends ActionBarActivity {
                     //      从文件读取涉及到路径问题
 
                     textView.setText(sbd);
-                    textView = (TextView)findViewById(R.id.article);
                     textView.setMovementMethod(ScrollingMovementMethod.getInstance());
 
                 }
@@ -67,7 +67,7 @@ public class Message extends ActionBarActivity {
                 try {
                       article = spiderArticle.getPassage("http://www.51voa.com/VOA_Special_English/animal-weapons-offer-lesons-for-human-arms-race-61556.html");
                 }catch (NullPointerException e){
-//                    Log.e("empty!","network wroong");
+                    Log.e("empty!", "network wroong");
 //                    //TODO 增加网络错误提示窗口
                     Intent intent = new Intent();
                     intent.setClass(Message.this,Listview.class);
