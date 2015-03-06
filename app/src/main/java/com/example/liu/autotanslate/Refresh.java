@@ -18,20 +18,12 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_refresh2);
+        setContentView(R.layout.activity_refresh);
         getData();
         showListView(itemEntities);
     }
 
     private void showListView(ArrayList<HashMap<String, Object>> itemEntities) {
-//        if (adapter == null) {
-//            listview = (MyListView) findViewById(R.id.listview);
-//            listview.setLoaderListener(this);
-//            adapter = new MyAdapter(itemEntities, this);
-//            listview.setAdapter(adapter);
-//        } else {
-//            adapter.onDataChange(itemEntities);
-//        }
         listview = (MyListView) findViewById(R.id.mylist);
         listview.setLoaderListener(this);
         SimpleAdapter mSimpleAdapter = new SimpleAdapter(Refresh.this,itemEntities,//需要绑定的数据
@@ -45,14 +37,6 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
     }
     private void getData() {
         itemEntities = new ArrayList<HashMap<String, Object>>();
-//        for (int i = 0; i < 4; i++) {
-//            ItemEntity itemEntity = new ItemEntity();
-//            itemEntity.setName("测试程序:" + i);
-//            itemEntity.setInfo("这是初始节目加载的Item");
-//            itemEntity.setItemId(R.drawable.ic_launcher);
-//            itemEntities.add(itemEntity);
-//        }
-
         for (int i = 0; i < 10; i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();
 
@@ -64,16 +48,8 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         }
     }
     private void loadData() {
-//        for (int i = 0; i < 2; i++) {
-//            ItemEntity itemEntity = new ItemEntity();
-//            itemEntity.setName("上拉加载程序:" + i);
-//            itemEntity.setInfo("这是向上拖动加载的Item");
-//            itemEntity.setItemId(R.drawable.ic_launcher);
-//            itemEntities.add(itemEntity);
-//        }
         for (int i = 100; i < 115; i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();
-
             map.put("ItemImage", R.drawable.ic_launcher);//加入图片
             map.put("title", "上拉加载" + i);
             map.put("date", "2015.3.04");
@@ -82,16 +58,8 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
 
     }
     private void setReflashData() {
-//        for (int i = 0; i < 2; i++) {
-//            ItemEntity itemEntity = new ItemEntity();
-//            itemEntity.setName("下拉刷新程序:" + i);
-//            itemEntity.setInfo("这是向下拖动刷新的Item");
-//            itemEntity.setItemId(R.drawable.test_icon);
-//            itemEntities.add(0, itemEntity);
-//        }
         for (int i = 10; i < 15; i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();
-
             map.put("ItemImage", R.drawable.ic_launcher);//加入图片
             map.put("title", "下拉刷新" + i);
             map.put("date", "2015.3.04");

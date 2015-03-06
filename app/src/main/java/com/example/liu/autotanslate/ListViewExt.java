@@ -315,26 +315,6 @@ public class ListViewExt extends ListView implements OnScrollListener {
         invalidate();
     }
 
-//    public void setOnLoadListener(OnLoadListener onLoadListener){
-//        this.onLoadListener = onLoadListener;
-//    }
-
-//    /**
-//     * 加载数据接口
-//     * @author Administrator
-//     *
-//     */
-//    public interface OnLoadListener{
-//        void onLoad();
-//    }
-//
-//    public void loadComplete(){
-////        footerView.setVisibility(View.GONE);
-//        isLoading = false;
-//        this.invalidate();
-//    }
-
-
     public void setOnRefreshListener(OnRefreshListener onRefreshListener){
         this.onRefreshListener = onRefreshListener;
     }
@@ -346,21 +326,5 @@ public class ListViewExt extends ListView implements OnScrollListener {
      */
     public interface OnRefreshListener{
         void onRefresh();
-    }
-
-    /**
-     * 数据加载完成
-     */
-    @SuppressLint("SimpleDateFormat")
-    public void refreshComplete(){
-//        state = NONE;
-//        isRefresh = false;
-//        reflashViewByState();
-//        TextView lastupdatetime = (TextView) topView
-//                .findViewById(R.id.lastupdate_time);
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
-//        Date date = new Date(System.currentTimeMillis());
-//        String time = format.format(date);
-//        lastupdatetime.setText(time);
     }
 }

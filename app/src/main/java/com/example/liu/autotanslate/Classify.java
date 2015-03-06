@@ -219,31 +219,31 @@ public class Classify extends ActionBarActivity {
                     break;
                 case R.id.button2:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("初级健康");
                     startActivity(intent);
                     break;
                 case R.id.button3:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("初级经济");
                     startActivity(intent);
                     break;
                 case R.id.button4:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("初级历史");
                     startActivity(intent);
                     break;
                 case R.id.button5:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("初级理财");
                     startActivity(intent);
                     break;
                 case R.id.button6:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("初级娱乐");
                     startActivity(intent);
                     break;
@@ -251,74 +251,74 @@ public class Classify extends ActionBarActivity {
 
                 case R.id.button21:
                     intent = new Intent(Intent.ACTION_SEND);
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("中级科技");
                     startActivity(intent);
                     break;
                 case R.id.button22:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("中级健康");
                     startActivity(intent);
                     break;
                 case R.id.button23:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("中级经济");
                     startActivity(intent);
                     break;
                 case R.id.button24:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("中级历史");
                     startActivity(intent);
                     break;
                 case R.id.button25:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("中级理财");
                     startActivity(intent);
                     break;
                 case R.id.button26:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("中级娱乐");
                     startActivity(intent);
                     break;
 
                 case R.id.button31:
                     intent = new Intent(Intent.ACTION_SEND);
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("高级科技");
                     startActivity(intent);
                     break;
                 case R.id.button32:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("高级健康");
                     startActivity(intent);
                     break;
                 case R.id.button33:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("高级经济");
                     startActivity(intent);
                     break;
                 case R.id.button34:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("高级历史");
                     startActivity(intent);
                     break;
                 case R.id.button35:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("高级理财");
                     startActivity(intent);
                     break;
                 case R.id.button36:
                     intent = new Intent();
-                    intent.setClass(Classify.this,Listview.class);
+                    intent.setClass(Classify.this,Refresh.class);
                     intent.setAction("高级娱乐");
                     startActivity(intent);
                     break;

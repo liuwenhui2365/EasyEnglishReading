@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.internal.widget.AdapterViewCompat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,10 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
-
-public class Listview extends ActionBarActivity implements FooterView.OnLoadListener,ListViewExt.OnRefreshListener { // implements PaginationListView.OnLoadListener, RefreshListView.OnRefreshListener{
+public class Listview extends ActionBarActivity implements FooterView.OnLoadListener,ListViewExt.OnRefreshListener {
 
     private  ListView plv = null;
     private  ListViewExt lv = null;
@@ -37,23 +33,17 @@ public class Listview extends ActionBarActivity implements FooterView.OnLoadList
     private DbArticle dbArticle;
     Article article = null;
     SpiderArticle spiderArticle = new SpiderArticle();
-    private PaginationListView paginationLv;
-    private RefreshListView refreshLv;
-
     Handler mHandler = null;
-//    private ListView mainLv;
-//    private DemoAdapter demoAdapter;
     final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String,Object>>();
-    private List<ApkBean> datas = new ArrayList<ApkBean>();
     private ArrayList<String> mList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_refresh2);
+        setContentView(R.layout.activity_refresh);
 
         initData();
-        lv = (ListViewExt) findViewById(R.id.lv);
+//        lv = (ListViewExt) findViewById(R.id.lv);
 //        lv.setAdapter(new ArrayAdapter<HashMap<String, Object>>(this,
 //                android.R.layout.simple_list_item_1,listItem));
 
@@ -81,20 +71,6 @@ public class Listview extends ActionBarActivity implements FooterView.OnLoadList
             }
         });
 
-//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            paginationLv = (PaginationListView) this.findViewById(R.id.refresh);
-//            paginationLv.setOnLoadListener(this);
-//
-//            refreshLv =(RefreshListView) this.findViewById(R.id.refresh);
-//            refreshLv.setOnRefreshListener(this);
-//            refreshLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view,
-//                                    int position, long id) {
-//
-//            }
-//        });
 
 
         //      获取当前时间
@@ -260,15 +236,6 @@ public class Listview extends ActionBarActivity implements FooterView.OnLoadList
 ////      deleteDatabase("test.db");
 //
 //    }
-//
-//
-////    private void showView(){
-////        if(demoAdapter == null){
-////            demoAdapter = new DemoAdapter(this, datas);
-////            mainLv.setAdapter(demoAdapter);
-////        }else{
-////            demoAdapter.updateView(datas);
-////        }
     }
 
     @Override
