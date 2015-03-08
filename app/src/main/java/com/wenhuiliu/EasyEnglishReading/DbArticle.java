@@ -16,17 +16,18 @@ public class DbArticle extends SQLiteOpenHelper
     public DbArticle(Context context, String name, SQLiteDatabase.CursorFactory factory,
                           int version)
     {
-        super(context, "test.db", null, version);
+
+        super(context, "articles.db", null, version);
     }
     //创建表
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-//        db.execSQL("DROP TABLE IF EXISTS Article");
+        db.execSQL("DROP TABLE IF EXISTS Article");
         //创建person表
-        db.execSQL("CREATE TABLE Article (id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR," +
+        db.execSQL("CREATE TABLE Article (url VARCHAR PRIMARY KEY,title VARCHAR," +
                 "catalogy VARCHAR, body VARCHAR, level VARCHAR, difficultRatio INT, time VARCHAR)");
-
+        Log.e("数据库","表创建成功");
     }
     //升级表（当Database的Version低于当前new里的Version，直接执行下面方法）
     @Override

@@ -1,8 +1,5 @@
 package com.example.liu.autotanslate;
 
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -10,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -30,7 +26,6 @@ public class Listview extends ActionBarActivity implements FooterView.OnLoadList
     private  ListViewExt lv = null;
 
     private  ListView rlv = null;
-    private DbArticle dbArticle;
     Article article = null;
     SpiderArticle spiderArticle = new SpiderArticle();
     Handler mHandler = null;
@@ -209,31 +204,6 @@ public class Listview extends ActionBarActivity implements FooterView.OnLoadList
 //                startActivity(intent);
 //            }
 //        });
-////        关于数据库的操作
-//        dbArticle = new DbArticle(this,"Articles.db",null,1);
-//        SQLiteDatabase db = dbArticle.getWritableDatabase();
-//
-//        //插入数据
-////        db.execSQL("INSERT INTO Article VALUES (?,?,?,?,?,?,?)", new Object[]{4,"title","科技","body"
-////                ,"初级","50","2015.03.03"});
-//        Cursor c = db.rawQuery("SELECT * FROM Article",null);
-//        while (c.moveToNext()) {
-//            int id = c.getInt(c.getColumnIndex("id"));
-//            String title = c.getString(c.getColumnIndex("title"));
-//            String catalogy = c.getString(c.getColumnIndex("catalogy"));
-//            String body = c.getString(c.getColumnIndex("body"));
-//            String level = c.getString(c.getColumnIndex("level"));
-//            int difficultRatio = c.getInt(c.getColumnIndex("difficultRatio"));
-//            Log.i("db", "id=>" + id + ", title=>" + title + ", catalogy=>" + catalogy
-//                    + ", body=>" + body + ", level=>" + level + "difficultRatio=>" + difficultRatio);
-//        }
-//        c.close();
-//
-//        //关闭当前数据库
-//        db.close();
-//
-////        //删除test.db数据库
-////      deleteDatabase("test.db");
 //
 //    }
     }

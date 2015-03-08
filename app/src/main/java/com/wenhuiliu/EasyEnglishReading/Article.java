@@ -21,6 +21,29 @@ public class Article {
     private Level level;
     private int difficultRatio;
 
+    public Article(){
+        this.title = "title";
+        this.body = new StringBuilder("body");
+        this.catalogy = Catalogy.valueOf("科技");
+        this.time=new Date().toString();
+        this.difficultRatio = 100;
+        this.level = Level.valueOf("高级");
+    }
+
+    public Article(String title,StringBuilder body,String catalogy){
+
+        if(title==null || body==null || catalogy == null) {
+            throw  new IllegalArgumentException("title/body/catalogy not null");
+        }
+        this.title = title;
+        this.body = body;
+        this.catalogy = Catalogy.valueOf(catalogy);
+        this.time=new Date().toString();
+        this.difficultRatio = 100;
+        this.level = Level.valueOf("高级");
+    }
+
+
     public String getTitle() {
         return title;
     }
@@ -117,26 +140,7 @@ public class Article {
         }
     }
 
-    public Article(String title,StringBuilder body,String catalogy){
 
-        if(title!=null && body!=null && catalogy!=null){
-            this.title = title;
-            this.body = body;
-            this.catalogy = Catalogy.valueOf(catalogy);
-        }
-        this.time=new Date().toString();
-        this.difficultRatio = 100;
-        this.level = Level.valueOf("高级");
-    }
-
-    public Article(){
-        this.title = "title";
-        this.body = new StringBuilder("body");
-        this.catalogy = Catalogy.valueOf("科技");
-        this.time=new Date().toString();
-        this.difficultRatio = 100;
-        this.level = Level.valueOf("高级");
-    }
     public ArrayList<String> getWords(){
         ArrayList<String> words = new ArrayList<String>();
         //Pattern expression = Pattern.compile("[a-zA-Z,."';:]+");  //定义正则表达式匹配单词
@@ -148,7 +152,7 @@ public class Article {
 
         while(matcher.find()){
             words.add(matcher.group());
-            System.out.println(matcher.group());
+//            System.out.println(matcher.group());
         }
 
         return words;

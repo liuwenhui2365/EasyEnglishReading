@@ -9,11 +9,17 @@ import java.util.ArrayList;
 public interface ISpiderArticle {
 
     /**
-     * 根据提供的网址抓取对应文章的地址
-     * @param url  文章列表网址
-     * @return  多个文章地址构成的链表
+     * 使用初始化包含文章列表的网址
+     * @return 包含多篇文章的具体网址
      */
-    public ArrayList<String> getUrl(String url);
+    public ArrayList<String> getUrlList();
+
+    /**
+     * 根据获取到的网址读取页面内容
+     * @param url
+     * @return  页面内容
+     */
+    public String getMessage(String url);
 
     /**
      * 根据提供网页内容获取文章的标题

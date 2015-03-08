@@ -8,10 +8,21 @@ import java.util.regex.Pattern;
 
 public class SpiderArticle implements ISpiderArticle{
 
-    public ArrayList<String> getUrl(String url){
-        ArrayList<String> urls = new ArrayList<String>();
+    private Matcher mat = null;
+    private ArrayList<String> techURLList;
+    public ArrayList<String> urlList;
+    final private Pattern timePat = Pattern.compile("<SPAN class=datetime>(.*)</SPAN>", Pattern.CASE_INSENSITIVE);
+    final private Pattern titlePat = Pattern.compile("<div id=\"title\">(.*?)</div>");
+    final private Pattern contentPat = Pattern.compile("<P>([^<_]*?)</P>", Pattern.MULTILINE|Pattern.DOTALL);
+    final private Pattern catalogyPat = Pattern.compile("<div id=\"nav\">.*title=.*?title=\"(.*?)\">");
 
-        return urls;
+
+    public SpiderArticle(){
+        techURLList = new ArrayList<String>();
+        techURLList.add("http://www.51voa.com/Technology_Report_1.html");
+        techURLList.add("http://www.51voa.com/Technology_Report_2.html");
+        urlList = new ArrayList<String>();
+        urlList.addAll(techURLList);
     }
 
     public String getMessage(String url){
@@ -21,16 +32,26 @@ public class SpiderArticle implements ISpiderArticle{
         return message;
     }
 
-    Pattern pat = null;
-    Matcher mat = null;
+    @Override
+    public ArrayList<String> getUrlList() {
+        ArrayList<String>  urls = new ArrayList<String>();
+        for (String url : urlList) {
+            String message = new HttpClient(url).getResponse();
+            Pattern pat = Pattern.compile("<li>.*?href=\"(.*?)\" target.*?</li>");
+            Matcher mat = pat.matcher(message);
+            while(mat.find()){
+                urls.add("http://www.51voa.com"+mat.group(1));
+            }
+        }
+        return urls;
+    }
 
     @Override
     public String getTitle(String message){
         String title = null;
         if(message != null) {
 
-            pat = Pattern.compile("<div id=\"title\">(.*?)</div>");
-            mat = pat.matcher(message);
+            mat = titlePat.matcher(message);
             if (mat.find()) {
                 title = mat.group(1);
             }
@@ -41,8 +62,7 @@ public class SpiderArticle implements ISpiderArticle{
     @Override
     public StringBuilder getContent(String message){
         StringBuilder content = new StringBuilder();
-        pat = Pattern.compile("<P>([^<_]*?)</P>", Pattern.MULTILINE|Pattern.DOTALL);
-        mat = pat.matcher(message);
+        mat = contentPat.matcher(message);
         while(mat.find()){
             content.append(mat.group(1));
             content.append("\n\n");
@@ -53,8 +73,7 @@ public class SpiderArticle implements ISpiderArticle{
     @Override
     public String getTime(String message){
         String time = null;
-        pat = Pattern.compile("<SPAN class=datetime>(.*)</SPAN>", Pattern.CASE_INSENSITIVE);
-        mat = pat.matcher(message);
+        mat = timePat.matcher(message);
         if(mat.find()){
             time = mat.group(1);
         }
@@ -63,9 +82,8 @@ public class SpiderArticle implements ISpiderArticle{
 
     @Override
     public String getCatalogy(String message){
-        String catalogy = null;
-        pat = Pattern.compile("<div id=\"nav\">.*title=.*?title=\"(.*?)\">");
-        mat = pat.matcher(message);
+        String catalogy = "null";
+        mat = catalogyPat.matcher(message);
         if(mat.find()){
             catalogy = mat.group(1).substring(0,2);
         }
@@ -76,7 +94,7 @@ public class SpiderArticle implements ISpiderArticle{
         String message = getMessage(url);
         String title = getTitle(message);
         StringBuilder content = getContent(message);
-        String catalogy= getCatalogy(message);
+        String catalogy = getCatalogy(message);
         String time = getTime(message);
         Article article = new Article(title, content, catalogy);
         article.setTime(time);

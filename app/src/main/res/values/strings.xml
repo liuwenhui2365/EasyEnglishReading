@@ -23,8 +23,8 @@
     <string name="jingji">经济</string>
     <string name="history">历史</string>
     <string name="refresh">正在刷新</string>
-    <string name="uprefresh">上滑刷新</string>
-    <string name="downrefresh">下拉刷新</string>
+    <string name="uprefresh">正在读数据。。。</string>
+    <string name="downrefresh">正在从网络获取数据。。。</string>
     <string name="title_activity_refresh">Refresh</string>
 
 </resources>

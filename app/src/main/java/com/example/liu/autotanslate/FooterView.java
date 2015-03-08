@@ -59,7 +59,7 @@ public class FooterView extends LinearLayout  {
 
         mArrow = (ImageView) mFooter.findViewById(R.id.ivLoaderArrow);
         mProgressBar = (ProgressBar) mFooter.findViewById(R.id.pbLoaderWaiting);
-        mLoaderTips = (TextView) mFooter.findViewById(R.id.loader_tips);
+        mLoaderTips = (TextView) mFooter.findViewById(R.id.loader);
         mListView = (ListView)mFooter.findViewById(R.id.list);
 
 

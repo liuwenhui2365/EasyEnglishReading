@@ -10,11 +10,11 @@
         android:layout_height="60dip" >
 
         <TextView
-            android:id="@+id/loader_tips"
+            android:id="@+id/loader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/refresh"
+            android:text="@string/uprefresh"
             android:textSize="15sp" />
 
         <ImageView
@@ -24,10 +24,10 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="30dip"
             android:layout_marginEnd="30dp"
-            android:layout_toLeftOf="@id/loader_tips"
-            android:layout_toStartOf="@+id/loader_tips"
             android:contentDescription="@string/hello_world"
-            android:src="@drawable/ab" />
+            android:src="@drawable/ab"/>
+            <!--android:layout_toLeftOf="@id/loader"-->
+            <!--android:layout_toStartOf="@+id/loader"/>-->
 
         <ListView
             android:id="@+id/list"
@@ -42,9 +42,9 @@
             android:layout_centerInParent="true"
             android:layout_marginRight="30dip"
             android:layout_marginEnd="30dp"
-            android:layout_toLeftOf="@id/loader_tips"
-            android:layout_toStartOf="@+id/loader_tips"
-            android:visibility="gone" />
+            android:visibility="gone"/>
+            <!--android:layout_toLeftOf="@id/loader"-->
+            <!--android:layout_toStartOf="@+id/loader"/>-->
     </RelativeLayout>
 
 </LinearLayout>
