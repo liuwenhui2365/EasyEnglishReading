@@ -9,10 +9,10 @@ import java.util.ArrayList;
 public interface ISpiderArticle {
 
     /**
-     * 使用初始化包含文章列表的网址
+     * 根据分类获取含文章列表的网址
      * @return 包含多篇文章的具体网址
      */
-    public ArrayList<String> getUrlList();
+    public ArrayList<String> getUrlList(String catalogy);
 
     /**
      * 根据获取到的网址读取页面内容

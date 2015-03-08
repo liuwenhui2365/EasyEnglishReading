@@ -35,18 +35,29 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
     private  int loadIndex =0;
     private int perReadNum = 3;
     private int articleNum = 0;
+    private String type = null;
 
     View footer, header;// 底顶部布局
     LayoutInflater inflater = null;
 
-
+    public Refresh(){
+//
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refresh);
 //        deleteDatabase("Articles.db");
 //        Log.e("remind*****", "删除数据库成功");
-//      从数据库获取
+//      获取分类
+        type = this.getIntent().getAction();
+        if(type.equalsIgnoreCase("初级科技")) {
+            type = "科技";
+        }else if (type.equalsIgnoreCase("初级健康")){
+            type = "健康";
+        }
+
+        //      从数据库获取
         articleNum = getArticleNum();
         Log.e("数据数目", Integer.toString(articleNum));
         loadIndex = articleNum;
@@ -71,7 +82,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         try {
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
             db = dbArticle.getReadableDatabase();
-            c = db.rawQuery("select count(*) from 'Article'", null);
+            c = db.rawQuery("select count(*) from 'Article' where catalogy ='"+ type+"'", null);
             if (c.moveToNext()) {
                 count = c.getInt(0);
             }
@@ -123,40 +134,8 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         }else{
             lt.setText("已读完。");
         }
+        Log.d("上拉刷新 begin" + fromIndex, "end" + loadIndex);
 
-//        SQLiteDatabase db = null;
-//        Cursor c = null;
-//        try {
-//            dbArticle = new DbArticle(this, "Articles.db", null, 1);
-//            db = dbArticle.getReadableDatabase();
-//            if(db != null) {
-//                c = db.rawQuery("SELECT * FROM Article limit " + loadIndex + "," + (loadIndex + perReadNum), null);
-                Log.d("上拉刷新 begin" + fromIndex, "end" + loadIndex);
-//                while (c.moveToNext()) {
-//                    String url = c.getString(c.getColumnIndex("url"));
-//                    String title = c.getString(c.getColumnIndex("title"));
-//                    String catalogy = c.getString(c.getColumnIndex("catalogy"));
-//                    String body = c.getString(c.getColumnIndex("body"));
-//                    String level = c.getString(c.getColumnIndex("level"));
-//                    String time = c.getString(c.getColumnIndex("time"));
-//                    int difficultRatio = c.getInt(c.getColumnIndex("difficultRatio"));
-//                Log.i("db", "id=>" + id + ", title=>" + title + ", catalogy=>" + catalogy
-//                        + ",level=>" + level + "difficultRatio=>" + difficultRatio);
-//
-//
-//                }
-//            }
-//        }catch(Exception exception){
-//             exception.printStackTrace();
-//        }finally {
-//            if (c != null){
-//                c.close();
-//            }
-//            if(db != null) {
-//                db.close();
-//            }
-//
-//        }
     }
 
     @Override
@@ -226,7 +205,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
             db = dbArticle.getReadableDatabase();
             if (articleNum > 0) {
-                c = db.rawQuery("SELECT * FROM Article limit " + firstIndex + "," + perReadNum, null);
+                c = db.rawQuery("SELECT * FROM Article  WHERE catalogy ='"+type+"' limit " +firstIndex +"," + perReadNum, null);
                 while (c.moveToNext()) {
                     String url = c.getString(c.getColumnIndex("url"));
                     title = c.getString(c.getColumnIndex("title"));
@@ -235,7 +214,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                     String level = c.getString(c.getColumnIndex("level"));
                     int difficultRatio = c.getInt(c.getColumnIndex("difficultRatio"));
                     time = c.getString(c.getColumnIndex("time"));
-                    Log.d("从数据库中读取db", "title=>" + title + ",time" + time);
+                    Log.d("从数据库中读取db", "title=>" + title + ",time" + time + ",catalogy" + catalogy);
                     StringBuilder bodys = new StringBuilder(body);
                     article = new Article(title, bodys, catalogy);
                     article.setDifficultRatio(100);
@@ -279,12 +258,14 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         Article article = null;
         SQLiteDatabase db = null;
         Cursor myCursor = null;
+
         SpiderArticle spiderArticle = new SpiderArticle();
 
         //插入数据(逆序写入保证读取到最新的）
 //        这样在多次插入数据再读取的时候会出现顺序不匹配问题
         try {
-            urls = spiderArticle.getUrlList();
+             urls = spiderArticle.getUrlList(type);
+
             db = dbArticle.getWritableDatabase();
 //            db.execSQL("DROP TABLE IF EXISTS Article");
 //            Log.i("提示","表删除成功");

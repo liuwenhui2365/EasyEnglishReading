@@ -3,6 +3,7 @@ package com.wenhuiliu.EasyEnglishReading;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +11,9 @@ public class SpiderArticle implements ISpiderArticle{
 
     private Matcher mat = null;
     private ArrayList<String> techURLList;
-    public ArrayList<String> urlList;
+    private ArrayList<String> healthURLList;
+
+    public HashMap<String, ArrayList<String>> urlList;
     final private Pattern timePat = Pattern.compile("<SPAN class=datetime>(.*)</SPAN>", Pattern.CASE_INSENSITIVE);
     final private Pattern titlePat = Pattern.compile("<div id=\"title\">(.*?)</div>");
     final private Pattern contentPat = Pattern.compile("<P>([^<_]*?)</P>", Pattern.MULTILINE|Pattern.DOTALL);
@@ -21,9 +24,16 @@ public class SpiderArticle implements ISpiderArticle{
         techURLList = new ArrayList<String>();
         techURLList.add("http://www.51voa.com/Technology_Report_1.html");
         techURLList.add("http://www.51voa.com/Technology_Report_2.html");
-        urlList = new ArrayList<String>();
-        urlList.addAll(techURLList);
+        urlList = new HashMap<String,ArrayList<String>>();
+        urlList.put("科技", techURLList);
+
+        healthURLList = new ArrayList<String>();
+        healthURLList.add("http://www.51voa.com/Health_Report_1.html");
+        healthURLList.add("http://www.51voa.com/Health_Report_2.html");
+        urlList.put("健康", healthURLList);
+
     }
+
 
     public String getMessage(String url){
         String message = null;
@@ -33,14 +43,16 @@ public class SpiderArticle implements ISpiderArticle{
     }
 
     @Override
-    public ArrayList<String> getUrlList() {
+    public ArrayList<String> getUrlList(String catalogy) {
         ArrayList<String>  urls = new ArrayList<String>();
-        for (String url : urlList) {
-            String message = new HttpClient(url).getResponse();
-            Pattern pat = Pattern.compile("<li>.*?href=\"(.*?)\" target.*?</li>");
-            Matcher mat = pat.matcher(message);
-            while(mat.find()){
-                urls.add("http://www.51voa.com"+mat.group(1));
+        if(urlList.get(catalogy) != null){
+            for (String url : urlList.get(catalogy)) {
+                String message = new HttpClient(url).getResponse();
+                Pattern pat = Pattern.compile("<li>.*?href=\"(.*?)\" target.*?</li>");
+                Matcher mat = pat.matcher(message);
+                while(mat.find()){
+                    urls.add("http://www.51voa.com"+mat.group(1));
+                }
             }
         }
         return urls;
