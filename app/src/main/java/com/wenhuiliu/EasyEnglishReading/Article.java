@@ -99,11 +99,11 @@ public class Article {
     //	如果不匹配系统自动报错。
     public enum  Catalogy implements Serializable{
         科技         ( "科技"),
-        娱乐         ( "娱乐"),
+        娱乐         ( "自然"),
         健康         ( "健康"),
-        理财      	( "理财"),
+        理财      	( "教育"),
         经济   	    ( "经济"),
-        历史  	    ( "历史");
+        历史  	    ( "今日");
 
         //        private final int status;
         private final String description;

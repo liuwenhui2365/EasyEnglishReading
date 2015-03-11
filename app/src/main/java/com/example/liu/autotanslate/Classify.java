@@ -232,19 +232,19 @@ public class Classify extends ActionBarActivity {
                 case R.id.button4:
                     intent = new Intent();
                     intent.setClass(Classify.this,Refresh.class);
-                    intent.setAction("初级历史");
+                    intent.setAction("初级教育");
                     startActivity(intent);
                     break;
                 case R.id.button5:
                     intent = new Intent();
                     intent.setClass(Classify.this,Refresh.class);
-                    intent.setAction("初级理财");
+                    intent.setAction("初级自然");
                     startActivity(intent);
                     break;
                 case R.id.button6:
                     intent = new Intent();
                     intent.setClass(Classify.this,Refresh.class);
-                    intent.setAction("初级娱乐");
+                    intent.setAction("初级其他");
                     startActivity(intent);
                     break;
 

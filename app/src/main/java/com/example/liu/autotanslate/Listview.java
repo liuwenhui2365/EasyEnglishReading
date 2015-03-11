@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Listview extends ActionBarActivity implements FooterView.OnLoadListener,ListViewExt.OnRefreshListener {
+public class Listview extends ActionBarActivity{
 
     private  ListView plv = null;
     private  ListViewExt lv = null;
@@ -36,11 +36,6 @@ public class Listview extends ActionBarActivity implements FooterView.OnLoadList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refresh);
-
-        initData();
-//        lv = (ListViewExt) findViewById(R.id.lv);
-//        lv.setAdapter(new ArrayAdapter<HashMap<String, Object>>(this,
-//                android.R.layout.simple_list_item_1,listItem));
 
         SimpleAdapter mSimpleAdapter = new SimpleAdapter(Listview.this,listItem,//需要绑定的数据
                 R.layout.lsitviewitem,//每一行的布局
@@ -76,92 +71,8 @@ public class Listview extends ActionBarActivity implements FooterView.OnLoadList
 
         //获取类别和级别
 
-          final String message = this.getIntent().getAction();
+//          final String message = this.getIntent().getAction();
 
-        //实现每行显示两行文本和图片
-//        plv = (ListView)findViewById(R.id.refresh);
-//        mHandler = new Handler() {
-//            @Override
-//            public void handleMessage(android.os.Message msg) {
-//                if (msg.what == 1) {
-//                    article = (Article) msg.obj;
-//
-//                    /*在数组中存放数据*/
-//                    if(article != null) {
-//                        for (int i = 0; i < 10; i++) {
-//                            HashMap<String, Object> map = new HashMap<String, Object>();
-//                            if (i == 1 || i == 3 || i == 5) {
-//                                if (article != null && message != null && message.equalsIgnoreCase("初级科技")) {
-//                                    map.put("ItemImage", null);//加入图片
-//                                    map.put("title", article.getTitle());
-//                                    map.put("date", article.getTime());
-//                                    listItem.add(map);
-//                                }
-//                            } else {
-//                                map.put("ItemImage", R.drawable.ic_launcher);//加入图片
-//                                map.put("title", "标题" + i);
-//                                map.put("date", str);
-//                                listItem.add(map);
-//                            }
-//                        }
-//                    }else{
-//                        Log.e("------ERROR----------","article is empty");
-//                    }
-//
-//                    SimpleAdapter mSimpleAdapter = new SimpleAdapter(Listview.this,listItem,//需要绑定的数据
-//                            R.layout.lsitviewitem,//每一行的布局
-//                            //动态数组中的数据源的键对应到定义布局的View中
-//                            new String[] {"ItemImage","title", "date"},
-//                            new int[] {R.id.ItemImage,R.id.title,R.id.date}
-//                    );
-////
-//                    plv.setAdapter(mSimpleAdapter);//为ListView绑定适配器
-//                }
-//            }
-//        };
-//
-//        rlv = (ListView)findViewById(R.id.refresh);
-//        mHandler = new Handler() {
-//            @Override
-//            public void handleMessage(android.os.Message msg) {
-//                if (msg.what == 1) {
-//                    article = (Article) msg.obj;
-//
-//                    /*在数组中存放数据*/
-//                    if(article != null) {
-//                        for (int i = 0; i < 10; i++) {
-//                            HashMap<String, Object> map = new HashMap<String, Object>();
-//                            if (i == 1 || i == 3 || i == 5) {
-//                                if (article != null && message != null && message.equalsIgnoreCase("初级科技")) {
-//                                    map.put("ItemImage", null);//加入图片
-//                                    map.put("title", article.getTitle());
-//                                    map.put("date", article.getTime());
-//                                    listItem.add(map);
-//                                }
-//                            } else {
-//                                map.put("ItemImage", R.drawable.ic_launcher);//加入图片
-//                                map.put("title", "标题" + i);
-//                                map.put("date", str);
-//                                listItem.add(map);
-//                            }
-//                        }
-//                    }else{
-//                        Log.e("------ERROR----------","article is empty");
-//                    }
-//
-//                    SimpleAdapter mSimpleAdapter = new SimpleAdapter(Listview.this,listItem,//需要绑定的数据
-//                            R.layout.lsitviewitem,//每一行的布局
-//                            //动态数组中的数据源的键对应到定义布局的View中
-//                            new String[] {"ItemImage","title", "date"},
-//                            new int[] {R.id.ItemImage,R.id.title,R.id.date}
-//                    );
-//
-//                    rlv.setAdapter(mSimpleAdapter);//为ListView绑定适配器
-//                }
-//            }
-//        };
-//
-//
 //        new Thread() {
 //            @Override
 //            public void run() {
@@ -184,28 +95,7 @@ public class Listview extends ActionBarActivity implements FooterView.OnLoadList
 //                mHandler.sendMessage(msg);
 //            }
 //        }.start();
-//
-//        plv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Log.e("MyListViewBase", "你点击了ListView条目" + position);//在LogCat中没有输出信息
-//                Intent intent = new Intent();
-//                intent.setClass(Listview.this, RefreshActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        rlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Log.e("MyListViewBase", "你点击了ListView条目" + position);//在LogCat中没有输出信息
-//                Intent intent = new Intent();
-//                intent.setClass(Listview.this, RefreshActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//
-//    }
+
     }
 
     @Override
@@ -242,88 +132,5 @@ public class Listview extends ActionBarActivity implements FooterView.OnLoadList
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onLoad() {
-        new Handler().postDelayed(new Runnable() {
 
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-//                initLoadData();
-                showView();
-//                lv.getFootView().loadComplete();
-            }
-        }, 3000);
-    }
-
-    private void showView() {
-
-        for (int i = 10; i < 20; i++) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
-
-                map.put("ItemImage", R.drawable.ic_launcher);//加入图片
-                map.put("title", "标题" + i);
-                map.put("date", "2015.3.04");
-                listItem.add(map);
-
-        }
-//        SimpleAdapter mSimpleAdapter = new SimpleAdapter(Listview.this,listItem,//需要绑定的数据
-//                R.layout.lsitviewitem,//每一行的布局
-//                //动态数组中的数据源的键对应到定义布局的View中
-//                new String[] {"ItemImage","title", "date"},
-//                new int[] {R.id.ItemImage,R.id.title,R.id.date}
-//        );
-//
-//        plv.setAdapter(mSimpleAdapter);//为ListView绑定适配器
-    }
-
-    private void showView1() {
-
-        for (int i = 100; i < 120; i++) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
-
-            map.put("ItemImage", R.drawable.ic_launcher);//加入图片
-            map.put("title", "标题" + i);
-            map.put("date", "2015.3.04");
-            listItem.add(0,map);
-
-        }
-        SimpleAdapter mSimpleAdapter = new SimpleAdapter(Listview.this,listItem,//需要绑定的数据
-                R.layout.lsitviewitem,//每一行的布局
-                //动态数组中的数据源的键对应到定义布局的View中
-                new String[] {"ItemImage","title", "date"},
-                new int[] {R.id.ItemImage,R.id.title,R.id.date}
-        );
-        mSimpleAdapter.notifyDataSetChanged();
-        lv.setAdapter(mSimpleAdapter);//为ListView绑定适配器
-    }
-
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                showView1();
-//                lv.refreshComplete();
-            }
-        }, 3000);
-    }
-
-    private void initData() {
-        for (int i = 0; i < 10; i++) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
-            if (i == 1 || i == 3 || i == 5) {
-                map.put("ItemImage", null);//加入图片
-                map.put("title", "标题");
-                map.put("date", "2015.03.05");
-                listItem.add(map);
-            } else {
-                map.put("ItemImage", R.drawable.ic_launcher);//加入图片
-                map.put("title", "标题" + i);
-                map.put("date", "2015.03.06");
-                listItem.add(map);
-            }
-        }
-    }
 }

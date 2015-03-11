@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -47,6 +48,8 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_refresh);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 //        deleteDatabase("Articles.db");
 //        Log.e("remind*****", "删除数据库成功");
 //      获取分类
@@ -55,6 +58,14 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             type = "科技";
         }else if (type.equalsIgnoreCase("初级健康")){
             type = "健康";
+        }else if(type.equalsIgnoreCase("初级教育")){
+            type = "教育";
+        }else if(type.equalsIgnoreCase("初级经济")){
+            type = "经济";
+        }else if(type.equalsIgnoreCase("初级自然")){
+            type = "自然";
+        }else if (type.equalsIgnoreCase("初级其他")){
+            type = "今日";
         }
 
         //      从数据库获取
@@ -73,7 +84,23 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         inflater = LayoutInflater.from(this);
 
         showListView(itemEntities);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                String title =  (String)itemEntities.get((int)id).get("title");
+                Intent intent = new Intent();
+                intent.setClass(Refresh.this,Message.class);
+                intent.setAction(title);
+                startActivity(intent);
+//                  Log.d("你点击的是" , listview.toString() +","+ position +","+id + ","
+//                          + itemEntities.get(position - 1) + itemEntities.get((int)id));
+                  Log.d("你点击的文章题目是",title);
+            }
+        });
     }
+
 
     public int getArticleNum(){
         SQLiteDatabase db = null;
@@ -97,6 +124,8 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         }
 
     }
+
+
 
     private void showListView(ArrayList<HashMap<String, Object>> itemEntities) {
         listview = (MyListView) findViewById(R.id.mylist);

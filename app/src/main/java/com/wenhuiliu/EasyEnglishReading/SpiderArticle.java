@@ -12,6 +12,11 @@ public class SpiderArticle implements ISpiderArticle{
     private Matcher mat = null;
     private ArrayList<String> techURLList;
     private ArrayList<String> healthURLList;
+    private ArrayList<String> educationURLList;
+    private ArrayList<String> economicsURLList;
+    private ArrayList<String> natureURLList;
+    private ArrayList<String> othersURLList;
+
 
     public HashMap<String, ArrayList<String>> urlList;
     final private Pattern timePat = Pattern.compile("<SPAN class=datetime>(.*)</SPAN>", Pattern.CASE_INSENSITIVE);
@@ -32,6 +37,27 @@ public class SpiderArticle implements ISpiderArticle{
         healthURLList.add("http://www.51voa.com/Health_Report_2.html");
         urlList.put("健康", healthURLList);
 
+
+        educationURLList = new ArrayList<String>();
+        educationURLList.add("http://www.51voa.com/Education_Report_1.html");
+        educationURLList.add("http://www.51voa.com/Education_Report_2.html");
+        urlList.put("教育", educationURLList);
+
+        economicsURLList = new ArrayList<String>();
+        economicsURLList.add("http://www.51voa.com/Economics_Report_1.html");
+        economicsURLList.add("http://www.51voa.com/Economics_Report_2.html");
+        urlList.put("经济", economicsURLList);
+
+
+        natureURLList = new ArrayList<String>();
+        natureURLList.add("http://www.51voa.com/Explorations_1.html");
+        natureURLList.add("http://www.51voa.com/Explorations_2.html");
+        urlList.put("自然", natureURLList);
+
+        othersURLList = new ArrayList<String>();
+        othersURLList.add("http://www.51voa.com/This_is_America_1.html");
+        othersURLList.add("http://www.51voa.com/This_is_America_2.html");
+        urlList.put("今日", othersURLList);
     }
 
 
