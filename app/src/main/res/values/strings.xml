@@ -4,8 +4,10 @@
     <string name="app_name">AutoTanslate</string>
     <string name="hello_world">Hello world!</string>
     <string name="classify">请输入分类名称</string>
-\        <string name="waiting">请稍候正在加载。。。</string>
+    <string name="waiting">请稍候正在加载。。。</string>
     <string name="action_settings">返回</string>
+    <string name="word_list">this is words list</string>
+
 
     <color name="black">#ff070508</color>
     <color name="white">#ffffffff</color>
@@ -26,5 +28,6 @@
     <string name="uprefresh">正在读数据。。。</string>
     <string name="downrefresh">正在从网络获取数据。。。</string>
     <string name="title_activity_refresh">Refresh</string>
+    <string name="title_activity_word_classify">WordClassify</string>
 
 </resources>

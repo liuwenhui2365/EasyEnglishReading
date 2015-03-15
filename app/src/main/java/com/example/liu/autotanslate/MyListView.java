@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -51,6 +52,7 @@ public class MyListView extends ListView implements OnScrollListener {
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+
         if (totalItemCount == lastVisibaleItem && scrollState == SCROLL_STATE_IDLE) {
             if (!isLoading) {
                 isLoading = true;
@@ -63,8 +65,11 @@ public class MyListView extends ListView implements OnScrollListener {
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                          int totalItemCount) {
+
         this.lastVisibaleItem = firstVisibleItem + visibleItemCount;
         this.totalItemCount = totalItemCount;
+//        Log.d("onScroll lastVisibaleItem", String.valueOf(lastVisibaleItem));
+
     }
     private void initView(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);

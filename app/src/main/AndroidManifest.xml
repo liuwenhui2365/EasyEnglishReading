@@ -22,25 +22,25 @@
             android:name=".Classify"
             android:label="@string/title_activity_classify" >
         </activity>
-        <!--<activity-->
-            <!--android:name=".Listview"-->
-            <!--android:label="@string/title_activity_listview"-->
-            <!--android:parentActivityName=".Classify" >-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value=".Classify" />-->
-        <!--</activity>-->
         <activity
             android:name=".Message"
             android:label="@string/title_activity_message"
             android:parentActivityName=".Refresh" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.liu.autotanslate.Listview" />
+                android:value="com.example.liu.autotanslate.Refresh" />
         </activity>
         <activity
             android:name=".Refresh"
-            android:label="@string/title_activity_refresh" >
+            android:label="@string/title_activity_refresh"
+            android:parentActivityName=".Classify" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.liu.autotanslate.Classify" />
+        </activity>
+        <activity
+            android:name=".WordClassify"
+            android:label="@string/title_activity_word_classify" >
         </activity>
     </application>
 

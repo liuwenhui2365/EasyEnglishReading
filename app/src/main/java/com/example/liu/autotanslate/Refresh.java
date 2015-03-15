@@ -54,51 +54,55 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
 //        Log.e("remind*****", "删除数据库成功");
 //      获取分类
         type = this.getIntent().getAction();
-        if(type.equalsIgnoreCase("初级科技")) {
-            type = "科技";
-        }else if (type.equalsIgnoreCase("初级健康")){
-            type = "健康";
-        }else if(type.equalsIgnoreCase("初级教育")){
-            type = "教育";
-        }else if(type.equalsIgnoreCase("初级经济")){
-            type = "经济";
-        }else if(type.equalsIgnoreCase("初级自然")){
-            type = "自然";
-        }else if (type.equalsIgnoreCase("初级其他")){
-            type = "今日";
-        }
+        if(type != null) {
+            if (type.equalsIgnoreCase("初级科技")) {
+                type = "科技";
+            } else if (type.equalsIgnoreCase("初级健康")) {
+                type = "健康";
+            } else if (type.equalsIgnoreCase("初级教育")) {
+                type = "教育";
+            } else if (type.equalsIgnoreCase("初级经济")) {
+                type = "经济";
+            } else if (type.equalsIgnoreCase("初级自然")) {
+                type = "自然";
+            } else if (type.equalsIgnoreCase("初级其他")) {
+                type = "今日";
+            }
 
-        //      从数据库获取
-        articleNum = getArticleNum();
-        Log.e("数据数目", Integer.toString(articleNum));
-        loadIndex = articleNum;
-        readArticle(articleNum - perReadNum, articleNum);
-//        如果数据库为空 添加默认页面
-        if (itemEntities.isEmpty()){
-            HashMap<String, Object> map = new HashMap<String, Object>();
-            map.put("ItemImage", R.drawable.ic_launcher);//加入图片
-            map.put("title", "下拉刷新从网络获取数据");
-            map.put("date", new Date());
-            itemEntities.add(map);
-        }
-        inflater = LayoutInflater.from(this);
 
-        showListView(itemEntities);
+            //      从数据库获取
+            articleNum = getArticleNum();
+            Log.e("数据数目", Integer.toString(articleNum));
+            loadIndex = articleNum;
+            readArticle(articleNum - perReadNum, articleNum);
+            //        如果数据库为空 添加默认页面
+            if (itemEntities.isEmpty()) {
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                map.put("ItemImage", R.drawable.ic_launcher);//加入图片
+                map.put("title", "下拉刷新从网络获取数据");
+                map.put("date", new Date());
+                itemEntities.add(map);
+            }
+            inflater = LayoutInflater.from(this);
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-                String title =  (String)itemEntities.get((int)id).get("title");
-                Intent intent = new Intent();
-                intent.setClass(Refresh.this,Message.class);
-                intent.setAction(title);
-                startActivity(intent);
+            showListView(itemEntities);
+
+
+            listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position,
+                                        long id) {
+                    String title = (String) itemEntities.get((int) id).get("title");
+                    Intent intent = new Intent();
+                    intent.setClass(Refresh.this, Message.class);
+                    intent.setAction(title);
+                    startActivity(intent);
 //                  Log.d("你点击的是" , listview.toString() +","+ position +","+id + ","
 //                          + itemEntities.get(position - 1) + itemEntities.get((int)id));
-                  Log.d("你点击的文章题目是",title);
-            }
-        });
+//                  Log.d("你点击的文章题目是",title);
+                }
+            });
+        }
     }
 
 

@@ -10,20 +10,29 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wenhuiliu.EasyEnglishReading.Article;
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
 import com.wenhuiliu.EasyEnglishReading.SpiderArticle;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.SQLDataException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 public class Message extends ActionBarActivity {
@@ -34,6 +43,8 @@ public class Message extends ActionBarActivity {
     private String title = null;
     private String body = null;
     private String time = null;
+    SQLiteDatabase db = null;
+    Cursor c = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,62 +61,74 @@ public class Message extends ActionBarActivity {
 
         textView = (TextView) findViewById(R.id.title);
         textView.setText(title);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(Message.this,WordClassify.class);
+                startActivity(intent);
+            }
+        });
 
+//        Toast.makeText();
         readArticle(title);
+        getWordsMeaningByFile();
 
-
-//        final Handler mHandler = new Handler() {
-//            @Override
-//            public void handleMessage(android.os.Message msg) {
-//                if (msg.what == 1) {
-//                    article = (Article) msg.obj;
-//                    textView = (TextView) findViewById(R.id.title);
-//                    textView.setText(title);
-////                  textView.setText(article.getTitle());
-//                    textView = (TextView) findViewById(R.id.content);
-//                    StringBuilder sbd = new StringBuilder(body);
-//                    //      从文件读取涉及到路径问题
-//
-//                    textView.setText(sbd);
-//                    textView.setMovementMethod(ScrollingMovementMethod.getInstance());
-//
-//                }
-//            }
-//        };
-//
-//        final SpiderArticle spiderArticle = new SpiderArticle();
-//        Thread articleTask = new Thread() {
-//            @Override
-//            public void run() {
-//                try {
-//                      article = spiderArticle.getPassage("http://www.51voa.com/VOA_Special_English/animal-weapons-offer-lesons-for-human-arms-race-61556.html");
-//                }catch (NullPointerException e){
-//                    Log.e("empty!", "network wroong");
-////                    //TODO 增加网络错误提示窗口
-//                    Intent intent = new Intent();
-//                    intent.setClass(Message.this,Listview.class);
-//                    startActivity(intent);
-//                }
-//
-//                android.os.Message msg = new android.os.Message();
-//                msg.what = 1;
-////                mDownloadCount ++;
-//                msg.obj = article;
-//                mHandler.sendMessage(msg);
-//            }
-//        };
-//        articleTask.start();
 
     }
 
+    public void getWordsMeaningByFile() {
+//		从文章中获取每一个单词
+        HashMap<String, String> wordMeaning = new HashMap<String, String>();
+        String [] words = new String[]{};
+        BufferedReader reader = null;
+        String line = null;
+        InputStream input = getResources().openRawResource(R.raw.words);
+        BufferedReader read = new BufferedReader(new InputStreamReader(input));
+        try {
+            while((line= read.readLine()) != null){
+                words =  line.split(" ");
+                wordMeaning.put(words[0],words[1]);
+//                System.out.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            dbArticle = new DbArticle(this, "Articles.db", null, 1);
+            db = dbArticle.getReadableDatabase();
+            c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='words'", null);
+            if (c.moveToNext()) {
+                int count = c.getInt(0);
+                if (count > 0) {
+//                 如果表存在
+
+                } else {
+                    db.execSQL("CREATE TABLE words (word VARCHAR PRIMARY KEY,meaning VARCHAR,type VARCHAR)");
+                    Log.e("数据库", "表创建成功");
+                    Iterator iter = wordMeaning.entrySet().iterator();
+                    while (iter.hasNext()) {
+                        Map.Entry entry = (Map.Entry) iter.next();
+                        //            往数据库里放数据
+                        db.execSQL("INSERT INTO words values(?,?,?)", new String[]{entry.getKey().toString(), entry.getValue().toString(), "unknown"});
+                        //                Log.d("单词：", entry.getKey().toString());
+                        //                Log.d("意思：", entry.getValue().toString());
+                    }
+                }
+            }
+            if(db != null){
+                db.close();
+            }
+
+        }
+    }
+
     public void readArticle(String title){
-        SQLiteDatabase db = null;
-//        Article article = null;
-        Cursor c = null;
 
         try {
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
             db = dbArticle.getReadableDatabase();
+            c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='Article'", null);
+
             Log.d("数据库获取到的标题",title);
             c = db.rawQuery("SELECT * FROM Article  WHERE title = ?",new String[]{title});
             while (c.moveToNext()) {

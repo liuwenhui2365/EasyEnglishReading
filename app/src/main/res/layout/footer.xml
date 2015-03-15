@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:id="@+id/footer_ll"
     android:gravity="center"
     android:layout_width="match_parent"
@@ -19,6 +19,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:text="正在加载..."
+        android:layout_marginStart="20dp"
+        android:text="@string/refresh"
         android:textColor="#FF0000" />
+
+    <ListView
+        android:id="@+id/wlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>
