@@ -47,7 +47,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/ab1"
             android:textSize="25sp"
-            android:text="@string/jingji"/>
+            android:text="@string/education"/>
 
         <Button
             android:id="@+id/button4"
@@ -56,7 +56,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/ef"
             android:textSize="25sp"
-            android:text="@string/history"/>
+            android:text="@string/jingji"/>
 
     </TableRow>
 
@@ -75,7 +75,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/ab2"
             android:textSize="25sp"
-            android:text="@string/licai"/>
+            android:text="@string/nature"/>
 
         <Button
             android:id="@+id/button6"
@@ -84,7 +84,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/gh"
             android:textSize="25sp"
-            android:text="@string/yule"/>
+            android:text="@string/other"/>
 
     </TableRow>
 </TableLayout>

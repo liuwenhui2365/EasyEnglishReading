@@ -167,7 +167,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         }else{
             lt.setText("已读完。");
         }
-        Log.d("上拉刷新 begin" + fromIndex, "end" + loadIndex);
+//        Log.d("上拉刷新 begin" + fromIndex, "end" + loadIndex);
 
     }
 
@@ -200,7 +200,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             }
         }.start();
         articleNum = getArticleNum();
-        Log.d("下拉刷新索引开始" + refreshIndex, "结束" + articleNum);
+//        Log.d("下拉刷新索引开始" + refreshIndex, "结束" + articleNum);
         if (refreshIndex < articleNum){
             readArticle(refreshIndex, articleNum);
         }else {
@@ -247,7 +247,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                     String level = c.getString(c.getColumnIndex("level"));
                     int difficultRatio = c.getInt(c.getColumnIndex("difficultRatio"));
                     time = c.getString(c.getColumnIndex("time"));
-                    Log.d("从数据库中读取db", "title=>" + title + ",time" + time + ",catalogy" + catalogy);
+//                    Log.d("从数据库中读取db", "title=>" + title + ",time" + time + ",catalogy" + catalogy);
                     StringBuilder bodys = new StringBuilder(body);
                     article = new Article(title, bodys, catalogy);
                     article.setDifficultRatio(100);

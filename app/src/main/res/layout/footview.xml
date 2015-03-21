@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/uprefresh"
+            android:text="@string/up_refresh"
             android:textSize="15sp" />
 
         <ImageView

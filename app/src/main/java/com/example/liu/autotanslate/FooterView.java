@@ -116,7 +116,7 @@ public class FooterView extends LinearLayout  {
         switch(state){
             case STATE_NORMAL:
                 mArrow.startAnimation(mRotateUp);
-                mLoaderTips.setText(R.string.uprefresh);
+                mLoaderTips.setText(R.string.up_refresh);
                 break;
 
             case STATE_WILL_RELEASE:
@@ -125,7 +125,7 @@ public class FooterView extends LinearLayout  {
                 break;
 
             case STATE_LOADING:
-                mLoaderTips.setText(R.string.downrefresh);
+                mLoaderTips.setText(R.string.down_refresh);
                 break;
 
             default:

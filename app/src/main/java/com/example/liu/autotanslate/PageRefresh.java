@@ -5,13 +5,16 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class PageRefresh extends ListView implements OnScrollListener{
     //底部View
     private View footerView;
+    private TextView textView;
     //ListView item个数
     int totalItemCount;// = 0;
     //最后可见的Item
@@ -45,20 +48,20 @@ public class PageRefresh extends ListView implements OnScrollListener{
         //添加底部View
         this.addFooterView(footerView);
         this.setOnScrollListener(this);
-        Log.d("setOnScrollListener", this.toString());
+//        Log.d("setOnScrollListener", this.toString());
 
     }
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        Log.d("状态改变","准备改变");
+//        Log.d("状态改变","准备改变");
         //当滑动到底端，并滑动状态为 not scrolling
         if(lastVisibleItem == totalItemCount && scrollState == SCROLL_STATE_IDLE){
             if(!isLoading){
                 isLoading = true;
                 //设置可见
                 footerView.setVisibility(View.VISIBLE);
-                Log.d("状态改变","已经改变");
+//                Log.d("状态改变","已经改变");
 
                 //加载数据
                 onLoadListener.onLoad();

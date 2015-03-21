@@ -4,6 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -20,12 +25,12 @@
         </activity>
         <activity
             android:name=".Classify"
-            android:label="@string/title_activity_classify" >
+            android:label="@string/title_activity_classify"
+            android:launchMode="singleTask">
         </activity>
         <activity
             android:name=".Message"
-            android:label="@string/title_activity_message"
-            android:parentActivityName=".Refresh" >
+            android:label="@string/message">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.liu.autotanslate.Refresh" />
@@ -40,7 +45,28 @@
         </activity>
         <activity
             android:name=".WordClassify"
-            android:label="@string/title_activity_word_classify" >
+            android:label="@string/title_activity_word_classify"
+            android:parentActivityName=".Classify">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.liu.autotanslate.Classify" />
+        </activity>
+        <activity
+            android:name=".MenuTest"
+            android:label="@string/title_activity_menu_test" >
+        </activity>
+        <activity
+            android:name=".WordMeaning"
+            android:label="@string/title_activity_word_meaning"
+            android:parentActivityName=".WordClassify" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.liu.autotanslate.WordClassify" />
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
     </application>
 

@@ -65,7 +65,7 @@ public class Message extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(Message.this,WordClassify.class);
+                intent.setClass(Message.this,MenuTest.class);
                 startActivity(intent);
             }
         });
@@ -132,12 +132,12 @@ public class Message extends ActionBarActivity {
             Log.d("数据库获取到的标题",title);
             c = db.rawQuery("SELECT * FROM Article  WHERE title = ?",new String[]{title});
             while (c.moveToNext()) {
-                title = c.getString(c.getColumnIndex("title"));
-                String body = c.getString(c.getColumnIndex("body"));
+                  title = c.getString(c.getColumnIndex("title"));
+                  String body = c.getString(c.getColumnIndex("body"));
+                  time = c.getString(c.getColumnIndex("time"));
 //                String level = c.getString(c.getColumnIndex("level"));
 //                int difficultRatio = c.getInt(c.getColumnIndex("difficultRatio"));
-                time = c.getString(c.getColumnIndex("time"));
-                Log.d("从数据库中读取db", "title=>" + title + ",time" + time);
+//                Log.d("从数据库中读取db", "title=>" + title + ",time" + time);
 //                StringBuilder bodys = new StringBuilder(body);
 //                article = new Article(title, bodys, catalogy);
 //                article.setDifficultRatio(100);

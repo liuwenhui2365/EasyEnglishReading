@@ -6,6 +6,11 @@
         <item name="android:actionBarTheme">@color/white</item>
         <item name="android:actionBarStyle">@color/white</item>
         <item name="android:actionBarItemBackground">@color/white</item>
+
+
     </style>
+
+    <!--为按钮设置样式-->
+
 
 </resources>
