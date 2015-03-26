@@ -28,7 +28,7 @@
         android:layout_marginRight="5dp"
         android:layout_gravity="center_vertical"
         android:background="@color/grey"
-        android:text="按钮"
+        android:text="@string/select"
     />
 
 </LinearLayout>

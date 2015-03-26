@@ -17,12 +17,25 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
-<!--菜单栏-->
-    <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#ffffcc">
-    </ListView>
+<!--菜单栏注意左对齐 以后加图片-->
+    <!--<LinearLayout-->
+        <!--android:id="@+id/left_drawer"-->
+        <!--android:layout_width="240dp"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_height="wrap_content">-->
+            <!--<ImageView-->
+                <!--android:contentDescription="@string/wait"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/ef"/>-->
+
+            <ListView
+                android:id="@+id/menu_list"
+                android:layout_width="240dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="@color/white"/>
+
+
+        <!--</LinearLayout>-->
 </android.support.v4.widget.DrawerLayout>

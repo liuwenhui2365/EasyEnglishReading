@@ -3,11 +3,11 @@
     package="com.example.liu.autotanslate" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -31,9 +31,9 @@
         <activity
             android:name=".Message"
             android:label="@string/message">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.liu.autotanslate.Refresh" />
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value="com.example.liu.autotanslate.Refresh" />-->
         </activity>
         <activity
             android:name=".Refresh"
@@ -50,10 +50,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.liu.autotanslate.Classify" />
-        </activity>
-        <activity
-            android:name=".MenuTest"
-            android:label="@string/title_activity_menu_test" >
         </activity>
         <activity
             android:name=".WordMeaning"

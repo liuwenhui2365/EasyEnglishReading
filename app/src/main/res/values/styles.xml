@@ -2,15 +2,12 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
-        <item name="android:actionBarTheme">@color/white</item>
+        <item name="android:actionBarTabBarStyle">@color/white</item>
+        <item name="android:actionBarSize">10dp</item>
         <item name="android:actionBarStyle">@color/white</item>
-        <item name="android:actionBarItemBackground">@color/white</item>
-
 
     </style>
 
     <!--为按钮设置样式-->
-
 
 </resources>

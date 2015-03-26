@@ -6,13 +6,17 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:scrollbars="vertical"
     android:background="@color/white"
     tools:context="com.example.liu.autotanslate.Message">
 
-
+    <!--<ViewPager-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:scrollbars="vertical">-->
         <TextView
             android:id="@+id/title"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/black"
             android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
@@ -21,20 +25,21 @@
 
         <TextView
             android:id="@+id/date"
-            android:layout_below="@+id/title"
             android:textColor="@color/black"
             android:layout_marginBottom="10dp"
+            android:layout_below="@id/title"
+            android:gravity="end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/content"
-            android:layout_below="@+id/date"
             android:textColor="@color/black"
+            android:layout_below="@+id/date"
+            android:textSize="15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/waiting"
-            android:scrollbars="vertical"
             android:singleLine="false"/>
-
+    <!--</ViewPager>-->
 </RelativeLayout>

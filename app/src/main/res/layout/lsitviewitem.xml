@@ -3,11 +3,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -15,24 +10,29 @@
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"/>
+                android:layout_height="45dp"
+                android:singleLine="true"
+                android:textSize="16sp"/>
+            <!--android:ellipsize="end"单行不需要-->
 
-            <ImageView
-                android:layout_alignParentRight="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/ItemImage"
-                />
+            <!--<ImageView-->
+                <!--android:contentDescription="@string/wait"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/ItemImage"-->
+                <!--/>-->
         </RelativeLayout>
-    </LinearLayout>
 
     <TextView
         android:id="@+id/date"
+        android:padding="5dp"
         android:textSize="12sp"
-        android:layout_width="match_parent"
+        android:layout_gravity="end"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="155dp"
-        android:layout_marginStart="1dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
     />
 </LinearLayout>

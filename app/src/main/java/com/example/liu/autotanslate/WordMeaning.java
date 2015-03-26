@@ -11,7 +11,14 @@ import android.widget.TextView;
 
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 public class WordMeaning extends ActionBarActivity {
@@ -32,22 +39,29 @@ public class WordMeaning extends ActionBarActivity {
     }
 
     private String FindWordMeaning(String word) {
-        DbArticle dbArticle;
+        HashMap<String, String> wordMeaning = new HashMap<String, String>();
+        String [] words = new String[]{};
+        BufferedReader reader = null;
+        InputStream input = null;
+        String line = null;
         String meaning = null;
+
+        DbArticle dbArticle = null;
         SQLiteDatabase db = null;
         Cursor c = null;
+//      表已经创建
         try {
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
             db = dbArticle.getReadableDatabase();
             c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='words'", null);
             if (c.moveToNext()) {
                 int count = c.getInt(0);
-//                Log.d("查询表的个数",count+"");
+    //                Log.d("查询表的个数",count+"");
                 if (count > 0) {
                     c = db.rawQuery("select meaning from words where word = ?", new String[]{word});
                     if (c.moveToNext()) {
                         meaning = c.getString(c.getColumnIndex("meaning"));
-//                        Log.d("从数据库中读取wordMeaning", "meaning=>" + meaning);
+    //                        Log.d("从数据库中读取wordMeaning", "meaning=>" + meaning);
                     } else {
                         //TODO 添加弹框提示数据库读取完毕
                         Log.e("错误", "数据库没有该单词");

@@ -19,6 +19,7 @@ public class DbArticle extends SQLiteOpenHelper
 
         super(context, "articles.db", null, version);
     }
+
     //创建表
     @Override
     public void onCreate(SQLiteDatabase db)
@@ -29,6 +30,7 @@ public class DbArticle extends SQLiteOpenHelper
                 "catalogy VARCHAR, body VARCHAR, level VARCHAR, difficultRatio INT, time VARCHAR)");
         Log.e("数据库","表创建成功");
     }
+
     //升级表（当Database的Version低于当前new里的Version，直接执行下面方法）
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)

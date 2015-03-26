@@ -140,13 +140,13 @@ public class Article {
         }
     }
 
-
+//   把文章内容为String类型的转为Arraylist类型的
     public ArrayList<String> getWords(){
         ArrayList<String> words = new ArrayList<String>();
         //Pattern expression = Pattern.compile("[a-zA-Z,."';:]+");  //定义正则表达式匹配单词
         //Pattern expression = Pattern.compile("([\\w]+)|([,.:;\"?!]+)");
         //Pattern expression = Pattern.compile("([\\w]+)|([\\pP])");
-        Pattern expression = Pattern.compile("([\\w]+)|([.,\"\\?!:'])");
+        Pattern expression = Pattern.compile("([\\w]+)|([.,\"\\?!:'$^])");
 
         Matcher matcher = expression.matcher(body);
 

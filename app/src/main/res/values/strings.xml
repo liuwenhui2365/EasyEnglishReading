@@ -3,6 +3,8 @@
 
     <string name="app_name">AutoTanslate</string>
     <string name="hello_world">Hello world!</string>
+    <string name="down">下拉图片</string>
+    <string name="up">上拉图片</string>
     <string name="classify">请输入分类名称</string>
     <string name="waiting">请稍候正在加载。。。</string>
     <string name="action_settings">返回</string>
@@ -13,6 +15,7 @@
     <color name="black">#ff070508</color>
     <color name="white">#ffffffff</color>
     <color name="red">#ffff0000</color>
+    <color name="lightred">#ffff8163</color>
     <color name="grey">#161b1531</color>
 
     <string name="title_activity_classify">主页</string>
@@ -30,6 +33,8 @@
     <string name="other">其他</string>
 
 
+    <string name="select">choose</string>
+    <string name="state">当前time：</string>
     <string name="refresh">正在刷新</string>
     <string name="wait">请等待正在加载图片。。。</string>
     <string name="up_refresh">正在读数据。。。</string>

@@ -45,7 +45,7 @@ public class HeaderView extends LinearLayout {
         setGravity(Gravity.BOTTOM);
 
         mArrow = (ImageView) mHeader.findViewById(R.id.ivArrow);
-        mProgressBar = (ProgressBar) mHeader.findViewById(R.id.pbWaiting);
+        mProgressBar = (ProgressBar) mHeader.findViewById(R.id.refresh_Progress);
         mRefreshTips = (TextView) mHeader.findViewById(R.id.refresh_tips);
         //mRefreshLastTime = (TextView) mHeader.findViewById(R.id.refresh_last_time);
 

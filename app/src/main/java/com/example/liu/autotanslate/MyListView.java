@@ -5,6 +5,7 @@ import java.util.Date;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,6 +48,24 @@ public class MyListView extends ListView implements OnScrollListener {
         initView(context);
     }
 
+    private void initView(Context context) {
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        footer = inflater.inflate(R.layout.footview, null);
+        header = inflater.inflate(R.layout.headerview, null);
+//        NULL Exception
+//        measureView(header);
+        headerHeight = header.getMeasuredHeight();
+        footer.findViewById(R.id.list).setVisibility(View.GONE);
+        topPadding(-headerHeight);
+        this.addHeaderView(header);// 加到顶部
+        this.addFooterView(footer);// 加到底部
+        header.setVisibility(GONE);
+        footer.setVisibility(GONE);
+        this.setOnScrollListener(this);// 监听滚动到底部
+//        Log.d("初始化完成","header"+header+"foot"+footer);
+    }
+
     public void setLoaderListener(OnLoaderListener loaderListener) {
         this.loaderListener = loaderListener;
     }
@@ -56,6 +76,7 @@ public class MyListView extends ListView implements OnScrollListener {
         if (totalItemCount == lastVisibaleItem && scrollState == SCROLL_STATE_IDLE) {
             if (!isLoading) {
                 isLoading = true;
+                footer.setVisibility(VISIBLE);
                 footer.findViewById(R.id.list).setVisibility(View.VISIBLE);
                 loaderListener.onLoad();// 加载更多
             }
@@ -71,18 +92,7 @@ public class MyListView extends ListView implements OnScrollListener {
 //        Log.d("onScroll lastVisibaleItem", String.valueOf(lastVisibaleItem));
 
     }
-    private void initView(Context context) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        footer = inflater.inflate(R.layout.footview, null);
-        header = inflater.inflate(R.layout.top, null);
-        measureView(header);
-        headerHeight = header.getMeasuredHeight();
-        footer.findViewById(R.id.list).setVisibility(View.GONE);
-        topPadding(-headerHeight);
-        this.addHeaderView(header);// 加到顶部
-        this.addFooterView(footer);// 加到底部
-        this.setOnScrollListener(this);// 监听滚动到底部
-    }
+
     /**
      * 通知父布局，占用的宽，高；
      *
@@ -153,6 +163,7 @@ public class MyListView extends ListView implements OnScrollListener {
         int tempY = (int) ev.getY();
         int space = tempY - startY;
         int topPadding = space - headerHeight;
+
         switch (state) {
             case NONE:
                 if (space > 0) {
@@ -161,6 +172,8 @@ public class MyListView extends ListView implements OnScrollListener {
                 }
                 break;
             case PULL:
+                header.setVisibility(VISIBLE);
+
                 topPadding(topPadding);
                 if (space > headerHeight + 30 && scrollState == SCROLL_STATE_TOUCH_SCROLL) {
                     state = RELESE;
@@ -168,6 +181,8 @@ public class MyListView extends ListView implements OnScrollListener {
                 }
                 break;
             case RELESE:
+                header.setVisibility(VISIBLE);
+
                 topPadding(topPadding);
                 if (space < headerHeight + 30) {
                     state = PULL;
@@ -181,20 +196,23 @@ public class MyListView extends ListView implements OnScrollListener {
         }
     }
     /**
-     * 根据当前状态，改变界面显示；
+     * 根据当前状态，改变界面显示；注意设置Visibility的属性
      */
     private void reflashViewByState() {
-        TextView tip = (TextView) header.findViewById(R.id.tip);
-        ImageView arrow = (ImageView) header.findViewById(R.id.arrow);
-        ProgressBar progress = (ProgressBar) header.findViewById(R.id.progress);
+        TextView tip = (TextView) header.findViewById(R.id.refresh_tips);
+        ImageView arrow = (ImageView) header.findViewById(R.id.ivArrow);
+        ProgressBar progress = (ProgressBar) header.findViewById(R.id.refresh_Progress);
+
         RotateAnimation anim = new RotateAnimation(0, 180, RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
         anim.setDuration(500);
         anim.setFillAfter(true);
+
         RotateAnimation anim1 = new RotateAnimation(180, 0, RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
         anim1.setDuration(500);
         anim1.setFillAfter(true);
+
         switch (state) {
             case NONE:
                 arrow.clearAnimation();
@@ -219,6 +237,7 @@ public class MyListView extends ListView implements OnScrollListener {
                 arrow.setVisibility(View.GONE);
                 progress.setVisibility(View.VISIBLE);
                 tip.setText("正在刷新...");
+//                Log.d("正在刷新","....");
                 arrow.clearAnimation();
                 break;
         }
@@ -230,17 +249,19 @@ public class MyListView extends ListView implements OnScrollListener {
         state = NONE;
         isRemark = false;
         reflashViewByState();
-        TextView lastupdatetime = (TextView) header.findViewById(R.id.lastupdate_time);
+        TextView lastupdatetime = (TextView) header.findViewById(R.id.refresh_last_time);
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
         Date date = new Date(System.currentTimeMillis());
         String time = format.format(date);
         lastupdatetime.setText(time);
+        header.setVisibility(GONE);
     }
     /**
      * 上拉加载完数据
      */
     public void loadComplete() {
         isLoading = false;
+        footer.setVisibility(GONE);
         footer.findViewById(R.id.list).setVisibility(View.GONE);
     }
 

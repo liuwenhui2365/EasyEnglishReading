@@ -43,8 +43,8 @@ public class PageRefresh extends ListView implements OnScrollListener{
      */
     private void initView(Context context){
         LayoutInflater mInflater = LayoutInflater.from(context);
-        footerView = mInflater.inflate(R.layout.footer, null);
-        footerView.findViewById(R.id.wlist).setVisibility(View.GONE);
+        footerView = mInflater.inflate(R.layout.footview, null);
+        footerView.findViewById(R.id.list).setVisibility(View.GONE);
         //添加底部View
         this.addFooterView(footerView);
         this.setOnScrollListener(this);
@@ -54,15 +54,12 @@ public class PageRefresh extends ListView implements OnScrollListener{
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-//        Log.d("状态改变","准备改变");
         //当滑动到底端，并滑动状态为 not scrolling
         if(lastVisibleItem == totalItemCount && scrollState == SCROLL_STATE_IDLE){
             if(!isLoading){
                 isLoading = true;
                 //设置可见
                 footerView.setVisibility(View.VISIBLE);
-//                Log.d("状态改变","已经改变");
-
                 //加载数据
                 onLoadListener.onLoad();
             }

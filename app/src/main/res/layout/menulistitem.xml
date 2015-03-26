@@ -8,6 +8,7 @@
         android:id="@+id/menu"
         android:textSize="20sp"
         android:gravity="center"
+        android:textColor="@color/lightred"
         android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp" />

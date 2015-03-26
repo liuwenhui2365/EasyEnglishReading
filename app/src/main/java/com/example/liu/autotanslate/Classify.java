@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -51,7 +52,7 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
         initViewPager();//初始化ViewPager要在初始化initTab之前，否则会出错
         initMenu();
 //      添加tab切换的时候使用
-//        initTab();
+//      initTab();
    //   ton.setOnClickListener(listener);
 
 
@@ -127,7 +128,6 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
             @Override
             public void onPageScrolled(int position, float positionOffset,
                                        int positionOffsetPixels) {
-//                if(position==0) {
                     getLayoutInflater().inflate(R.layout.classifyitem1, null);
                     button = (Button) findViewById(R.id.button1);
                     button.setOnClickListener(listener);
@@ -141,37 +141,6 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
                     button.setOnClickListener(listener);
                     button = (Button) findViewById(R.id.button6);
                     button.setOnClickListener(listener);
-//                }else if(position==1){
-//                    getLayoutInflater().inflate(R.layout.classifyitem2, null);
-//                    button = (Button) findViewById(R.id.button21);
-//                    button.setOnClickListener(listener);
-//                    button = (Button) findViewById(R.id.button22);
-//                    button.setOnClickListener(listener);
-//                    button = (Button) findViewById(R.id.button23);
-//                    button.setOnClickListener(listener);
-//                    button = (Button) findViewById(R.id.button24);
-//                    button.setOnClickListener(listener);
-//                    button = (Button) findViewById(R.id.button25);
-//                    button.setOnClickListener(listener);
-//                    button = (Button) findViewById(R.id.button26);
-//                    button.setOnClickListener(listener);
-//                }else{
-////                    获取当前页面的VIew
-//                    getLayoutInflater().inflate(R.layout.classifyitem3, null);
-//                    button = (Button) findViewById(R.id.button31);
-//                    button.setOnClickListener(listener);
-//                    button = (Button) findViewById(R.id.button32);
-//                    button.setOnClickListener(listener);
-//                    button = (Button) findViewById(R.id.button33);
-//                    button.setOnClickListener(listener);
-//                    button = (Button) findViewById(R.id.button34);
-//                    button.setOnClickListener(listener);
-//                    button = (Button) findViewById(R.id.button35);
-//                    button.setOnClickListener(listener);
-//                    button = (Button) findViewById(R.id.button36);
-//                    button.setOnClickListener(listener);
-//                }
-
             }
 
             @Override
@@ -194,7 +163,7 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
      */
      private void initMenu(){
          mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+         mDrawerList = (ListView) findViewById(R.id.menu_list);
 
          item = new HashMap<>();
          item.put("item","单词分类");
@@ -202,7 +171,7 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
          item = new HashMap<>();
          item.put("item","设置");
          menuLists.add(item);
-//    adapter = new ArrayAdapter<String>(this,R.layout.wordlistviewitem);
+
          adapter = new SimpleAdapter(Classify.this,menuLists,//需要绑定的数据
                  R.layout.menulistitem,//每一行的布局
                  //动态数组中的数据源的键对应到定义布局的View中
@@ -210,10 +179,22 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
                  new int[] {R.id.menu}
          );
          mDrawerList.setAdapter(adapter);
-//        mDrawerList.setOnItemClickListener();
 
+         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+             @Override
+             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                 if(position == 0){
+//                    Log.d("菜单第一行", "选中了");
+                     Intent intent = new Intent(Classify.this,WordClassify.class);
+//                    intent.setClass();
+                     startActivity(intent);
+                 }
+             }
+         });
+
+//         设置标题栏图标
          mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                 R.drawable.ab, R.string.open,
+                 R.drawable.ic_launcher, R.string.open,
                  R.string.close) {
              @Override
              public void onDrawerOpened(View drawerView) {
@@ -239,68 +220,7 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
          }catch (NullPointerException w){
              w.printStackTrace();
          }
-
-         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-             @Override
-             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 if(position == 0){
-//                    Log.d("菜单第一行", "选中了");
-                     Intent intent = new Intent(Classify.this,WordClassify.class);
-//                    intent.setClass();
-                     startActivity(intent);
-                 }
-             }
-         });
      }
-
-    /**
-     * 初始化Tab
-     */
-//    private void initTab() {
-//        tabs = new ArrayList<ActionBar.Tab>();
-//        actionbar = getSupportActionBar();//获取v7兼容包中的ActionBar
-//        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-//        ActionBar.Tab tab1 = actionbar.newTab();//创建一个tab实例
-//        ActionBar.Tab tab2 = actionbar.newTab();
-//        ActionBar.Tab tab3 = actionbar.newTab();
-//        tab1.setTag(0);//为Tab设置Tag，用于标识Tab的位置
-//        tab1.setText("初级");
-//        tab2.setTag(1);
-//        tab2.setText("中级");
-//        tab3.setTag(2);
-//        tab3.setText("高级");
-//        tab1.setTabListener(tabListener);//为Tab设置监听(这一步是必须的，不然系统会不报错)
-//        tab2.setTabListener(tabListener);
-//        tab3.setTabListener(tabListener);
-//      添加到链表里面
-//        tabs.add(tab1);
-//        tabs.add(tab2);
-//        tabs.add(tab3);
-//        actionbar.addTab(tab1);//将Tab添加ActionBar上
-//        actionbar.addTab(tab2);
-//        actionbar.addTab(tab3);
-//    }
-
-    /**
-     * ActionBar的Tab监听器
-     */
-//    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-//        @Override
-//        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-//            //当选中了指定的Tab后让VeiwPager滑动到指定页面
-//            Viewpage.setCurrentItem((Integer) tab.getTag());
-//        }
-//
-//        @Override
-//        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-//
-//        }
-//
-//        @Override
-//        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-//
-//        }
-//    };
 
     View.OnClickListener listener = new View.OnClickListener()
     {

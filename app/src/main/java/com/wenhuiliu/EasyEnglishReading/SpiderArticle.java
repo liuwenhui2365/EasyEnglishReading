@@ -1,6 +1,9 @@
 package com.wenhuiliu.EasyEnglishReading;
 
 import android.util.Log;
+import android.widget.Toast;
+
+import com.example.liu.autotanslate.Refresh;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,7 +106,7 @@ public class SpiderArticle implements ISpiderArticle{
         mat = contentPat.matcher(message);
         while(mat.find()){
             content.append(mat.group(1));
-            content.append("\n\n");
+            content.append("^");
         }
         return content;
     }
