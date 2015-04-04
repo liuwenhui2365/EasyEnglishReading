@@ -135,6 +135,7 @@ public class WordClassify extends ActionBarActivity implements PageRefresh.OnLoa
 //        获取系统默认文件路径
 //        Log.d("路径：",this.getFilesDir()+"");
         String fileList [] =  this.fileList();
+//        TODO 从文件中获取
 //        for (String file :fileList){
 //            Log.d("文件",file);
 //        }

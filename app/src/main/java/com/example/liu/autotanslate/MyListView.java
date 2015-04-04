@@ -233,11 +233,10 @@ public class MyListView extends ListView implements OnScrollListener {
                 arrow.setAnimation(anim);
                 break;
             case REFLASHING:
-                topPadding(50);
+                topPadding(getPaddingTop());
                 arrow.setVisibility(View.GONE);
                 progress.setVisibility(View.VISIBLE);
                 tip.setText("正在刷新...");
-//                Log.d("正在刷新","....");
                 arrow.clearAnimation();
                 break;
         }

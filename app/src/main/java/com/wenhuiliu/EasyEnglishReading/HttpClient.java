@@ -38,7 +38,7 @@ public class HttpClient {
     StringBuilder body;
     //	定义存储网址的变量
     String url;
-    HttpClient(String url){
+    public HttpClient(String url){
         this.url = url;
         this.body = new StringBuilder();
     }
@@ -97,12 +97,14 @@ public class HttpClient {
                 HttpHeaders.Values.CLOSE);
         request.setHeader(HttpHeaders.Names.ACCEPT_ENCODING,
                 HttpHeaders.Values.GZIP);
-        //request.setHeader(HttpHeaders.Names.ACCEPT_LANGUAGE, HttpHeaders.Values.);
+        request.setHeader(HttpHeaders.Names.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:34.0) Gecko/20100101 Firefox/34.0");
+//        request.setHeader(HttpHeaders.Names.ACCEPT_LANGUAGE, HttpHeaders.Values.);
 //		 Set some example cookies.本项目不需要缓存
 //		CookieEncoder httpCookieEncoder = new CookieEncoder(false);
 //		httpCookieEncoder.addCookie("my-cookie", "foo");
 //		httpCookieEncoder.addCookie("another-cookie", "bar");
 //		request.setHeader(HttpHeaders.Names.COOKIE, httpCookieEncoder.encode());
+
 //		 Send the HTTP request.
         channel.write(request);
 //		 Wait for the server to close the connection.

@@ -1,5 +1,7 @@
 package com.wenhuiliu.EasyEnglishReading;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,14 +33,15 @@ public class Article {
     }
 
     public Article(String title,StringBuilder body,String catalogy){
-
+//        Log.d("开始初始化文章对象","...");
         if(title==null || body==null || catalogy == null) {
             throw  new IllegalArgumentException("title/body/catalogy not null");
         }
         this.title = title;
         this.body = body;
         this.catalogy = Catalogy.valueOf(catalogy);
-        this.time=new Date().toString();
+        this.time=new Date().toString().substring(0,16);
+//        Log.d("时间",time);
         this.difficultRatio = 100;
         this.level = Level.valueOf("高级");
     }
@@ -103,7 +106,8 @@ public class Article {
         健康         ( "健康"),
         理财      	( "教育"),
         经济   	    ( "经济"),
-        历史  	    ( "今日");
+        今日  	    ( "今日"),
+        默认         ( "默认");
 
         //        private final int status;
         private final String description;

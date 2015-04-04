@@ -169,9 +169,16 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
          item.put("item","单词分类");
          menuLists.add(item);
          item = new HashMap<>();
-         item.put("item","设置");
+         item.put("item","分享");
          menuLists.add(item);
 
+//         item = new HashMap<>();
+//         item.put("item","接受分享");
+//         menuLists.add(item);
+
+         item = new HashMap<>();
+         item.put("item","接受到的分享");
+         menuLists.add(item);
          adapter = new SimpleAdapter(Classify.this,menuLists,//需要绑定的数据
                  R.layout.menulistitem,//每一行的布局
                  //动态数组中的数据源的键对应到定义布局的View中
@@ -180,21 +187,34 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
          );
          mDrawerList.setAdapter(adapter);
 
+//         左侧菜单栏的点击事件
          mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
              @Override
              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 if(position == 0){
-//                    Log.d("菜单第一行", "选中了");
-                     Intent intent = new Intent(Classify.this,WordClassify.class);
-//                    intent.setClass();
-                     startActivity(intent);
-                 }
-             }
+              switch (position) {
+                  case 0:
+                      Intent intent = new Intent(Classify.this, WordClassify.class);
+                      startActivity(intent);
+                      break;
+                  case 1:
+                      intent = new Intent(Classify.this, Share.class);
+                      startActivity(intent);
+                      break;
+//                  case 2:
+//                      intent = new Intent(Classify.this, AcceptShare.class);
+//                      startActivity(intent);
+//                      break;
+                  case 2:
+                      intent = new Intent(Classify.this, AlreadyAcceptShare.class);
+                      startActivity(intent);
+                      break;
+              }
+              }
          });
 
 //         设置标题栏图标
          mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                 R.drawable.ic_launcher, R.string.open,
+                 R.drawable.tubiao, R.string.open,
                  R.string.close) {
              @Override
              public void onDrawerOpened(View drawerView) {
@@ -347,12 +367,7 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
 //    左侧菜单栏选择
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(position == 0){
-//            Log.d("bzd菜单第一行", "选中了");
-            Intent intent = new Intent();
-            intent.setClass(Classify.this,WordClassify.class);
-            startActivity(intent);
-        }
+
     }
 
     @Override

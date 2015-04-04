@@ -64,17 +64,8 @@ public class Message extends ActionBarActivity {
         final String title = this.getIntent().getAction();
 
 //        TODO 增加内容的时候使用
-        textView = (TextView) findViewById(R.id.title);
+        textView = (TextView) findViewById(R.id.title_message);
         textView.setText(title);
-//        textView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setClass(Message.this,);
-//                startActivity(intent);
-//            }
-//        });
-
 //      注意顺序
         getWordsMeaningByFile();
         readArticle(title);
@@ -180,7 +171,7 @@ public class Message extends ActionBarActivity {
                         String catalogy = c.getString(c.getColumnIndex("catalogy"));
                         StringBuilder sBody = new StringBuilder(body);
                         article = new Article(title,sBody,catalogy);
-                        textView = (TextView) findViewById(R.id.date);
+                        textView = (TextView) findViewById(R.id.date_message);
                         textView.setText(time);
 //                        Log.d("提示","开始翻译啦");
 //                        Log.d("知道map大小",""+knownWords.size());

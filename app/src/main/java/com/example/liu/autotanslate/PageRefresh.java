@@ -44,9 +44,10 @@ public class PageRefresh extends ListView implements OnScrollListener{
     private void initView(Context context){
         LayoutInflater mInflater = LayoutInflater.from(context);
         footerView = mInflater.inflate(R.layout.footview, null);
-        footerView.findViewById(R.id.list).setVisibility(View.GONE);
         //添加底部View
         this.addFooterView(footerView);
+        footerView.findViewById(R.id.list).setVisibility(View.GONE);
+
         this.setOnScrollListener(this);
 //        Log.d("setOnScrollListener", this.toString());
 

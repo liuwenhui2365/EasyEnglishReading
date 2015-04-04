@@ -104,7 +104,7 @@ public class Translate {
                     body.append(bodyWords.get(j)+" ");
                 }
             }else if (word.equalsIgnoreCase("^")){
-                System.out.println("找到符号了"+word);
+//                System.out.println("找到符号了"+word);
                 body.append("\n\n");
             }else {
                 body.append(bodyWords.get(j) + " ");

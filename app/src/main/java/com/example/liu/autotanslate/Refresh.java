@@ -218,8 +218,6 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         if (refreshIndex < articleNum){
             readArticle(refreshIndex, articleNum);
         }else {
-//          TODO 添加文本提示
-            tip.setText("已经是最新的啦！");
             Toast.makeText(this,"已经是最新的啦！",Toast.LENGTH_SHORT).show();
         }
     }
@@ -260,7 +258,6 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             readArticle(fromIndex, perReadNum);
         }else{
             Toast.makeText(this,"已读完了哦！",Toast.LENGTH_SHORT).show();
-            lt.setText("已读完。");
         }
 //        Log.d("上拉刷新 begin" + fromIndex, "end" + loadIndex);
 
@@ -296,7 +293,6 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                     dbal.add(article);
                 }
             }else {
-                Log.w("警告", "数据库读取完毕");
                 Toast.makeText(this,"数据读取完成",Toast.LENGTH_SHORT).show();
             }
         }catch (Exception e){
@@ -320,8 +316,6 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                 dbal.clear();
             }else{
                 Toast.makeText(this,"当前数据库为空！",Toast.LENGTH_SHORT).show();
-                Log.e("提示","数据为空！");
-
             }
         }
     }
@@ -453,7 +447,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                 }
             }catch (NullPointerException e){
                 e.printStackTrace();
-                Log.d("获取网络状态","失败");
+//                Log.d("获取网络状态","失败");
             }
         }
     }

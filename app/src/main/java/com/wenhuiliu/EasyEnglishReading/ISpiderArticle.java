@@ -1,5 +1,6 @@
 package com.wenhuiliu.EasyEnglishReading;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -19,7 +20,7 @@ public interface ISpiderArticle {
      * @param url
      * @return  页面内容
      */
-    public String getMessage(String url);
+    public String getMessage(String url) throws IOException;
 
     /**
      * 根据提供网页内容获取文章的标题

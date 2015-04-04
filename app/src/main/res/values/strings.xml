@@ -3,6 +3,7 @@
 
     <string name="app_name">AutoTanslate</string>
     <string name="hello_world">Hello world!</string>
+    <string name="already_share">已接受的分享</string>
     <string name="down">下拉图片</string>
     <string name="up">上拉图片</string>
     <string name="classify">请输入分类名称</string>
@@ -31,8 +32,6 @@
     <string name="jingji">经济</string>
     <string name="history">历史</string>
     <string name="other">其他</string>
-
-
     <string name="select">choose</string>
     <string name="state">当前time：</string>
     <string name="refresh">正在刷新</string>
@@ -43,5 +42,9 @@
     <string name="title_activity_word_classify">WordClassify</string>
     <string name="title_activity_menu_test">MenuTest</string>
     <string name="title_activity_word_meaning">WordMeaning</string>
+    <string name="title_activity_share">Share</string>
+    <string name="title_activity_acceptshare">分享到的内容</string>
+    <string name="title_activity_already_accept_share">AlreadyAcceptShare</string>
+    <string name="title_activity_share_message">ShareMessage</string>
 
 </resources>
