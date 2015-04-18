@@ -30,7 +30,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
         android:contentDescription="@string/down"
-        android:src="@drawable/ab"
+        android:src="@drawable/refresh"
         android:layout_toLeftOf="@id/loader"
         android:layout_toStartOf="@+id/loader"/>
 

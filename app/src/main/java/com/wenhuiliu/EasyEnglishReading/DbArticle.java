@@ -9,6 +9,7 @@ import android.util.Log;
 
 /**
  * Created by Administrator on 2015/3/3.
+ * 数据库类
  */
 public class DbArticle extends SQLiteOpenHelper
 {

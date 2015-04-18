@@ -18,6 +18,8 @@
     <color name="red">#ffff0000</color>
     <color name="lightred">#ffff8163</color>
     <color name="grey">#161b1531</color>
+    <color name="green">#ffadff81</color>
+    <color name="deepgreen">#ff2bff11</color>
 
     <string name="title_activity_classify">主页</string>
     <string name="article_list">文章列表</string>

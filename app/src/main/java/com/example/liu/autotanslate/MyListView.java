@@ -217,6 +217,7 @@ public class MyListView extends ListView implements OnScrollListener {
             case NONE:
                 arrow.clearAnimation();
                 topPadding(-headerHeight);
+                tip.setText("下拉可以刷新！");
                 break;
             case PULL:
                 arrow.setVisibility(View.VISIBLE);

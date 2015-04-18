@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by Administrator on 2015/4/2.
+ * 获取ChinaDaily的网页内容，并按要求对应相应的内容
  * 获取适合手机的网页内容
  */
 public class MSpiderChinaDaily implements ISpiderArticle {
@@ -44,7 +45,6 @@ public class MSpiderChinaDaily implements ISpiderArticle {
         public String getMessage(String url) throws IOException {
             // TODO Auto-generated method stub
             String message = null;
-//            HttpClient httpClient = new HttpClient(url);
             HttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
             HttpResponse httpResponse = null;
@@ -85,7 +85,7 @@ public class MSpiderChinaDaily implements ISpiderArticle {
                     bodyItem = bodyItem.replace("</em>", "");
                     bodyItem = bodyItem.replace("</EM>", "");
                     if (bodyItem.length() != 0) {
-                        Log.d("每行：", bodyItem);
+//                        Log.d("每行：", bodyItem);
                         content.append(bodyItem);
                         content.append("^");
                     }
@@ -110,12 +110,12 @@ public class MSpiderChinaDaily implements ISpiderArticle {
         @Override
         public String getCatalogy(String message) {
             // TODO Auto-generated method stub
-            String catalogy = "默认";
+//            String catalogy = null;
 //		Matcher mat = catalogyPat.matcher(message);
 //		if(mat.find()){
 //			catalogy = mat.group(1).substring(0,2);
 //		}
-            return catalogy;
+            return "默认";
         }
 
     //    初始化文章对象

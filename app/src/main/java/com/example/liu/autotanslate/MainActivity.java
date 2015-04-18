@@ -2,20 +2,44 @@ package com.example.liu.autotanslate;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.wenhuiliu.EasyEnglishReading.DbArticle;
+import com.wenhuiliu.EasyEnglishReading.Translate;
+import com.wenhuiliu.EasyEnglishReading.Words;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.zip.ZipInputStream;
+
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 
 public class MainActivity extends Activity {
 
-
+    private static final String TAG = MainActivity.class.getSimpleName();
     private ArrayList<ImageView> images = new ArrayList<ImageView>();
 
     @Override
@@ -26,9 +50,7 @@ public class MainActivity extends Activity {
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         LayoutInflater inflater=getLayoutInflater();
-//        Intent intent = new Intent();
-//        intent.setClass(MainActivity.this,Classify.class);
-//        MainActivity.this.startActivity(intent);
+
 //       添加图片页
         ArrayList<View> views=new ArrayList<View>();
         views.add(inflater.inflate(R.layout.item1, null));
@@ -43,6 +65,129 @@ public class MainActivity extends Activity {
         ViewPager viewPager=(ViewPager)findViewById(R.id.vpage);
         viewPager.setAdapter(new ViewPagerAdapter(views));
         viewPager.setOnPageChangeListener(new ViewPagerChangeListener());
+
+//      开启新线程执行初始化单词
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                initData();
+            }
+        }).start();
+//        Toast.makeText(this,"初始化完成",Toast.LENGTH_SHORT).show();
+    }
+
+//    初始化单词表
+    private void initData() {
+        DbArticle dbArticle = null;
+        SQLiteDatabase db = null;
+        InputStream inputStream = null;
+        BufferedReader reader = null;
+
+        Cursor c = null;
+        try {
+            dbArticle = new DbArticle(this, "Articles.db", null, 1);
+            db = dbArticle.getReadableDatabase();
+            Log.d(TAG,"开始初始化单词表");
+            c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='words'", null);
+            if (c.moveToNext()) {
+                int count = c.getInt(0);
+                if (count <= 0) {
+                    //                Log.d("获取个数：",""+wordMeaning.size());
+                    db.execSQL("CREATE TABLE words (word VARCHAR PRIMARY KEY,meaning VARCHAR,type VARCHAR)");
+                    Log.e(TAG, "单词表创建成功");
+//                  记住这种读取方式以后会用到！！！
+                    inputStream = getResources().openRawResource(R.raw.sortwordlist);
+                    reader = new BufferedReader(new InputStreamReader(inputStream));
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        String[] type = line.split(":");
+//                      有些单词没有意思
+                        if (type.length == 2) {
+                            db.execSQL("INSERT INTO words values(?,?,?)", new String[]{type[0], type[1], "unknow"});
+                        }
+                    }
+                }
+            }
+
+            Log.d(TAG,"开始初始化词性表");
+            c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='wordsTag'", null);
+            if (c.moveToNext()) {
+                int count = c.getInt(0);
+                if (count <= 0) {
+                    //                Log.d("获取个数：",""+wordMeaning.size());
+                    db.execSQL("CREATE TABLE wordsTag (tag VARCHAR PRIMARY KEY,type VARCHAR)");
+                    Log.e("数据库", "单词词性编码表创建成功");
+
+                    inputStream = getResources().openRawResource(R.raw.wordtag);
+                    reader = new BufferedReader(new InputStreamReader(inputStream));
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        String[] type = line.split(" ");
+//                      防止越界！
+                        if (type.length == 2) {
+//                            Log.d("词性" + type[0], "代码" + type[1]);
+                            db.execSQL("INSERT INTO wordsTag values(?,?)", new String[]{type[0], type[1]});
+                        }
+                    }
+                }
+            }
+
+            Log.d(TAG,"开始拷贝文件");
+            File file = new File(Translate.OBJPATH);
+            if (file.exists()){
+                Log.d("文件","已存在");
+//                MaxentTagger tagger = new MaxentTagger(getFilesDir().getPath() + "/englishTag");
+//                String tagged = tagger.tagString("this is a person!");
+//                Log.d("标记后的",tagged);
+            }else {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+             //        将文件后缀名tagger无法识别写入SD卡中,后来改用压缩文件的 形式,解压出问题，所以删除后缀名可以正常运行
+                        InputStream inputStream = getResources().openRawResource(R.raw.englishtag);
+                        FileOutputStream fileOutputStream = null;
+
+                        byte[] item = new byte[2048];
+                        int len = 0;
+                        Log.d("目标文件路径",Translate.OBJPATH);
+                        try {
+                            fileOutputStream = new FileOutputStream(Translate.OBJPATH);
+                            while ((len = inputStream.read(item)) != -1) {
+                                fileOutputStream.write(item, 0, len);
+                            }
+                            inputStream.close();
+
+                            fileOutputStream.flush();
+                            fileOutputStream.close();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }finally {
+                            Log.d(TAG, "拷贝完成");
+                        }
+                    }
+                }).start();
+            }
+
+        }catch (FileNotFoundException w) {
+            Log.d("文件没有找到", "-------");
+        }catch (IOException e1){
+            Log.e("IOException","hh ");
+        }catch (Exception e){
+//            Toast.makeText(this,"表初始化异常",Toast.LENGTH_SHORT).show();
+            Log.e("初始化异常","-------");
+            e.printStackTrace();
+        }finally {
+            if (c != null){
+                c.close();
+            }
+
+            if (db != null){
+                db.close();
+            }
+        }
+
+        Log.d("数据初始化","完成");
     }
 
 

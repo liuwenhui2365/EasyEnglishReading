@@ -21,12 +21,8 @@ import com.wenhuiliu.EasyEnglishReading.Words;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,16 +42,16 @@ public class WordClassify extends ActionBarActivity implements PageRefresh.OnLoa
     private int loadIndex = 0;
     private int perReadNum = 30;
     LayoutInflater inflater = null;
-    private ContentAdapter contentAdapter;
+    private WordAdapter contentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_classify);
-
-        wordNum = getWordNum();
-//        Log.d("单词总个数",wordNum+"");
+//      注意顺序，否则在初始化时只能读取一次，只有再进去才能读
         readWord(loadIndex, perReadNum);
+        wordNum = getWordNum();
+        Log.d("单词总个数",wordNum+"");
         inflater = LayoutInflater.from(this);
         showWordView();
 
@@ -92,7 +88,7 @@ public class WordClassify extends ActionBarActivity implements PageRefresh.OnLoa
 
 //      刚开始一直是SimpleAdapter没有改适配器
 //      最关键的是要把自定义的适配器加载到ListView这样才能按钮生效！（研究四天）
-        contentAdapter = new ContentAdapter(WordClassify.this,//需要绑定的数据
+        contentAdapter = new WordAdapter(WordClassify.this,//需要绑定的数据
                 R.layout.wordlistviewitem,wordsView,//每一行的布局
                 //动态数组中的数据源的键对应到定义布局的View中
                 new String[] {"word"},
@@ -116,8 +112,6 @@ public class WordClassify extends ActionBarActivity implements PageRefresh.OnLoa
             }
 
         });
-
-
     }
 
     public void readWord(int firstIndex, int perReadNum){
@@ -196,8 +190,8 @@ public class WordClassify extends ActionBarActivity implements PageRefresh.OnLoa
                     Iterator iter = wordMeaning.entrySet().iterator();
                     while (iter.hasNext()) {
                         Map.Entry entry = (Map.Entry) iter.next();
-                        //            往数据库里放数据
-                        db.execSQL("INSERT INTO words values(?,?,?)", new String[]{entry.getKey().toString(), entry.getValue().toString(), "unknown"});
+                        //            往数据库里放数据(默认为认识的）
+                        db.execSQL("INSERT INTO words values(?,?,?)", new String[]{entry.getKey().toString(), entry.getValue().toString(), "know"});
                         //                Log.d("单词：", entry.getKey().toString());
                         //                Log.d("意思：", entry.getValue().toString());
                     }

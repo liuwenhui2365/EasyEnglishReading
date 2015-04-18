@@ -172,10 +172,6 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
          item.put("item","分享");
          menuLists.add(item);
 
-//         item = new HashMap<>();
-//         item.put("item","接受分享");
-//         menuLists.add(item);
-
          item = new HashMap<>();
          item.put("item","接受到的分享");
          menuLists.add(item);
@@ -197,7 +193,7 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
                       startActivity(intent);
                       break;
                   case 1:
-                      intent = new Intent(Classify.this, Share.class);
+                      intent = new Intent(Classify.this, LoginActivity.class);
                       startActivity(intent);
                       break;
 //                  case 2:

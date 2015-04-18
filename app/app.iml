@@ -85,6 +85,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.2" level="project" />
+    <orderEntry type="library" exported="" name="stanford-postagger" level="project" />
+    <orderEntry type="library" exported="" name="gifview" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="netty-3.2.5.Final" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.1.71" level="project" />

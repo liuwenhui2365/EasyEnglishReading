@@ -345,7 +345,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                 if (count > 0) {
 //                    Log.i("网络获取文章数目", Integer.toString(urls.size()));
 //                    TODO 调试完成之后修改参数
-                    for (int i = urls.size()-1; i > urls.size() -4; i--) {
+                    for (int i = urls.size()-1; i > urls.size() -51; i--) {
                         String url = urls.get(i);
                         try {
                             article = spiderArticle.getPassage(url);
@@ -370,8 +370,9 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                     db.execSQL("CREATE TABLE Article (url VARCHAR PRIMARY KEY,title VARCHAR," +
                             "catalogy VARCHAR, body VARCHAR, level VARCHAR, difficultRatio INT, time VARCHAR)");
                     Log.e("数据库", "表创建成功");
+//                    TODO 调试完成之后修改参数
 //                    Log.i("网络获取文章数目", Integer.toString(urls.size()));
-                    for (int i = urls.size()-1; i > urls.size()-11; i--) {
+                    for (int i = urls.size()-1; i > urls.size()-51; i--) {
                         String url = urls.get(i);
                         try {
                             article = spiderArticle.getPassage(url);

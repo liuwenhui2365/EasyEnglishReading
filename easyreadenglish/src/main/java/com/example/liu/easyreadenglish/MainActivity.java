@@ -24,6 +24,7 @@ import java.lang.reflect.Array;
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
     private VideoView videoView;
+    private TextView textView;
     private Button play;
     private Button pause;
     private Button replay;
@@ -38,6 +39,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 //                    .add(R.id.container, new PlaceholderFragment())
 //                    .commit();
 //        }
+//       跳转页面
         TextView textView = (TextView)findViewById(R.id.text);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +59,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         replay.setOnClickListener(this);
 
         initVideoPath();
+
     }
 
     @Override
@@ -85,7 +88,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private void initVideoPath(){
 //        ListDir("/sdcard/Download");
 //        ListDir(Environment.get());
-        videoView.setVideoPath("/sdcard/Download/ddd.mp4");
+        String basePath = Environment.getExternalStorageDirectory().getPath();
+        Log.d("根目录",basePath);
+        videoView.setVideoPath(basePath+"/Download/ddd.mp4");
 //        Log.d("文件路径",file.getPath());
     }
 

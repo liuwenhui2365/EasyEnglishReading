@@ -52,7 +52,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:contentDescription="@string/refresh"
-        android:src="@drawable/ab1"/>
+        android:src="@drawable/refresh"/>
 
     <ProgressBar
         android:id="@+id/refresh_Progress"

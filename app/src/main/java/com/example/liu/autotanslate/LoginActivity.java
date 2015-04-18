@@ -21,12 +21,17 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +57,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private WebView mWebView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -76,6 +82,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             }
         });
 
+
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -86,6 +93,19 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mWebView  = (WebView)findViewById(R.id.web1);
+        String data = null;
+        InputStream in = getResources().openRawResource(R.raw.welcome);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String line = null;
+        try {
+            while ((line = reader.readLine())!= null){
+                data = data + line;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mWebView.loadData(data,"text/html","utf-8");
     }
 
     private void populateAutoComplete() {
