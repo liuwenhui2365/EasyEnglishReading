@@ -193,13 +193,9 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
                       startActivity(intent);
                       break;
                   case 1:
-                      intent = new Intent(Classify.this, LoginActivity.class);
+                      intent = new Intent(Classify.this, Web.class);
                       startActivity(intent);
                       break;
-//                  case 2:
-//                      intent = new Intent(Classify.this, AcceptShare.class);
-//                      startActivity(intent);
-//                      break;
                   case 2:
                       intent = new Intent(Classify.this, AlreadyAcceptShare.class);
                       startActivity(intent);

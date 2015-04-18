@@ -39,8 +39,12 @@ import java.util.logging.SimpleFormatter;
 
 public class Refresh extends ActionBarActivity implements MyListView.OnLoaderListener {
 
+    private final String TAG = Refresh.class.getSimpleName();
     ArrayList<HashMap<String, Object>> itemEntities = new ArrayList<HashMap<String, Object>>();
+    private int REQ_CODE = 100;
     MyListView listview = null;
+//  所要删除的行数
+    private int location =0;
     private DbArticle dbArticle;
     private  int refreshIndex = 0;
     private  int loadIndex =0;
@@ -53,6 +57,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
 
 //  获取网络状态
     private IntentFilter intentFilter;
+    private SimpleAdapter mSimpleAdapter;
 //  extends BraodcastReceiver
     private NetworkChangeReceiver networkChangeReceiver;
 
@@ -138,8 +143,33 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
              }
             }
         });
+
+//      长按删除如果为false就会执行itemClick事件
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                location =(int)id;
+                Intent intent = new Intent();
+                intent.setClass(Refresh.this, Web.class);
+                startActivityForResult(intent, REQ_CODE);
+                return true;
+            }
+        });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_CODE){
+            if (resultCode == RESULT_OK){
+                Log.d(TAG,"删除"+location);
+//              注意先后顺序
+                deleteArticle(location);
+                itemEntities.remove(location);
+                mSimpleAdapter.notifyDataSetChanged();
+                Toast.makeText(this,"删除成功",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     public int getArticleNum(){
         SQLiteDatabase db = null;
@@ -173,7 +203,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
     private void showListView(ArrayList<HashMap<String, Object>> itemEntities) {
         listview = (MyListView) findViewById(R.id.mylist);
         listview.setLoaderListener(this);
-        SimpleAdapter mSimpleAdapter = new SimpleAdapter(Refresh.this,itemEntities,//需要绑定的数据
+        mSimpleAdapter = new SimpleAdapter(Refresh.this,itemEntities,//需要绑定的数据
                 R.layout.lsitviewitem,//每一行的布局//动态数组中的数据源的键对应到定义布局的View中(图片先不加）
                 new String[] {"title", "date"},
                 new int[] {R.id.title,R.id.date}
@@ -206,7 +236,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
 
         TextView tip = (TextView) header.findViewById(R.id.refresh_tips);
 
-        refreshIndex = articleNum + 1;
+
         new Thread(){
 
             public void run(){
@@ -214,6 +244,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             }
         }.start();
         articleNum = getArticleNum();
+        refreshIndex = articleNum + 1;
 //        Log.d("下拉刷新索引开始" + refreshIndex, "结束" + articleNum);
         if (refreshIndex < articleNum){
             readArticle(refreshIndex, articleNum);
@@ -409,6 +440,36 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             }
         }
 
+    }
+
+//    删除文章
+    public void deleteArticle(int pos){
+//        想想为什么要减一
+        String title = (String) itemEntities.get(pos).get("title");
+        Log.d(TAG,"删除标题"+title);
+        SQLiteDatabase db = null;
+        Cursor myCursor = null;
+        try {
+            db = dbArticle.getWritableDatabase();
+//          判断表是否存在
+            myCursor = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='Article'", null);
+            if (myCursor.moveToNext()) {
+                int count = myCursor.getInt(0);
+                if (count > 0) {
+                    db.execSQL("DELETE FROM Article WHERE title = ?", new Object[]{title});
+                }
+            }
+        }catch (Exception e) {
+            Log.d(TAG,"捕获异常");
+        }finally {
+            if(myCursor!=null){
+                myCursor.close();
+            }
+
+            if (db!=null){
+                db.close();
+            }
+        }
     }
 
     @Override

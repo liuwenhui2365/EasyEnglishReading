@@ -18,8 +18,8 @@
     <color name="red">#ffff0000</color>
     <color name="lightred">#ffff8163</color>
     <color name="grey">#161b1531</color>
-    <color name="green">#ffadff81</color>
-    <color name="deepgreen">#ff2bff11</color>
+    <color name="green">#ff66ff45</color>
+    <color name="deepgreen">#ff21b00f</color>
 
     <string name="title_activity_classify">主页</string>
     <string name="article_list">文章列表</string>
@@ -48,5 +48,10 @@
     <string name="title_activity_acceptshare">分享到的内容</string>
     <string name="title_activity_already_accept_share">AlreadyAcceptShare</string>
     <string name="title_activity_share_message">ShareMessage</string>
+    <string name="title_activity_web">Web</string>
+    <string name="delete">确认删除</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="cancel">取消删除</string>
 
 </resources>
