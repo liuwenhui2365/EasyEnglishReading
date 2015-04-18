@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -41,21 +42,38 @@ public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private ArrayList<ImageView> images = new ArrayList<ImageView>();
+    private MyGifView myGifView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // 设置无标题窗口
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//      requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-        LayoutInflater inflater=getLayoutInflater();
 
+        initView();
+//      开启新线程执行初始化单词
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                initData();
+            }
+        }).start();
+//        Toast.makeText(this,"初始化完成",Toast.LENGTH_SHORT).show();
+    }
+
+    private void initView(){
 //       添加图片页
         ArrayList<View> views=new ArrayList<View>();
+        LayoutInflater inflater=getLayoutInflater();
         views.add(inflater.inflate(R.layout.item1, null));
         views.add(inflater.inflate(R.layout.item2, null));
         views.add(inflater.inflate(R.layout.item3, null));
+
+        View view = inflater.inflate(R.layout.item1,null);
+
+
 
 //      添加圆点
         images.add((ImageView)findViewById(R.id.iv_01));
@@ -65,15 +83,6 @@ public class MainActivity extends Activity {
         ViewPager viewPager=(ViewPager)findViewById(R.id.vpage);
         viewPager.setAdapter(new ViewPagerAdapter(views));
         viewPager.setOnPageChangeListener(new ViewPagerChangeListener());
-
-//      开启新线程执行初始化单词
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                initData();
-            }
-        }).start();
-//        Toast.makeText(this,"初始化完成",Toast.LENGTH_SHORT).show();
     }
 
 //    初始化单词表

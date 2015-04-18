@@ -41,6 +41,10 @@ public class Translate {
     // 高级 > 50%
     final private int ADVANCED = 50;
 
+//    标记词性
+    private MaxentTagger tagger = null;
+    String tagged = null;
+
     public Translate(Context context){
         this.context = context;
     }
@@ -219,14 +223,20 @@ public class Translate {
 //        Log.d(TAG,"文章内容"+body);
         Log.d(TAG,"开始标记词性");
         Log.d("目标路径",OBJPATH);
-        Log.d("包资源路径",context.getPackageResourcePath());
         File file = new File(OBJPATH);
         if (file.exists()){
             Log.d("文件","已存在");
-//            MaxentTagger tagger = new MaxentTagger(OBJPATH);
-//            String tagged = tagger.tagString("this is a person!");
-//            Log.d(TAG,"标记后的文章内容"+tagged);
-//            String [] wordsTagged = tagged.split(" ");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    tagger = new MaxentTagger(OBJPATH);
+                    tagged = tagger.tagString("this is a person!");
+
+                }
+            }).start();
+
+            Log.d(TAG,"标记后的文章内容"+tagged);
+            String [] wordsTagged = tagged.split(" ");
 //            for (String word : wordsTagged) {
 //                String[] wordlist = word.split("_");
 //                WordMap wordMap = new WordMap(wordlist[0], wordlist[1]);

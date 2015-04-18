@@ -33,9 +33,13 @@ import java.util.Map;
 public class AlreadyAcceptShare extends ActionBarActivity implements PageRefresh.OnLoadListener{
 
     ArrayList<HashMap<String, Object>> itemEntities = new ArrayList<HashMap<String, Object>>();
-    LayoutInflater inflater = null;
-    PageRefresh listview = null;
+    private LayoutInflater inflater = null;
+    private PageRefresh listview;
+    private SimpleAdapter mSimpleAdapter;
+    private final int REQ_CODE = 1;
     private DbArticle dbArticle;
+//   删除位置
+    int location = 0;
     private  int loadIndex =0;
     //  每个页面显示的行数
     private int perReadNum = 6;
@@ -116,12 +120,68 @@ public class AlreadyAcceptShare extends ActionBarActivity implements PageRefresh
                 }
             }
         });
+
+        //      长按删除如果为false就会执行itemClick事件
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                location =(int)id;
+                Intent intent = new Intent();
+                intent.setClass(AlreadyAcceptShare.this, Web.class);
+                startActivityForResult(intent, REQ_CODE);
+                return true;
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_CODE){
+            if (resultCode == RESULT_OK){
+//                Log.d(TAG,"删除"+location);
+//              注意先后顺序
+                deleteArticle(location);
+                itemEntities.remove(location);
+                mSimpleAdapter.notifyDataSetChanged();
+                Toast.makeText(this,"删除成功",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void deleteArticle(int pos) {
+        //        想想为什么要减一
+        String title = (String) itemEntities.get(pos).get("title");
+//        Log.d(TAG,"删除标题"+title);
+        SQLiteDatabase db = null;
+        Cursor myCursor = null;
+        try {
+            db = dbArticle.getWritableDatabase();
+//          判断表是否存在
+            myCursor = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='ShareArticle'", null);
+            if (myCursor.moveToNext()) {
+                int count = myCursor.getInt(0);
+                if (count > 0) {
+                    db.execSQL("DELETE FROM ShareArticle WHERE title = ?", new Object[]{title});
+                }
+            }
+        }catch (Exception e) {
+            Log.d(AlreadyAcceptShare.class.getSimpleName(),"捕获异常");
+        }finally {
+            if(myCursor!=null){
+                myCursor.close();
+            }
+
+            if (db!=null){
+                db.close();
+            }
+        }
     }
 
     private void showListView(ArrayList<HashMap<String, Object>> itemEntities) {
         listview = (PageRefresh) findViewById(R.id.sharepage);
         listview.setOnLoadListener(this);
-        SimpleAdapter mSimpleAdapter = new SimpleAdapter(AlreadyAcceptShare.this,itemEntities,//需要绑定的数据
+        mSimpleAdapter = new SimpleAdapter(AlreadyAcceptShare.this,itemEntities,//需要绑定的数据
                 R.layout.lsitviewitem,//每一行的布局//动态数组中的数据源的键对应到定义布局的View中(图片先不加）
                 new String[] {"title", "date"},
                 new int[] {R.id.title,R.id.date}

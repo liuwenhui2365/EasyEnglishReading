@@ -1,8 +1,10 @@
 package com.example.liu.autotanslate;
 
 import android.accounts.NetworkErrorException;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 
 import com.wenhuiliu.EasyEnglishReading.Article;
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
+import com.wenhuiliu.EasyEnglishReading.MyApplication;
 import com.wenhuiliu.EasyEnglishReading.SpiderArticle;
 
 import java.sql.SQLException;
@@ -161,7 +164,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE){
             if (resultCode == RESULT_OK){
-                Log.d(TAG,"删除"+location);
+//                Log.d(TAG,"删除"+location);
 //              注意先后顺序
                 deleteArticle(location);
                 itemEntities.remove(location);
@@ -446,7 +449,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
     public void deleteArticle(int pos){
 //        想想为什么要减一
         String title = (String) itemEntities.get(pos).get("title");
-        Log.d(TAG,"删除标题"+title);
+//        Log.d(TAG,"删除标题"+title);
         SQLiteDatabase db = null;
         Cursor myCursor = null;
         try {

@@ -5,17 +5,24 @@ import com.wenhuiliu.EasyEnglishReading.Translate;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -34,6 +41,7 @@ import java.io.InputStreamReader;
 public class Web extends Activity {
 
     private TextView textView;
+    private MyGifView myGifView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
