@@ -49,24 +49,8 @@ public class Web extends Activity {
 
         setContentView(R.layout.activity_web);
         textView = (TextView)findViewById(R.id.delete);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = getIntent();
-                setResult(RESULT_OK);
-                finish();
-            }
-        });
+        textView.setText("Hello ! 呵呵 what about you?");
 
-        textView = (TextView)findViewById(R.id.cancel);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = getIntent();
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        });
 
 //        WebView webView = (WebView)findViewById(R.id.web1);
 

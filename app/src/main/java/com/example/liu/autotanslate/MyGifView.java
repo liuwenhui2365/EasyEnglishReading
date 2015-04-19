@@ -131,7 +131,8 @@ public class MyGifView extends ImageView {
         bitmap = cacheImage;
         width = bitmap.getWidth();
         height = bitmap.getHeight();
-        setLayoutParams(new LinearLayout.LayoutParams(width, height));
+//       显示播放动画的屏幕大小
+        setLayoutParams(new LinearLayout.LayoutParams(wScreen, hScreen));
     }
 
     private void decode() {
@@ -166,8 +167,9 @@ public class MyGifView extends ImageView {
         super.onDraw(canvas);
 //        Log.d("屏幕宽度和高度", wScreen + "/" + hScreen);
 //        Log.d("图片宽度和高度", width + "/" + height);
-//        float scale_x = wScreen / width;
-//        float scale_y = hScreen / height;
+        float scale_x = wScreen / width;
+        float scale_y = hScreen / height;
+//        Log.d("缩放比",scale_x+":"+scale_y);
         try {
             if (decodeStatus == DECODE_STATUS_UNDECODE) {
                 canvas.drawBitmap(bitmap, 0, 0, null);
@@ -191,9 +193,9 @@ public class MyGifView extends ImageView {
                         }
                         Bitmap bitmap = decoder.getFrame(index);
                         if (bitmap != null) {
-                            //                        Log.d(Translate.class.getSimpleName(),"开始画了");
-                            //                        TODO 关于拉缩放比例影响全屏显示
-                            canvas.scale(1.5f, 1.6f);
+//                        Log.d(Translate.class.getSimpleName(),"开始画了");
+//                        TODO 关于拉缩放比例影响全屏显示
+                            canvas.scale(scale_x-0.5f, scale_y-0.3f);
                             canvas.drawBitmap(bitmap, 0, 0, null);
                         }
                         invalidate();

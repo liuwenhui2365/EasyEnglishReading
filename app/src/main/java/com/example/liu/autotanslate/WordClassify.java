@@ -22,6 +22,7 @@ import com.wenhuiliu.EasyEnglishReading.Words;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +52,7 @@ public class WordClassify extends ActionBarActivity implements PageRefresh.OnLoa
 //      注意顺序，否则在初始化时只能读取一次，只有再进去才能读
         readWord(loadIndex, perReadNum);
         wordNum = getWordNum();
-        Log.d("单词总个数",wordNum+"");
+//        Log.d("单词总个数",wordNum+"");
         inflater = LayoutInflater.from(this);
         showWordView();
 
@@ -123,47 +124,11 @@ public class WordClassify extends ActionBarActivity implements PageRefresh.OnLoa
         InputStream input = null;
         BufferedWriter writer = null;
         OutputStream output = null;
-        String line = null;
         String word = null;
         Cursor c = null;
 //        获取系统默认文件路径
 //        Log.d("路径：",this.getFilesDir()+"");
         String fileList [] =  this.fileList();
-//        TODO 从文件中获取
-//        for (String file :fileList){
-//            Log.d("文件",file);
-//        }
-//
-//        try {
-//            output = openFileOutput("words",MODE_PRIVATE);
-//            writer = new BufferedWriter(new OutputStreamWriter(output));
-//
-//            input = getResources().openRawResource(R.raw.words);
-//            reader = new BufferedReader(new InputStreamReader(input));
-//            int n =0;
-//
-//            while((line= reader.readLine()) != null){
-//                //writer.write(line+"\n");
-//                n++;
-//                //System.out.println("文件读取"+line);
-//            }
-//            Log.d("一共",n+"");
-//
-////            Log.d("从系统文件夹中","开始读了");
-//            input = openFileInput("words");//"/data/data/com.example.liu.autotanslate/files/words"); //getResources().openRawResource(R.raw.words);
-//            reader = new BufferedReader(new InputStreamReader(input));
-//            while((line= reader.readLine()) != null){
-//                words =  line.split(" ");
-//                wordMeaning.put(words[0],words[1]);
-//                Log.d("单词"+words[0],"意思"+words[1]);
-//            }
-//        }catch (FileNotFoundException e){
-//            e.printStackTrace();
-//            Log.d("没有获取", "文件");
-//        }catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
-//        Log.d("单词个数:",wordMeaning.size()+"");
 
         try {
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
@@ -182,18 +147,20 @@ public class WordClassify extends ActionBarActivity implements PageRefresh.OnLoa
                         wordsView.add(wordMap);
                     }
                 }else {
-//                  从变量中获取
-                    wordMeaning = Words.getWord();
-//                    Log.d("获取个数：",""+wordMeaning.size());
+//                  从变量中获取（放弃不要了）
                     db.execSQL("CREATE TABLE words (word VARCHAR PRIMARY KEY,meaning VARCHAR,type VARCHAR)");
                     Log.d("数据库", "单词表创建成功");
-                    Iterator iter = wordMeaning.entrySet().iterator();
-                    while (iter.hasNext()) {
-                        Map.Entry entry = (Map.Entry) iter.next();
-                        //            往数据库里放数据(默认为认识的）
-                        db.execSQL("INSERT INTO words values(?,?,?)", new String[]{entry.getKey().toString(), entry.getValue().toString(), "know"});
-                        //                Log.d("单词：", entry.getKey().toString());
-                        //                Log.d("意思：", entry.getValue().toString());
+        //        TODO 从文件中获取
+        //            往数据库里放数据(默认为认识的）
+                    InputStream inputStream = getResources().openRawResource(R.raw.sortwordlist);
+                    reader = new BufferedReader(new InputStreamReader(inputStream));
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        String[] type = line.split(":");
+//                      有些单词没有意思
+                        if (type.length == 2) {
+                            db.execSQL("INSERT INTO words values(?,?,?)", new String[]{type[0], type[1], "unknow"});
+                        }
                     }
 
                     c = db.rawQuery("SELECT word FROM words limit ?,?", new String[]{firstIndex + "", perReadNum + ""});

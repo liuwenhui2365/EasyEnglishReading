@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.wenhuiliu.EasyEnglishReading.Article;
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
 import com.wenhuiliu.EasyEnglishReading.MyApplication;
+import com.wenhuiliu.EasyEnglishReading.MyHttpPost;
 import com.wenhuiliu.EasyEnglishReading.SpiderArticle;
 
 import java.sql.SQLException;
@@ -150,28 +151,32 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
 //      长按删除如果为false就会执行itemClick事件
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                location =(int)id;
-                Intent intent = new Intent();
-                intent.setClass(Refresh.this, Web.class);
-                startActivityForResult(intent, REQ_CODE);
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
+//              注意ID是从0开始，position从1开始
+//                Log.d("ID:"+id,"pos:"+position);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(Refresh.this);
+                dialog.setTitle("确认删除");
+                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        注意先后顺序
+                        deleteArticle((int)id);
+                        itemEntities.remove((int)id);
+                        mSimpleAdapter.notifyDataSetChanged();
+                        Toast.makeText(Refresh.this,"删除成功",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                dialog.show();
                 return true;
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQ_CODE){
-            if (resultCode == RESULT_OK){
-//                Log.d(TAG,"删除"+location);
-//              注意先后顺序
-                deleteArticle(location);
-                itemEntities.remove(location);
-                mSimpleAdapter.notifyDataSetChanged();
-                Toast.makeText(this,"删除成功",Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     public int getArticleNum(){
@@ -377,7 +382,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             if (myCursor.moveToNext()) {
                 int count = myCursor.getInt(0);
                 if (count > 0) {
-//                    Log.i("网络获取文章数目", Integer.toString(urls.size()));
+                    Log.d("网络获取文章数目", Integer.toString(urls.size()));
 //                    TODO 调试完成之后修改参数
                     for (int i = urls.size()-1; i > urls.size() -51; i--) {
                         String url = urls.get(i);
@@ -390,7 +395,11 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                             StringBuilder body = article.getBody();
                             String time = article.getTime();
 //                            Log.d("从网络获取文章时间", time);
-                            db.execSQL("INSERT INTO Article VALUES (?,?,?,?,?,?,?)", new Object[]{url, title, catalogy, body
+//                            Log.d(TAG,"文章内容"+body);
+                            String contentTagged = MyHttpPost.post(body.toString());
+//                            Log.d(TAG,"标记后的内容"+contentTagged);
+//                            标记好的内容放进数据库
+                            db.execSQL("INSERT INTO Article VALUES (?,?,?,?,?,?,?)", new Object[]{url, title, catalogy, contentTagged
                                     , level, difficultRatio, time});
                         } catch (IllegalArgumentException e) {
                             Log.w("警告", "article arguments is illegal!");
@@ -417,7 +426,10 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                             StringBuilder body = article.getBody();
                             String time = article.getTime();
 //                            Log.d("从网络获取文章时间", time);
-                            db.execSQL("INSERT INTO Article VALUES (?,?,?,?,?,?,?)", new Object[]{url, title, catalogy, body
+                            Log.d(TAG,"文章内容"+body);
+                            String contentTagged = MyHttpPost.post(body.toString());
+//                            Log.d(TAG,"标记后的内容"+contentTagged);
+                            db.execSQL("INSERT INTO Article VALUES (?,?,?,?,?,?,?)", new Object[]{url, title, catalogy, contentTagged
                                     , level, difficultRatio, time});
                         } catch (IllegalArgumentException e) {
                             Log.w("警告", "article arguments is illegal!");

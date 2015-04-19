@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.wenhuiliu.EasyEnglishReading.Article;
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
 import com.wenhuiliu.EasyEnglishReading.MSpiderChinaDaily;
+import com.wenhuiliu.EasyEnglishReading.MyHttpPost;
 import com.wenhuiliu.EasyEnglishReading.SpiderEconomicArticle;
 import com.wenhuiliu.EasyEnglishReading.Translate;
 
@@ -141,14 +142,16 @@ public class AcceptShare extends ActionBarActivity {
                             //                        Log.d("从网络获取文章时间", time);
                             int difficultRatio = article.getDifficultRatio();
                             StringBuilder body = article.getBody();
-                            //                        Log.d("网络获取文章内容",body+"");
+   //                        Log.d("网络获取文章内容",body+"");
+//                          标记词性
+                            String contentTagged = MyHttpPost.post(body.toString());
                             db.execSQL("INSERT INTO ShareArticle VALUES (?,?,?,?,?,?,?)", new Object[]{url, title,
-                                    catalogy, body, level, difficultRatio, time});
+                                    catalogy, contentTagged, level, difficultRatio, time});
                             article = translate.translate(article, dbArticle);
                             Message message = new Message();
                             message.what = SHOW_DATA;
                             message.obj = article;
-                            //                      注意handler是全局对象
+   //                      注意handler是全局对象
                             handler.sendMessage(message);
                         }else {
                             Log.e("警告","获取文章为空");

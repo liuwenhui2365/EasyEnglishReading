@@ -48,7 +48,7 @@ public class ViewPagerAdapter extends PagerAdapter {
             myGifView = (MyGifView)viewList.get(position).findViewById(R.id.gifView);
 //          防止空指针异常，在运行完之后会再次进来
             if (myGifView != null) {
-                myGifView.setGif(R.raw.welcome1);
+                myGifView.setGif(R.drawable.welcome1);
             }
         }
 

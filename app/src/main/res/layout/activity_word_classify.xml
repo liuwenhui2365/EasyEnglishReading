@@ -20,6 +20,7 @@
     <com.example.liu.autotanslate.PageRefresh
         android:layout_below="@+id/remind"
         android:id="@+id/page"
+        android:scrollbarStyle="outsideOverlay"
         android:background="@color/grey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

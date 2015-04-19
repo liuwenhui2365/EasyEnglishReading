@@ -1,5 +1,7 @@
 package com.example.liu.autotanslate;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,7 +51,6 @@ public class AlreadyAcceptShare extends ActionBarActivity implements PageRefresh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_already_accept_share);
-
         shareArticleNum = GetShareArticleNum();
         InitView();
 
@@ -124,29 +125,31 @@ public class AlreadyAcceptShare extends ActionBarActivity implements PageRefresh
         //      长按删除如果为false就会执行itemClick事件
         listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                location =(int)id;
-                Intent intent = new Intent();
-                intent.setClass(AlreadyAcceptShare.this, Web.class);
-                startActivityForResult(intent, REQ_CODE);
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(AlreadyAcceptShare.this);
+                dialog.setTitle("确认删除");
+                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        注意先后顺序
+                        deleteArticle((int)id);
+                        itemEntities.remove((int)id);
+                        mSimpleAdapter.notifyDataSetChanged();
+                        Toast.makeText(AlreadyAcceptShare.this,"删除成功",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                dialog.show();
                 return true;
             }
         });
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQ_CODE){
-            if (resultCode == RESULT_OK){
-//                Log.d(TAG,"删除"+location);
-//              注意先后顺序
-                deleteArticle(location);
-                itemEntities.remove(location);
-                mSimpleAdapter.notifyDataSetChanged();
-                Toast.makeText(this,"删除成功",Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     private void deleteArticle(int pos) {

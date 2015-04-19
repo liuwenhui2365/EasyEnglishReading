@@ -63,6 +63,13 @@ public class Message extends ActionBarActivity {
 //        TODO 增加内容的时候使用
         textView = (TextView) findViewById(R.id.title_message);
         textView.setText(title);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Message.this,Web.class);
+                startActivity(intent);
+            }
+        });
 //      单词分类优化到翻译类里面
         readArticle(title);
 

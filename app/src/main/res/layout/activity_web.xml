@@ -15,20 +15,7 @@
         android:textColor="@color/black"
         android:textSize="20sp"
         android:gravity="center"
-        android:layout_width="0dp"
-       android:layout_weight="1"
-        android:layout_height="wrap_content" />
-
-   <TextView
-        android:id="@+id/cancel"
-        android:padding="10dp"
-        android:text="@string/cancel"
-        android:background="@drawable/bg_delete"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -5,37 +5,23 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
-import com.wenhuiliu.EasyEnglishReading.Translate;
-import com.wenhuiliu.EasyEnglishReading.Words;
+import com.wenhuiliu.EasyEnglishReading.MyHttpPost;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.zip.ZipInputStream;
-
-import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 
 public class MainActivity extends Activity {
@@ -54,12 +40,15 @@ public class MainActivity extends Activity {
 
         initView();
 //      开启新线程执行初始化单词
+        long start = System.currentTimeMillis();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 initData();
             }
         }).start();
+        long end = System.currentTimeMillis();
+        Log.d(TAG+"报告","总耗时"+(end - start)/1000);
 //        Toast.makeText(this,"初始化完成",Toast.LENGTH_SHORT).show();
     }
 
@@ -96,7 +85,7 @@ public class MainActivity extends Activity {
         try {
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
             db = dbArticle.getReadableDatabase();
-            Log.d(TAG,"开始初始化单词表");
+            Log.d(TAG, "开始初始化单词表");
             c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='words'", null);
             if (c.moveToNext()) {
                 int count = c.getInt(0);
@@ -118,7 +107,7 @@ public class MainActivity extends Activity {
                 }
             }
 
-            Log.d(TAG,"开始初始化词性表");
+            Log.d(TAG, "开始初始化词性表");
             c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='wordsTag'", null);
             if (c.moveToNext()) {
                 int count = c.getInt(0);
@@ -139,45 +128,16 @@ public class MainActivity extends Activity {
                         }
                     }
                 }
+//                }else {
+//                    Log.d(TAG,"开始查询");
+//                    c = db.rawQuery("select type from wordsTag where tag = ?", new String[]{"NN"});
+//                    while (c.moveToNext()) {
+//                        String tag = c.getString(c.getColumnIndex("type"));
+//                        Log.d(TAG+"获取到不认识单词的词性为", tag);
+//                    }
+//                }
             }
-
-            Log.d(TAG,"开始拷贝文件");
-            File file = new File(Translate.OBJPATH);
-            if (file.exists()){
-                Log.d("文件","已存在");
-//                MaxentTagger tagger = new MaxentTagger(getFilesDir().getPath() + "/englishTag");
-//                String tagged = tagger.tagString("this is a person!");
-//                Log.d("标记后的",tagged);
-            }else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-             //        将文件后缀名tagger无法识别写入SD卡中,后来改用压缩文件的 形式,解压出问题，所以删除后缀名可以正常运行
-                        InputStream inputStream = getResources().openRawResource(R.raw.englishtag);
-                        FileOutputStream fileOutputStream = null;
-
-                        byte[] item = new byte[2048];
-                        int len = 0;
-                        Log.d("目标文件路径",Translate.OBJPATH);
-                        try {
-                            fileOutputStream = new FileOutputStream(Translate.OBJPATH);
-                            while ((len = inputStream.read(item)) != -1) {
-                                fileOutputStream.write(item, 0, len);
-                            }
-                            inputStream.close();
-
-                            fileOutputStream.flush();
-                            fileOutputStream.close();
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }finally {
-                            Log.d(TAG, "拷贝完成");
-                        }
-                    }
-                }).start();
-            }
-
+//            标记单词需要拷贝后来还是不能用，放弃从网络获取
         }catch (FileNotFoundException w) {
             Log.d("文件没有找到", "-------");
         }catch (IOException e1){
@@ -187,16 +147,16 @@ public class MainActivity extends Activity {
             Log.e("初始化异常","-------");
             e.printStackTrace();
         }finally {
-            if (c != null){
+            if (c != null) {
                 c.close();
             }
 
-            if (db != null){
+            if (db != null) {
                 db.close();
             }
         }
 
-        Log.d("数据初始化","完成");
+        Log.d("数据初始化", "完成");
     }
 
 

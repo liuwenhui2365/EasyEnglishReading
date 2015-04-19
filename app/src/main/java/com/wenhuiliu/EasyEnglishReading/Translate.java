@@ -41,10 +41,6 @@ public class Translate {
     // 高级 > 50%
     final private int ADVANCED = 50;
 
-//    标记词性
-    private MaxentTagger tagger = null;
-    String tagged = null;
-
     public Translate(Context context){
         this.context = context;
     }
@@ -199,12 +195,12 @@ public class Translate {
     public Article translate(Article article,DbArticle dbArticle){
 //	        存放翻译好的文章链表
 //		    把文章的内容转成字符串
-        ArrayList<WordMap> articleTagged = null;
         getWordClassify(dbArticle);
+        ArrayList<WordMap> articleTagged = null;
         ArrayList<String> bodyWords = article.getWords();
-        articleTagged =  transContent(article.getBody());
-
-//        article.setBody(translateUnknowWords(articleTagged,dbArticle));
+        articleTagged = transContent(article.getBody());
+        Log.d(TAG+"报告","标记词性共有"+articleTagged.size());
+        article.setBody(translateUnknowWords(articleTagged, dbArticle));
         int difficultRatio = unknownWordsNum / bodyWords.size() * 100;
         if( difficultRatio <= PRIMARY ){
             article.setLevel("初级");
@@ -221,67 +217,67 @@ public class Translate {
     private  ArrayList<WordMap> transContent(StringBuilder body) {
         ArrayList<WordMap> articleTagged = new ArrayList<WordMap>();
 //        Log.d(TAG,"文章内容"+body);
-        Log.d(TAG,"开始标记词性");
-        Log.d("目标路径",OBJPATH);
-        File file = new File(OBJPATH);
-        if (file.exists()){
-            Log.d("文件","已存在");
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    tagger = new MaxentTagger(OBJPATH);
-                    tagged = tagger.tagString("this is a person!");
+//        Log.d("目标路径",OBJPATH);
+//        final File file = new File(OBJPATH);
+//        if (file.exists()){
+//            Log.d("文件","已存在");
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    tagger = new MaxentTagger(OBJPATH);
+//                    tagged = tagger.tagString("this is a person!");
+//                    Log.d(TAG,"标记后的文章内容"+tagged);
+//
+//                }
+//            }).start();
 
-                }
-            }).start();
-
-            Log.d(TAG,"标记后的文章内容"+tagged);
-            String [] wordsTagged = tagged.split(" ");
-//            for (String word : wordsTagged) {
-//                String[] wordlist = word.split("_");
-//                WordMap wordMap = new WordMap(wordlist[0], wordlist[1]);
-//                articleTagged.add(wordMap);
-//            }
-        }else {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //        将文件后缀名tagger无法识别写入SD卡中,后来改用压缩文件的 形式,解压出问题，所以删除后缀名可以正常运行
-                    InputStream inputStream = context.getResources().openRawResource(R.raw.englishtag);
-                    FileOutputStream fileOutputStream = null;
-
-                    byte[] item = new byte[2048];
-                    int len = 0;
-//                    Log.d("开始拷贝文件", ".......");
-                    try {
-                        fileOutputStream = new FileOutputStream(OBJPATH);
-                        while ((len = inputStream.read(item)) != -1) {
-                            fileOutputStream.write(item, 0, len);
-                        }
-                        inputStream.close();
-
-                        fileOutputStream.flush();
-                        fileOutputStream.close();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }finally {
-                        Log.d(getClass().getSimpleName(), "拷贝完成");
-
-
-                    }
-                }
-            }).start();
-//          MaxentTagger tagger = new MaxentTagger(OBJPATH);
-//            String tagged = tagger.tagString("this is a person!");
-//            Log.d(TAG,"标记后的文章内容"+tagged);
 //            String [] wordsTagged = tagged.split(" ");
 //            for (String word : wordsTagged) {
 //                String[] wordlist = word.split("_");
 //                WordMap wordMap = new WordMap(wordlist[0], wordlist[1]);
 //                articleTagged.add(wordMap);
 //            }
+////        }else {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+                    //        将文件后缀名tagger无法识别写入SD卡中,后来改用压缩文件的 形式,解压出问题，所以删除后缀名可以正常运行
+//                    InputStream inputStream = context.getResources().openRawResource(R.raw.englishtag);
+//                    FileOutputStream fileOutputStream = null;
+//
+//                    byte[] item = new byte[2048];
+//                    int len = 0;
+////                    Log.d("开始拷贝文件", ".......");
+//                    try {
+//                        File dir = new File(file.getParent());
+//                        dir.mkdir();
+//                        fileOutputStream = new FileOutputStream(OBJPATH);
+//                        while ((len = inputStream.read(item)) != -1) {
+//                            fileOutputStream.write(item, 0, len);
+//                        }
+//                        inputStream.close();
+//
+//                        fileOutputStream.flush();
+//                        fileOutputStream.close();
+//
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }finally {
+//                        Log.d(getClass().getSimpleName(), "拷贝完成");
+//                    }
+//                }
+//            }).start();
+//          MaxentTagger tagger = new MaxentTagger(OBJPATH);
+//            String tagged = tagger.tagString("this is a person!");
+//            Log.d(TAG,"标记后的文章内容"+tagged);
+//        Log.d(TAG,"标记后的内容"+body);
+        String [] wordsTagged = body.toString().split(" ");
+        for (String word : wordsTagged) {
+            String[] wordlist = word.split("_");
+            WordMap wordMap = new WordMap(wordlist[0], wordlist[1]);
+            articleTagged.add(wordMap);
         }
+
         return articleTagged;
     }
 
@@ -291,25 +287,34 @@ public class Translate {
         StringBuilder body = new StringBuilder();
         for (int j = 0; j < articleTagged.size(); j++) {
             String word = articleTagged.get(j).getWord();
+            Log.d(TAG+"报告","不认识的单词"+word);
             Pattern expression = Pattern.compile("[a-zA-Z]+");  //定义正则表达式匹配单词
             Matcher matcher = expression.matcher(word);
-            Log.d(TAG+"不认识单词大小",unknownWords.size()+"");
-            if(unknownWords.containsKey(word) && matcher.find()){
-//                    Log.d("提示","从不认识的单词表中获取");
+            //            Log.d(TAG+"不认识单词大小",unknownWords.size()+"");
+            if (unknownWords.containsKey(word) && matcher.find()) {
+                Log.d(TAG + "报告", "不认识的单词的词性编码" + articleTagged.get(j).getValue());
                 unknownWordsNum++;
-                String tag = getUnknowWordTag(articleTagged.get(j).getValue(),dbWordTag);
-//              根据词性查找意思
-                String [] meaning = unknownWords.get(word).split("|");
-                for (int i = 0; i <meaning.length ; i++) {
-                    if (meaning[i].contains(tag)){
-                        body.append(word+"("+meaning[i]+")"+" ");
+                String tag = getUnknowWordTag(articleTagged.get(j).getValue(), dbWordTag);
+//              TODO 根据词性查找意思(注意要转义)可能有两个词性
+                Log.d(TAG+"报告","获取到不认识单词的词性为"+tag);
+                String[] meaning = unknownWords.get(word).split("\\|");
+                for (int i = 0; i < meaning.length; i++) {
+//              防止为空
+                    try {
+                        if (meaning[i].contains(tag)) {
+                            Log.d(TAG + "报告", "获取到不认识单词的意思为" + meaning[i]);
+                            body.append(word + "(" + meaning[i] + ")" + " ");
+                        }
+                    }catch (NullPointerException e){
+                        body.append(word+" ");
                     }
                 }
-            }else if (word.equalsIgnoreCase("^")){
+            } else if (word.equalsIgnoreCase("^")) {
                 body.append("\n\n");
-            }else {
-                body.append(word+" ");
+            } else {
+                body.append(word + " ");
             }
+
         }
 
         return body.toString();
@@ -326,16 +331,16 @@ public class Translate {
                 int count = c.getInt(0);
 //                Log.d("表的个数",count+"");
                 if (count > 0) {
-//                    注意修改之后的类型名
-                    c = db.rawQuery("select type from words where tag = ?", new String[]{value});
+//                    注意修改之后的类型名注意type为词性代码
+                    c = db.rawQuery("select type from wordsTag where tag = ?", new String[]{value});
                     while (c.moveToNext()) {
-                        tag = c.getString(c.getColumnIndex("tag"));
+                        tag = c.getString(c.getColumnIndex("type"));
                         Log.d("获取到不认识单词的词性为", tag);
                     }
                 } else {
 //                    一般情况是不会运行此部分
                     db.execSQL("CREATE TABLE wordsTag (tag VARCHAR PRIMARY KEY,type VARCHAR)");
-                    Log.e("数据库", "单词词性编码表创建成功");
+//                    Log.e("数据库", "单词词性编码表创建成功");
 
                     InputStream inputStream = context.getResources().openRawResource(R.raw.wordtag);
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -348,7 +353,7 @@ public class Translate {
                     c = db.rawQuery("select type from words where tag = ?", new String[]{value});
                     while (c.moveToNext()) {
                         tag = c.getString(c.getColumnIndex("type"));
-//                        Log.d("获取到的词性", tag);
+                        Log.d(TAG+"获取到不认识的单词的词性", tag);
                     }
                 }
             }

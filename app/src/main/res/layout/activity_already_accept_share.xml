@@ -20,6 +20,7 @@
     <com.example.liu.autotanslate.PageRefresh
         android:layout_below="@id/already"
         android:id="@+id/sharepage"
+
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
