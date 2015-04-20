@@ -169,7 +169,7 @@ public class MyGifView extends ImageView {
 //        Log.d("图片宽度和高度", width + "/" + height);
         float scale_x = wScreen / width;
         float scale_y = hScreen / height;
-//        Log.d("缩放比",scale_x+":"+scale_y);
+        Log.d("缩放比",scale_x+":"+scale_y);
         try {
             if (decodeStatus == DECODE_STATUS_UNDECODE) {
                 canvas.drawBitmap(bitmap, 0, 0, null);
@@ -195,7 +195,7 @@ public class MyGifView extends ImageView {
                         if (bitmap != null) {
 //                        Log.d(Translate.class.getSimpleName(),"开始画了");
 //                        TODO 关于拉缩放比例影响全屏显示
-                            canvas.scale(scale_x-0.5f, scale_y-0.3f);
+                            canvas.scale(scale_x+0.6f, scale_y+0.8f);
                             canvas.drawBitmap(bitmap, 0, 0, null);
                         }
                         invalidate();

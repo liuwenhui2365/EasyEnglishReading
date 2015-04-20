@@ -350,6 +350,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                     map.put("title", title);
                     map.put("date", time);
                     itemEntities.add(map);
+//                    试试通知适配器
                     //Log.d("从dbal中读取db", "title=>" + title + ",time" + time);
                 }
                 dbal.clear();

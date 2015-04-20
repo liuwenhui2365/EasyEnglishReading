@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
@@ -26,10 +28,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 
 public class Message extends ActionBarActivity {
@@ -42,6 +47,11 @@ public class Message extends ActionBarActivity {
     private String time = null;
     SQLiteDatabase db = null;
     Cursor c = null;
+
+    private SpannableString mss = null;
+//    private String clickStr = null;
+//    private int start = 0;
+//    private int end = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +73,9 @@ public class Message extends ActionBarActivity {
 //        TODO 增加内容的时候使用
         textView = (TextView) findViewById(R.id.title_message);
         textView.setText(title);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Message.this,Web.class);
-                startActivity(intent);
-            }
-        });
+
 //      单词分类优化到翻译类里面
         readArticle(title);
-
     }
 
 //  从数据库读取并翻译
@@ -98,9 +101,15 @@ public class Message extends ActionBarActivity {
                         textView.setText(time);
 //                        Log.d("提示","开始翻译啦");
                         article = translate.translate(article,dbArticle);
-                        textView = (TextView) findViewById(R.id.content);
-                        textView.setText(article.getBody());
-                        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
+//                      选中每个单词,开启线程
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+                                handlerStr(article.getBody().toString());
+//                            }
+//                        }).start();
+
+
                     }
                 }
             }
@@ -118,6 +127,55 @@ public class Message extends ActionBarActivity {
         }
     }
 
+    public void handlerStr(String str){
+        mss = new SpannableString(str);
+        List<Integer> enStrList= Message.getENPositionList(str);
+        String tempStr=str.charAt(enStrList.get(0))+"";
+        for(int i=0;i<enStrList.size()-1;i++){
+            if(enStrList.get(i+1)-enStrList.get(i)==1){
+                tempStr=tempStr+str.charAt(enStrList.get(i+1));
+            }else{
+                setLink(enStrList.get(i)-tempStr.length()+1, enStrList.get(i)+1,tempStr);//因为此时i在循环中已经自加了
+                tempStr=str.charAt(enStrList.get(i+1))+"";
+            }
+        }
+        setLink(enStrList.get(enStrList.size()-1)-tempStr.length()+1, enStrList.get(enStrList.size()-1)+1,tempStr);
+    }
+
+    /**
+     * 给指定的[start,end)字符串设置链接
+     * @param start 设置链接的开始位置
+     * @param end  设置链接的结束位置
+     * @param clickStr 点击的字符串
+     */
+    public void setLink(final int start, final int end, final String clickStr) {
+//      msp.setSpan(new URLSpan("http://www.baidu.com"), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+//      特别注意传入上下文的时候，把该类作为上下文传进去，不能传全局的，否则报空指针异常
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+                mss.setSpan(new MyURLSpan(Message.this,clickStr), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textView = (TextView) findViewById(R.id.content);
+                textView.setText(mss);
+//             特别注意是LinkMovementMehond方法获取实例
+                textView.setMovementMethod(LinkMovementMethod.getInstance());
+//            }
+//        });
+    }
+
+    //    英文字母在字符串中的位置，将每一个字符的位置存储到list
+    public static List<Integer> getENPositionList(String str){
+        List<Integer> list=new ArrayList<Integer>();
+        for(int i=0;i<str.length();i++){
+            char mchar=str.charAt(i);
+            //('a' <= mchar && mchar <= 'z')||('A' <= mchar && mchar <='Z')
+            if(Pattern.matches("[A-Za-z]", mchar + "")){
+                list.add(i);
+//              System.out.println(i+"位置为英文字符："+mchar);
+            }
+        }
+        return list;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

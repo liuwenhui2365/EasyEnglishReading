@@ -199,7 +199,7 @@ public class Translate {
         ArrayList<WordMap> articleTagged = null;
         ArrayList<String> bodyWords = article.getWords();
         articleTagged = transContent(article.getBody());
-        Log.d(TAG+"报告","标记词性共有"+articleTagged.size());
+//        Log.d(TAG+"报告","标记词性共有"+articleTagged.size());
         article.setBody(translateUnknowWords(articleTagged, dbArticle));
         int difficultRatio = unknownWordsNum / bodyWords.size() * 100;
         if( difficultRatio <= PRIMARY ){
@@ -287,22 +287,22 @@ public class Translate {
         StringBuilder body = new StringBuilder();
         for (int j = 0; j < articleTagged.size(); j++) {
             String word = articleTagged.get(j).getWord();
-            Log.d(TAG+"报告","不认识的单词"+word);
+//            Log.d(TAG+"报告","不认识的单词"+word);
             Pattern expression = Pattern.compile("[a-zA-Z]+");  //定义正则表达式匹配单词
             Matcher matcher = expression.matcher(word);
             //            Log.d(TAG+"不认识单词大小",unknownWords.size()+"");
             if (unknownWords.containsKey(word) && matcher.find()) {
-                Log.d(TAG + "报告", "不认识的单词的词性编码" + articleTagged.get(j).getValue());
+//                Log.d(TAG + "报告", "不认识的单词的词性编码" + articleTagged.get(j).getValue());
                 unknownWordsNum++;
                 String tag = getUnknowWordTag(articleTagged.get(j).getValue(), dbWordTag);
 //              TODO 根据词性查找意思(注意要转义)可能有两个词性
-                Log.d(TAG+"报告","获取到不认识单词的词性为"+tag);
+//                Log.d(TAG+"报告","获取到不认识单词的词性为"+tag);
                 String[] meaning = unknownWords.get(word).split("\\|");
                 for (int i = 0; i < meaning.length; i++) {
 //              防止为空
                     try {
                         if (meaning[i].contains(tag)) {
-                            Log.d(TAG + "报告", "获取到不认识单词的意思为" + meaning[i]);
+//                            Log.d(TAG + "报告", "获取到不认识单词的意思为" + meaning[i]);
                             body.append(word + "(" + meaning[i] + ")" + " ");
                         }
                     }catch (NullPointerException e){
@@ -335,7 +335,7 @@ public class Translate {
                     c = db.rawQuery("select type from wordsTag where tag = ?", new String[]{value});
                     while (c.moveToNext()) {
                         tag = c.getString(c.getColumnIndex("type"));
-                        Log.d("获取到不认识单词的词性为", tag);
+//                        Log.d("获取到不认识单词的词性为", tag);
                     }
                 } else {
 //                    一般情况是不会运行此部分

@@ -40,15 +40,13 @@ public class MainActivity extends Activity {
 
         initView();
 //      开启新线程执行初始化单词
-        long start = System.currentTimeMillis();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 initData();
             }
         }).start();
-        long end = System.currentTimeMillis();
-        Log.d(TAG+"报告","总耗时"+(end - start)/1000);
+
 //        Toast.makeText(this,"初始化完成",Toast.LENGTH_SHORT).show();
     }
 
@@ -80,19 +78,21 @@ public class MainActivity extends Activity {
         SQLiteDatabase db = null;
         InputStream inputStream = null;
         BufferedReader reader = null;
+//        计时统计耗时
+        long start = System.currentTimeMillis();
 
         Cursor c = null;
         try {
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
             db = dbArticle.getReadableDatabase();
-            Log.d(TAG, "开始初始化单词表");
+//            Log.d(TAG, "开始初始化单词表");
             c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='words'", null);
             if (c.moveToNext()) {
                 int count = c.getInt(0);
                 if (count <= 0) {
                     //                Log.d("获取个数：",""+wordMeaning.size());
                     db.execSQL("CREATE TABLE words (word VARCHAR PRIMARY KEY,meaning VARCHAR,type VARCHAR)");
-                    Log.e(TAG, "单词表创建成功");
+//                    Log.e(TAG, "单词表创建成功");
 //                  记住这种读取方式以后会用到！！！
                     inputStream = getResources().openRawResource(R.raw.sortwordlist);
                     reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -107,14 +107,14 @@ public class MainActivity extends Activity {
                 }
             }
 
-            Log.d(TAG, "开始初始化词性表");
+//            Log.d(TAG, "开始初始化词性表");
             c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='wordsTag'", null);
             if (c.moveToNext()) {
                 int count = c.getInt(0);
                 if (count <= 0) {
                     //                Log.d("获取个数：",""+wordMeaning.size());
                     db.execSQL("CREATE TABLE wordsTag (tag VARCHAR PRIMARY KEY,type VARCHAR)");
-                    Log.e("数据库", "单词词性编码表创建成功");
+//                    Log.e("数据库", "单词词性编码表创建成功");
 
                     inputStream = getResources().openRawResource(R.raw.wordtag);
                     reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -128,18 +128,10 @@ public class MainActivity extends Activity {
                         }
                     }
                 }
-//                }else {
-//                    Log.d(TAG,"开始查询");
-//                    c = db.rawQuery("select type from wordsTag where tag = ?", new String[]{"NN"});
-//                    while (c.moveToNext()) {
-//                        String tag = c.getString(c.getColumnIndex("type"));
-//                        Log.d(TAG+"获取到不认识单词的词性为", tag);
-//                    }
-//                }
             }
 //            标记单词需要拷贝后来还是不能用，放弃从网络获取
         }catch (FileNotFoundException w) {
-            Log.d("文件没有找到", "-------");
+            Log.e("文件没有找到", "-------");
         }catch (IOException e1){
             Log.e("IOException","hh ");
         }catch (Exception e){
@@ -155,8 +147,10 @@ public class MainActivity extends Activity {
                 db.close();
             }
         }
+//        Log.d("数据初始化", "完成");
 
-        Log.d("数据初始化", "完成");
+        long end = System.currentTimeMillis();
+        Log.d(TAG+"报告","总耗时"+(end - start)/1000);
     }
 
 

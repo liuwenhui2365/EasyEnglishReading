@@ -112,7 +112,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_web"
             android:parentActivityName=".Classify"
-            android:theme="@style/Platform.AppCompat.Light.Dialog" >
+            android:theme="@style/Platform.AppCompat.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.liu.autotanslate.Classify" />

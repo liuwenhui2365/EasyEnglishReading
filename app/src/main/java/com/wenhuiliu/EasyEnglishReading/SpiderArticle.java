@@ -104,9 +104,10 @@ public class SpiderArticle implements ISpiderArticle{
     public StringBuilder getContent(String message){
         StringBuilder content = new StringBuilder();
         mat = contentPat.matcher(message);
+//      以空格分隔
         while(mat.find()){
             content.append(mat.group(1));
-            content.append("^");
+            content.append(" ^ ");
         }
         return content;
     }
