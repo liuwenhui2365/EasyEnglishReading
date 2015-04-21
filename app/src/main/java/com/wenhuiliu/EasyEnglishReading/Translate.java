@@ -274,8 +274,11 @@ public class Translate {
         String [] wordsTagged = body.toString().split(" ");
         for (String word : wordsTagged) {
             String[] wordlist = word.split("_");
-            WordMap wordMap = new WordMap(wordlist[0], wordlist[1]);
-            articleTagged.add(wordMap);
+//            防止越界
+            if (wordlist.length >= 2) {
+                WordMap wordMap = new WordMap(wordlist[0], wordlist[1]);
+                articleTagged.add(wordMap);
+            }
         }
 
         return articleTagged;
@@ -346,6 +349,7 @@ public class Translate {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                     while ((line = reader.readLine()) != null) {
                         String[] type = line.split(" ");
+
                         db.execSQL("INSERT INTO words values(?,?)", new String[]{type[0], type[1]});
 
                     }

@@ -98,6 +98,7 @@ public class PageRefresh extends ListView implements OnScrollListener{
     public void loadComplete(){
         footerView.setVisibility(View.GONE);
         isLoading = false;
+//        作废
         this.invalidate();
     }
 

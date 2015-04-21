@@ -202,6 +202,11 @@ public class MyListView extends ListView implements OnScrollListener {
         TextView tip = (TextView) header.findViewById(R.id.refresh_tips);
         ImageView arrow = (ImageView) header.findViewById(R.id.ivArrow);
         ProgressBar progress = (ProgressBar) header.findViewById(R.id.refresh_Progress);
+        TextView lastupdatetime = (TextView) header.findViewById(R.id.refresh_last_time);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
+        Date date = new Date(System.currentTimeMillis());
+        String time = format.format(date);
+        lastupdatetime.setText(time);
 
         RotateAnimation anim = new RotateAnimation(0, 180, RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
@@ -263,6 +268,7 @@ public class MyListView extends ListView implements OnScrollListener {
         isLoading = false;
         footer.setVisibility(GONE);
         footer.findViewById(R.id.list).setVisibility(View.GONE);
+        this.invalidate();
     }
 
     /**

@@ -48,7 +48,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/education"
                 android:textSize="25sp"
-                android:text="@string/education"/>
+                android:text="@string/jingji"/>
 
             <Button
                 android:id="@+id/button4"
@@ -57,7 +57,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/economy"
                 android:textSize="25sp"
-                android:text="@string/jingji"/>
+                android:text="@string/education"/>
 
         </TableRow>
 

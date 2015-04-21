@@ -240,42 +240,48 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
 
     private void setReflashData() {
         header = inflater.inflate(R.layout.headerview, null);
-//      footer = inflater.inflate(R.layout.footview, null);
+//        TextView tip = (TextView) header.findViewById(R.id.refresh_tips);
 
-        TextView tip = (TextView) header.findViewById(R.id.refresh_tips);
-
-
+//     TODO 修改为先写入数据库再显示写到一个线程里面
         new Thread(){
-
             public void run(){
-                  writeArticle();
+                writeArticle();
+                refreshIndex = articleNum + 1;
+                articleNum = getArticleNum();
+                if (refreshIndex < articleNum){
+                    refreshIndex = articleNum - perReadNum +1;
+                    Log.d("下拉刷新索引开始" + refreshIndex, "结束" + articleNum);
+                    readArticle(refreshIndex, articleNum);
+                }else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(Refresh.this,"已经是最新的啦！",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
             }
         }.start();
-        articleNum = getArticleNum();
-        refreshIndex = articleNum + 1;
-//        Log.d("下拉刷新索引开始" + refreshIndex, "结束" + articleNum);
-        if (refreshIndex < articleNum){
-            readArticle(refreshIndex, articleNum);
-        }else {
-            Toast.makeText(this,"已经是最新的啦！",Toast.LENGTH_SHORT).show();
-        }
+
     }
 
 
     @Override
     public void onLoad() {
-         Handler handler = new Handler();
-         handler.postDelayed(new Runnable() {
-             @Override
-             public void run () {
+//        试试不要handler
+//         Handler handler = new Handler();
+//         handler.postDelayed(new Runnable() {
+//             @Override
+//             public void run () {
                  // 获取更多数据
                  loadData();
                  // 更新listview显示；这样会导致从头开始显示，所以不用了
 //                 showListView(itemEntities);
                  // 通知listview加载完毕
-                 listview.loadComplete();
-             }
-        }, 1000);
+//                 listview.loadComplete();
+//             }
+//        }, 1000);
     }
 
 
@@ -299,6 +305,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             Toast.makeText(this,"已读完了哦！",Toast.LENGTH_SHORT).show();
         }
 //        Log.d("上拉刷新 begin" + fromIndex, "end" + loadIndex);
+        listview.loadComplete();
     }
 
 
@@ -348,8 +355,11 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                     map.put("ItemImage", R.drawable.ic_launcher);//加入图片
                     map.put("title", title);
                     map.put("date", time);
+
                     itemEntities.add(map);
-//                    试试通知适配器
+//                    试试显示
+                    showListView(itemEntities);
+//                    试试通知适配器会报空指针
                     //Log.d("从dbal中读取db", "title=>" + title + ",time" + time);
                 }
                 dbal.clear();
@@ -390,12 +400,13 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                             article = spiderArticle.getPassage(url);
                             String title = article.getTitle();
                             String catalogy = article.getCatalogy();
+//                            Log.d(TAG+"报告","获取到文章的类型为"+catalogy);
                             String level = article.getLevel();
                             int difficultRatio = article.getDifficultRatio();
                             StringBuilder body = article.getBody();
                             String time = article.getTime();
 //                            Log.d("从网络获取文章时间", time);
-//                            Log.d(TAG,"文章内容"+body);
+                            Log.d(TAG,"文章内容"+body);
                             String contentTagged = MyHttpPost.post(body.toString());
 //                            Log.d(TAG,"标记后的内容"+contentTagged);
 //                            标记好的内容放进数据库
@@ -407,6 +418,8 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                         } catch (SQLiteConstraintException e1) {
                             Log.w("警告", "表中已经存在！");
                             continue;
+                        } catch (Exception e){
+                            Log.w("警告","某个参数为空!");
                         }
                     }
                 } else {

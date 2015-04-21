@@ -102,12 +102,13 @@ public class Article {
     //	如果不匹配系统自动报错。
     public enum  Catalogy implements Serializable{
         科技         ( "科技"),
-        娱乐         ( "自然"),
+        自然         ( "自然"),
         健康         ( "健康"),
-        理财      	( "教育"),
+        教育      	( "教育"),
         经济   	    ( "经济"),
         今日  	    ( "今日"),
         默认         ( "默认");
+//        以后可以加娱乐和理财类
 
         //        private final int status;
         private final String description;

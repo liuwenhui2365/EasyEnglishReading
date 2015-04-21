@@ -128,6 +128,7 @@ public class SpiderArticle implements ISpiderArticle{
         mat = catalogyPat.matcher(message);
         if(mat.find()){
             catalogy = mat.group(1).substring(0,2);
+//            Log.d(getClass().getSimpleName()+"报告","获取到的类型为"+catalogy);
         }
         return catalogy;
     }
@@ -138,8 +139,12 @@ public class SpiderArticle implements ISpiderArticle{
         StringBuilder content = getContent(message);
         String catalogy = getCatalogy(message);
         String time = getTime(message);
-        Article article = new Article(title, content, catalogy);
-        article.setTime(time);
-        return article;
+//        如果body为空就不要创建对象
+        if (content != null) {
+            Article article = new Article(title, content, catalogy);
+            article.setTime(time);
+            return article;
+        }
+        return null;
     }
 }
