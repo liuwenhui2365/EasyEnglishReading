@@ -1,5 +1,7 @@
 package com.example.liu.autotanslate;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wenhuiliu.EasyEnglishReading.Article;
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
@@ -182,5 +185,18 @@ public class Message extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_message, menu);
         return true;
+    }
+
+    class MyReciver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equalsIgnoreCase("quit")) {
+                String message = intent.getStringExtra("remind");
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 }

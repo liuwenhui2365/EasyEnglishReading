@@ -270,8 +270,8 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
              public void run () {
                  // 获取更多数据
                  loadData();
-                 // 更新listview显示；
-                 showListView(itemEntities);
+                 // 更新listview显示；这样会导致从头开始显示，所以不用了
+//                 showListView(itemEntities);
                  // 通知listview加载完毕
                  listview.loadComplete();
              }
@@ -299,7 +299,6 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             Toast.makeText(this,"已读完了哦！",Toast.LENGTH_SHORT).show();
         }
 //        Log.d("上拉刷新 begin" + fromIndex, "end" + loadIndex);
-
     }
 
 
@@ -526,6 +525,19 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             }catch (NullPointerException e){
                 e.printStackTrace();
 //                Log.d("获取网络状态","失败");
+            }
+        }
+    }
+
+    class MyReciver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equalsIgnoreCase("quit")) {
+                String message = intent.getStringExtra("remind");
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
     }

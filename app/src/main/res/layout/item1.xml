@@ -10,11 +10,17 @@
         <!--android:layout_height="match_parent"-->
         <!--/>-->
 
-
-    <com.example.liu.autotanslate.MyGifView
-        android:id="@+id/gifView"
+    <ImageView
+        android:src="@drawable/welcome1"
         android:scaleType="fitXY"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:contentDescription="@string/wait"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+<!--TODO 以后添加-->
+    <!--<com.example.liu.autotanslate.MyGifView-->
+        <!--android:id="@+id/gifView"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
 
 </LinearLayout>

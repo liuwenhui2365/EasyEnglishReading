@@ -25,12 +25,11 @@ public class MyURLSpan extends ClickableSpan {
     @SuppressWarnings("deprecation")
     @Override
     public void onClick(View widget) {
-        Log.d("点击获取到",clickStr);
+//        Log.d("点击获取到",clickStr);
         try {
 //            Toast.makeText(ctx,"获取到的内容"+clickStr,Toast.LENGTH_SHORT).show();
             AlertDialog.Builder dialog = new AlertDialog.Builder(ctx);
 
-            dialog.setTitle("修改单词类型");
 //          防止单词首字母大写获取不到类型转换为小写
             final String type = getWordType(clickStr.toLowerCase());
             String flag = null;
@@ -40,7 +39,7 @@ public class MyURLSpan extends ClickableSpan {
                 } else {
                     flag = "不认识";
                 }
-
+                dialog.setTitle("修改单词类型");
                 dialog.setMessage("确定要将" + clickStr+"转为"+flag+"的单词吗？");
                 dialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -55,16 +54,16 @@ public class MyURLSpan extends ClickableSpan {
                         }
                     }
                 });
+
+                dialog.setNegativeButton("cancel",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
             }else {
                 Toast.makeText(ctx,"非常抱歉，该词还没有收录本词库，以后会更新哦！",Toast.LENGTH_SHORT).show();
             }
-
-            dialog.setNegativeButton("cancel",new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
 
             dialog.show();
 
@@ -161,7 +160,7 @@ public class MyURLSpan extends ClickableSpan {
     @Override
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
-        ds.setColor(ds.linkColor);
+        ds.setColor(ctx.getResources().getColor(R.color.black));
         ds.setUnderlineText(false); //去掉下划线
     }
 }

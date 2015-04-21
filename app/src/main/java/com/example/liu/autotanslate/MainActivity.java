@@ -58,9 +58,6 @@ public class MainActivity extends Activity {
         views.add(inflater.inflate(R.layout.item2, null));
         views.add(inflater.inflate(R.layout.item3, null));
 
-        View view = inflater.inflate(R.layout.item1,null);
-
-
 
 //      添加圆点
         images.add((ImageView)findViewById(R.id.iv_01));

@@ -1,5 +1,7 @@
 package com.example.liu.autotanslate;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
 import com.wenhuiliu.EasyEnglishReading.Words;
@@ -229,6 +232,19 @@ public class WordClassify extends ActionBarActivity implements PageRefresh.OnLoa
             }
 
             return count;
+        }
+    }
+
+    class MyReciver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equalsIgnoreCase("quit")) {
+                String message = intent.getStringExtra("remind");
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 }

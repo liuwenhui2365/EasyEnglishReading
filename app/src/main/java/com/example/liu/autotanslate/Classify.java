@@ -1,11 +1,15 @@
 package com.example.liu.autotanslate;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -21,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +48,9 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
     private ArrayList<ActionBar.Tab> tabs;
     /**当前页**/
     protected int currentPage;
+
+//   接受广播
+    private MyReciver reciver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,22 +62,30 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
 //      添加tab切换的时候使用
 //      initTab();
    //   ton.setOnClickListener(listener);
-
+        reciver = new MyReciver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("quit");
+        registerReceiver(reciver, filter);
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(reciver);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_classify, menu);
+//        getMenuInflater().inflate(R.menu.menu_classify, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean isDrawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_search).setVisible(!isDrawerOpen);
+//        menu.findItem(R.id.action_search).setVisible(!isDrawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -166,14 +182,18 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
          mDrawerList = (ListView) findViewById(R.id.menu_list);
 
          item = new HashMap<>();
-         item.put("item","单词分类");
+         item.put("item", "单词分类");
          menuLists.add(item);
          item = new HashMap<>();
-         item.put("item","分享");
+         item.put("item", "分享");
          menuLists.add(item);
 
          item = new HashMap<>();
          item.put("item","接受到的分享");
+         menuLists.add(item);
+
+         item = new HashMap<>();
+         item.put("item","退出");
          menuLists.add(item);
          adapter = new SimpleAdapter(Classify.this,menuLists,//需要绑定的数据
                  R.layout.menulistitem,//每一行的布局
@@ -193,12 +213,25 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
                       startActivity(intent);
                       break;
                   case 1:
-                      intent = new Intent(Classify.this, Web.class);
-                      startActivity(intent);
+//                      intent = new Intent(Classify.this, Share.class);
+//                      startActivity(intent);
+                      intent = new Intent(Intent.ACTION_SEND);
+                      intent.setType("text/plain");
+                      intent.putExtra(Intent.EXTRA_TEXT,"我在使用易读英语，感觉不错哦！你也试试吧！");
+                      String title = (String)getResources().getText(R.string.share);
+                      Intent chooser = Intent.createChooser(intent, title);
+                      startActivity(chooser);
                       break;
                   case 2:
                       intent = new Intent(Classify.this, AlreadyAcceptShare.class);
                       startActivity(intent);
+                      break;
+                  case 3:
+//                      Log.d(getClass().getSimpleName()+"报告","广播发出去了！");
+                      intent = new Intent();
+                      intent.setAction("quit");
+                      intent.putExtra("remind","易读英语欢迎您下次使用！");
+                      sendBroadcast(intent);
                       break;
               }
               }
@@ -375,5 +408,20 @@ public class Classify extends ActionBarActivity implements AdapterView.OnItemCli
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+
+//   接收广播退出
+    class MyReciver extends BroadcastReceiver{
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+//        Log.d(getClass().getSimpleName()+"报告","收到的Action为"+action);
+        if(action.equalsIgnoreCase("quit")){
+            String message = intent.getStringExtra("remind");
+            Toast.makeText(context,message,Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+}
 
 }

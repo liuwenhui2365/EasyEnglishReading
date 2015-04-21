@@ -41,16 +41,16 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(View container, int position) {
-//      初始化动画界面注意添加在后面
+//      初始化动画界面注意添加在后面 TODO由于适配问题暂时放弃
 
-        if (position == 0){
-//            Log.d(getClass().getSimpleName(),"适配器进来了");
-            myGifView = (MyGifView)viewList.get(position).findViewById(R.id.gifView);
-//          防止空指针异常，在运行完之后会再次进来
-            if (myGifView != null) {
-                myGifView.setGif(R.drawable.welcome1);
-            }
-        }
+//        if (position == 0){
+////            Log.d(getClass().getSimpleName(),"适配器进来了");
+//            myGifView = (MyGifView)viewList.get(position).findViewById(R.id.gifView);
+////          防止空指针异常，在运行完之后会再次进来
+//            if (myGifView != null) {
+//                myGifView.setGif(R.drawable.welcome1);
+//            }
+//        }
 
         ((ViewPager) container).addView(viewList.get(position));
         return viewList.get(position);

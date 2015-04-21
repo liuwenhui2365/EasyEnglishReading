@@ -1,5 +1,8 @@
 package com.example.liu.autotanslate;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
@@ -8,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
 
@@ -100,5 +104,18 @@ public class WordMeaning extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class MyReciver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equalsIgnoreCase("quit")) {
+                String message = intent.getStringExtra("remind");
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 }
