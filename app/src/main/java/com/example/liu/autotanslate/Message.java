@@ -101,16 +101,16 @@ public class Message extends ActionBarActivity {
                         StringBuilder sBody = new StringBuilder(body);
                         article = new Article(title,sBody,catalogy);
                         textView = (TextView) findViewById(R.id.date_message);
-                        textView.setText(time);
+                        textView.setText("文章更新于"+time);
 //                        Log.d("提示","开始翻译啦");
                         article = translate.translate(article,dbArticle);
 //                      选中每个单词,开启线程
-//                        new Thread(new Runnable() {
-//                            @Override
-//                            public void run() {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
                                 handlerStr(article.getBody().toString());
-//                            }
-//                        }).start();
+                            }
+                        }).start();
 
 
                     }
@@ -154,16 +154,16 @@ public class Message extends ActionBarActivity {
     public void setLink(final int start, final int end, final String clickStr) {
 //      msp.setSpan(new URLSpan("http://www.baidu.com"), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
 //      特别注意传入上下文的时候，把该类作为上下文传进去，不能传全局的，否则报空指针异常
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
                 mss.setSpan(new MyURLSpan(Message.this,clickStr), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
                 textView = (TextView) findViewById(R.id.content);
                 textView.setText(mss);
 //             特别注意是LinkMovementMehond方法获取实例
                 textView.setMovementMethod(LinkMovementMethod.getInstance());
-//            }
-//        });
+            }
+        });
     }
 
     //    英文字母在字符串中的位置，将每一个字符的位置存储到list

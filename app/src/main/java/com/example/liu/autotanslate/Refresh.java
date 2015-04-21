@@ -426,7 +426,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                             StringBuilder body = article.getBody();
                             String time = article.getTime();
 //                            Log.d("从网络获取文章时间", time);
-                            Log.d(TAG,"文章内容"+body);
+//                            Log.d(TAG,"文章内容"+body);
                             String contentTagged = MyHttpPost.post(body.toString());
 //                            Log.d(TAG,"标记后的内容"+contentTagged);
                             db.execSQL("INSERT INTO Article VALUES (?,?,?,?,?,?,?)", new Object[]{url, title, catalogy, contentTagged

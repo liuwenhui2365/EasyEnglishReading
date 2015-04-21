@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
@@ -20,20 +22,25 @@ import com.wenhuiliu.EasyEnglishReading.Words;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.LoggingPermission;
+import java.util.regex.Pattern;
 
 /**
  * Created by Administrator on 2015/4/1.
  * 用来显示已分享到的文章内容
  */
 public class ShareMessage extends ActionBarActivity {
-    TextView textView;
-    DbArticle dbArticle = null;
-    SQLiteDatabase db = null;
+    private TextView textView;
+    private DbArticle dbArticle = null;
+    private SQLiteDatabase db = null;
+    private Article article;
+    private SpannableString mss = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +66,6 @@ public class ShareMessage extends ActionBarActivity {
 
 
     public void readArticle(String title){
-
-        Article article = null;
         Cursor c = null;
         try {
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
@@ -80,16 +85,18 @@ public class ShareMessage extends ActionBarActivity {
                         String catalogy = c.getString(c.getColumnIndex("catalogy"));
                         StringBuilder sBody = new StringBuilder(body);
                         article = new Article(title,sBody,catalogy);
-
-                        article = translate.translate(article, dbArticle);
-
                         textView = (TextView)findViewById(R.id.sharemessage_title);
                         textView.setText(title);
                         textView = (TextView) findViewById(R.id.sharemessage_time);
-                        textView.setText(time);
-                        textView = (TextView) findViewById(R.id.sharemessage_content);
-                        textView.setText(article.getBody());
-                        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
+                        textView.setText("文章更新于"+time);
+                        article = translate.translate(article, dbArticle);
+//                      选中每个单词,开启线程
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                handlerStr(article.getBody().toString());
+                            }
+                        }).start();
                     }
                 }else {
                     Toast.makeText(this,"还没有分享到的文章哦！",Toast.LENGTH_SHORT).show();
@@ -106,6 +113,56 @@ public class ShareMessage extends ActionBarActivity {
                 db.close();
             }
         }
+    }
+
+    public void handlerStr(String str){
+        mss = new SpannableString(str);
+        List<Integer> enStrList= Message.getENPositionList(str);
+        String tempStr=str.charAt(enStrList.get(0))+"";
+        for(int i=0;i<enStrList.size()-1;i++){
+            if(enStrList.get(i+1)-enStrList.get(i)==1){
+                tempStr=tempStr+str.charAt(enStrList.get(i+1));
+            }else{
+                setLink(enStrList.get(i)-tempStr.length()+1, enStrList.get(i)+1,tempStr);//因为此时i在循环中已经自加了
+                tempStr=str.charAt(enStrList.get(i+1))+"";
+            }
+        }
+        setLink(enStrList.get(enStrList.size()-1)-tempStr.length()+1, enStrList.get(enStrList.size()-1)+1,tempStr);
+    }
+
+    /**
+     * 给指定的[start,end)字符串设置链接
+     * @param start 设置链接的开始位置
+     * @param end  设置链接的结束位置
+     * @param clickStr 点击的字符串
+     */
+    public void setLink(final int start, final int end, final String clickStr) {
+//      msp.setSpan(new URLSpan("http://www.baidu.com"), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+//      特别注意传入上下文的时候，把该类作为上下文传进去，不能传全局的，否则报空指针异常
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mss.setSpan(new MyURLSpan(ShareMessage.this,clickStr), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textView = (TextView) findViewById(R.id.sharemessage_content);
+                textView.setText(article.getBody());
+//             特别注意是LinkMovementMehond方法获取实例
+                textView.setMovementMethod(LinkMovementMethod.getInstance());
+            }
+        });
+    }
+
+    //    英文字母在字符串中的位置，将每一个字符的位置存储到list
+    public static List<Integer> getENPositionList(String str){
+        List<Integer> list=new ArrayList<Integer>();
+        for(int i=0;i<str.length();i++){
+            char mchar=str.charAt(i);
+            //('a' <= mchar && mchar <= 'z')||('A' <= mchar && mchar <='Z')
+            if(Pattern.matches("[A-Za-z]", mchar + "")){
+                list.add(i);
+//              System.out.println(i+"位置为英文字符："+mchar);
+            }
+        }
+        return list;
     }
 
     class MyReciver extends BroadcastReceiver {
