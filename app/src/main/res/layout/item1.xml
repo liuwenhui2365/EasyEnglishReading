@@ -11,7 +11,7 @@
         <!--/>-->
 
     <ImageView
-        android:src="@drawable/welcome1"
+        android:src="@drawable/welcome11"
         android:scaleType="fitXY"
         android:contentDescription="@string/wait"
         android:layout_width="match_parent"

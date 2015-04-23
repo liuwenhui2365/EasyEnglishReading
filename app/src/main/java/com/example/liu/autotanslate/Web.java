@@ -39,8 +39,8 @@ public class Web extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_web);
-        textView = (TextView) findViewById(R.id.delete);
+//        setContentView(R.layout.activity_web);
+//        textView = (TextView) findViewById(R.id.delete);
         textView.setText("Hello ! 呵呵 what about you?");
         str = (String)textView.getText();
         handlerStr(str);
@@ -88,9 +88,9 @@ public class Web extends Activity{
 //      特别注意传入上下文的时候，把该类作为上下文传进去，不能传全局的，否则报空指针异常
         Log.d(getClass().getSimpleName()+"报告","开始创建点击事件的对象");
         mss.setSpan(new MyURLSpan(this,clickStr), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textView = (TextView) findViewById(R.id.delete);
-        textView.setText(mss);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+//        textView = (TextView) findViewById(R.id.delete);
+//        textView.setText(mss);
+//        textView.setMovementMethod(LinkMovementMethod.getInstance());
 //            }
 //        });
     }

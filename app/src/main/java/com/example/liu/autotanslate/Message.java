@@ -86,6 +86,7 @@ public class Message extends ActionBarActivity {
         try {
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
             db = dbArticle.getReadableDatabase();
+
             Translate translate = new Translate(this);
             c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='Article'", null);
             if (c.moveToNext()) {
@@ -96,6 +97,7 @@ public class Message extends ActionBarActivity {
                     while (c.moveToNext()) {
                         title = c.getString(c.getColumnIndex("title"));
                         String body = c.getString(c.getColumnIndex("body"));
+//                        Log.d("从数据库读取到的文章内容",body);
                         time = c.getString(c.getColumnIndex("time"));
                         String catalogy = c.getString(c.getColumnIndex("catalogy"));
                         StringBuilder sBody = new StringBuilder(body);
@@ -104,10 +106,13 @@ public class Message extends ActionBarActivity {
                         textView.setText("文章更新于"+time);
 //                        Log.d("提示","开始翻译啦");
                         article = translate.translate(article,dbArticle);
+                        Log.d(getClass().getSimpleName()+"报告","翻译加词性结束");
 //                      选中每个单词,开启线程
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
+                                //        TODO 想想为什么后面的两个类的字符串长度异常大
+//                                Log.d("Message报告","传入处理Str传入之前大小为"+article.getBody().toString().length());
                                 handlerStr(article.getBody().toString());
                             }
                         }).start();
@@ -126,23 +131,36 @@ public class Message extends ActionBarActivity {
             if (db != null) {
                 db.close();
             }
-            return body;
         }
+        return body;
+
     }
 
     public void handlerStr(String str){
         mss = new SpannableString(str);
         List<Integer> enStrList= Message.getENPositionList(str);
-        String tempStr=str.charAt(enStrList.get(0))+"";
-        for(int i=0;i<enStrList.size()-1;i++){
-            if(enStrList.get(i+1)-enStrList.get(i)==1){
-                tempStr=tempStr+str.charAt(enStrList.get(i+1));
-            }else{
-                setLink(enStrList.get(i)-tempStr.length()+1, enStrList.get(i)+1,tempStr);//因为此时i在循环中已经自加了
-                tempStr=str.charAt(enStrList.get(i+1))+"";
+//        Log.d(getClass().getSimpleName()+"报告","添加获取单词后的文章大小"+enStrList.size());
+//      如果大小为0则不执行
+        if (enStrList.size() > 0) {
+            String tempStr = String.valueOf(str.charAt(enStrList.get(0)));
+            for (int i = 0; i < enStrList.size() - 1; i++) {
+                if (enStrList.get(i + 1) - enStrList.get(i) == 1) {
+                    tempStr = tempStr + str.charAt(enStrList.get(i + 1));
+                } else {
+                    setLink(enStrList.get(i) - tempStr.length() + 1, enStrList.get(i) + 1, tempStr);//因为此时i在循环中已经自加了
+                    tempStr = str.charAt(enStrList.get(i + 1)) + "";
+                }
             }
+            setLink(enStrList.get(enStrList.size() - 1) - tempStr.length() + 1, enStrList.get(enStrList.size() - 1) + 1, tempStr);
+        }else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(Message.this,"获取内容为空！",Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
         }
-        setLink(enStrList.get(enStrList.size()-1)-tempStr.length()+1, enStrList.get(enStrList.size()-1)+1,tempStr);
     }
 
     /**
@@ -169,6 +187,11 @@ public class Message extends ActionBarActivity {
     //    英文字母在字符串中的位置，将每一个字符的位置存储到list
     public static List<Integer> getENPositionList(String str){
         List<Integer> list=new ArrayList<Integer>();
+//        Log.d("报告标记后的文章大小",str.length()+"");
+//        如果长度太大截取即可，防止长时间没有响应
+        if (str.length() > 3000){
+            str = str.substring(0,3000);
+        }
         for(int i=0;i<str.length();i++){
             char mchar=str.charAt(i);
             //('a' <= mchar && mchar <= 'z')||('A' <= mchar && mchar <='Z')

@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -53,7 +54,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
     private  int refreshIndex = 0;
     private  int loadIndex =0;
 //  每个页面显示的行数
-    private int perReadNum = 6;
+    private int perReadNum = 8;
     private int articleNum = 0;
     private String type = null;
     View footer, header;// 底顶部布局
@@ -75,7 +76,6 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         networkChangeReceiver = new NetworkChangeReceiver();
         registerReceiver(networkChangeReceiver,intentFilter);
-//        deleteDatabase("Articles.db");
 //      获取分类
         type = this.getIntent().getAction();
         if(type != null) {
@@ -109,6 +109,13 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
     }
 
     public void InitView(){
+//      读数据之前创建适配器的对象否则在读数据的时候会报空指针异常
+        mSimpleAdapter = new SimpleAdapter(Refresh.this,itemEntities,//需要绑定的数据
+                R.layout.lsitviewitem,//每一行的布局//动态数组中的数据源的键对应到定义布局的View中(图片先不加）
+                new String[] {"title", "date"},
+                new int[] {R.id.title,R.id.date}
+        );
+
         loadIndex = articleNum;
         readArticle(articleNum - perReadNum, articleNum);
         //        如果数据库为空 添加默认页面
@@ -123,10 +130,16 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             map.put("date", time);
             itemEntities.add(map);
         }
+//        为顶部和底部VIew添加解析器
         inflater = LayoutInflater.from(this);
 
-        showListView(itemEntities);
+        listview = (MyListView) findViewById(R.id.mylist);
+        listview.setLoaderListener(this);
 
+        if(!mSimpleAdapter.isEmpty()) {
+            mSimpleAdapter.notifyDataSetChanged();
+            listview.setAdapter(mSimpleAdapter);//为ListView绑定适配器
+        }
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -186,12 +199,13 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         try {
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
             db = dbArticle.getReadableDatabase();
-            c = db.rawQuery("select count(*) from 'Article' where catalogy ='"+ type+"'", null);
+            c = db.rawQuery("select count(*) from 'Article' where catalogy ='" + type + "'", null);
             if (c.moveToNext()) {
                 count = c.getInt(0);
             }
+
         }catch (Exception e){
-             e.printStackTrace();
+            Log.e(TAG+"报告","数据库异常");
         }finally {
             if (c != null){
                 c.close();
@@ -201,41 +215,24 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             db.close();
             }
 
-            return count;
         }
+        return count;
 
     }
 
-
-
-    private void showListView(ArrayList<HashMap<String, Object>> itemEntities) {
-        listview = (MyListView) findViewById(R.id.mylist);
-        listview.setLoaderListener(this);
-        mSimpleAdapter = new SimpleAdapter(Refresh.this,itemEntities,//需要绑定的数据
-                R.layout.lsitviewitem,//每一行的布局//动态数组中的数据源的键对应到定义布局的View中(图片先不加）
-                new String[] {"title", "date"},
-                new int[] {R.id.title,R.id.date}
-        );
-        if(!mSimpleAdapter.isEmpty()) {
-            mSimpleAdapter.notifyDataSetChanged();
-            listview.setAdapter(mSimpleAdapter);//为ListView绑定适配器
-        }
-    }
 
     @Override
     public void onReflash() {
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 // 获取最新数据
                 setReflashData();
-                // 通知界面显示
-                showListView(itemEntities);
                 // 通知listview 刷新数据完毕；
                 listview.reflashComplete();
             }
-        }, 2000);
+        });
     }
 
     private void setReflashData() {
@@ -246,6 +243,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         new Thread(){
             public void run(){
                 writeArticle();
+                Log.d(TAG+"报告","刷新数据写入完成！");
                 refreshIndex = articleNum + 1;
                 articleNum = getArticleNum();
                 if (refreshIndex < articleNum){
@@ -269,19 +267,17 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
 
     @Override
     public void onLoad() {
-//        试试不要handler
-//         Handler handler = new Handler();
-//         handler.postDelayed(new Runnable() {
-//             @Override
-//             public void run () {
+//        试试不要handler（没区别）
+         Handler handler = new Handler();
+         handler.postDelayed(new Runnable() {
+             @Override
+             public void run () {
                  // 获取更多数据
                  loadData();
                  // 更新listview显示；这样会导致从头开始显示，所以不用了
 //                 showListView(itemEntities);
-                 // 通知listview加载完毕
-//                 listview.loadComplete();
-//             }
-//        }, 1000);
+             }
+        }, 1000);
     }
 
 
@@ -305,6 +301,10 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             Toast.makeText(this,"已读完了哦！",Toast.LENGTH_SHORT).show();
         }
 //        Log.d("上拉刷新 begin" + fromIndex, "end" + loadIndex);
+//                 定位显示
+        listview.setSelection(fromIndex - 3);
+        // 通知listview加载完毕
+
         listview.loadComplete();
     }
 
@@ -319,6 +319,8 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
         try {
             dbArticle = new DbArticle(this, "Articles.db", null, 1);
             db = dbArticle.getReadableDatabase();
+//            开启事务,暂时不用会导致数据库锁住
+//            db.beginTransaction();
             if (articleNum > 0) {
                 c = db.rawQuery("SELECT * FROM Article  WHERE catalogy ='"+type+"' limit " +firstIndex +"," + perReadNum, null);
                 while (c.moveToNext()) {
@@ -337,6 +339,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                     article.setTime(time);
                     dbal.add(article);
                 }
+//                db.setTransactionSuccessful();
             }else {
                 Toast.makeText(this,"数据读取完成",Toast.LENGTH_SHORT).show();
             }
@@ -344,6 +347,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             e.printStackTrace();
         }finally {
             if(db != null){
+//                db.endTransaction();
                 db.close();
             }
             if(!dbal.isEmpty()) {
@@ -355,10 +359,15 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                     map.put("ItemImage", R.drawable.ic_launcher);//加入图片
                     map.put("title", title);
                     map.put("date", time);
-
+                    Log.d(TAG+"报告","正在为ListView添加数据");
                     itemEntities.add(map);
-//                    试试显示
-                    showListView(itemEntities);
+//                    用于动态显示，必须在主线程调用适配器的通知方法
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mSimpleAdapter.notifyDataSetChanged();
+                        }
+                    });
 //                    试试通知适配器会报空指针
                     //Log.d("从dbal中读取db", "title=>" + title + ",time" + time);
                 }
@@ -385,8 +394,8 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
 //             Log.d("网址",urls.toString());
 
             db = dbArticle.getWritableDatabase();
-//            db.execSQL("DROP TABLE IF EXISTS Article");
-//            Log.i("提示","表删除成功");
+//            开启事务
+//            db.beginTransaction();
 //          判断表是否存在
             myCursor = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='Article'", null);
             if (myCursor.moveToNext()) {
@@ -406,7 +415,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                             StringBuilder body = article.getBody();
                             String time = article.getTime();
 //                            Log.d("从网络获取文章时间", time);
-                            Log.d(TAG,"文章内容"+body);
+//                            Log.d(TAG,"文章内容"+body);
                             String contentTagged = MyHttpPost.post(body.toString());
 //                            Log.d(TAG,"标记后的内容"+contentTagged);
 //                            标记好的内容放进数据库
@@ -454,6 +463,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
                     }
                 }
             }
+//            db.setTransactionSuccessful();
         }catch (Exception e) {
             e.printStackTrace();
             Log.d("捕获","异常");
@@ -464,6 +474,7 @@ public class Refresh extends ActionBarActivity implements MyListView.OnLoaderLis
             }
 
             if (db!=null){
+//                db.endTransaction();
                 db.close();
             }
         }

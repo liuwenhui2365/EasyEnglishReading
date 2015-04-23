@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
-import com.wenhuiliu.EasyEnglishReading.MyHttpPost;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -85,6 +84,8 @@ public class MainActivity extends Activity {
 //            Log.d(TAG, "开始初始化单词表");
             c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='words'", null);
             if (c.moveToNext()) {
+//                开启事务
+                db.beginTransaction();
                 int count = c.getInt(0);
                 if (count <= 0) {
                     //                Log.d("获取个数：",""+wordMeaning.size());
@@ -96,9 +97,9 @@ public class MainActivity extends Activity {
                     String line = null;
                     while ((line = reader.readLine()) != null) {
                         String[] type = line.split(":");
-//                      有些单词没有意思
+//                      有些单词没有意思，考虑大部分认识，所以将全部单词以认识为准
                         if (type.length == 2) {
-                            db.execSQL("INSERT INTO words values(?,?,?)", new String[]{type[0], type[1], "unknow"});
+                            db.execSQL("INSERT INTO words values(?,?,?)", new String[]{type[0], type[1], "know"});
                         }
                     }
                 }
@@ -126,7 +127,9 @@ public class MainActivity extends Activity {
                     }
                 }
             }
-//            标记单词需要拷贝后来还是不能用，放弃从网络获取
+//            判断是否成功执行完毕
+              db.setTransactionSuccessful();
+//             标记单词需要拷贝后来还是不能用，放弃从网络获取
         }catch (FileNotFoundException w) {
             Log.e("文件没有找到", "-------");
         }catch (IOException e1){
@@ -136,18 +139,20 @@ public class MainActivity extends Activity {
             Log.e("初始化异常","-------");
             e.printStackTrace();
         }finally {
+
             if (c != null) {
                 c.close();
             }
-
+//          结束事务
             if (db != null) {
+                db.endTransaction();
                 db.close();
             }
         }
 //        Log.d("数据初始化", "完成");
 
         long end = System.currentTimeMillis();
-        Log.d(TAG+"报告","总耗时"+(end - start)/1000);
+//        Log.d(TAG+"报告","总耗时"+(end - start)/1000);
     }
 
 
@@ -192,7 +197,7 @@ public class MainActivity extends Activity {
             for (int i = 0; i < images.size(); i++) {
                 images.get(i).setImageResource(R.drawable.gray);
                 if (arg0==i) {
-                    images.get(i).setImageResource(R.drawable.blue);
+                    images.get(i).setImageResource(R.drawable.green);
                 }
             }
 

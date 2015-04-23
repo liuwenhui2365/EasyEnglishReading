@@ -28,8 +28,6 @@ public class AcceptShare extends ActionBarActivity {
     DbArticle dbArticle;
     SQLiteDatabase db = null;
 
-    String title = null;
-    String time = null;
     StringBuilder content = null;
 
     @Override
@@ -88,17 +86,20 @@ public class AcceptShare extends ActionBarActivity {
 
     private Handler handler = new Handler(){
         public void handleMessage(Message msg){
-            Log.d("handler","接受到子线程传过来的对象了");
+//            Log.d("handler","接受到子线程传过来的对象了");
             switch (msg.what){
                 case SHOW_DATA:
                     Article article = (Article)msg.obj;
                     TextView textView = (TextView)findViewById(R.id.title_message);
-                    article.getTitle();
                     textView.setText( article.getTitle());
                     textView = (TextView)findViewById(R.id.date_message);
-                    textView.setText( article.getTime());
+//                    Log.d(getClass().getSimpleName()+"报告","线程传过来的文章时间"+article.getBody());
+                    textView.setText(article.getTime());
                     textView = (TextView)findViewById(R.id.content);
+                    textView.setText("正在努力加载文章内容。。。");
+//                    Log.d(getClass().getSimpleName()+"报告","线程传过来的文章内容"+article.getBody());
                     textView.setText( article.getBody());
+                break;
             }
         }
     };
@@ -113,7 +114,7 @@ public class AcceptShare extends ActionBarActivity {
         MSpiderChinaDaily mSpiderChinaDaily = new MSpiderChinaDaily();
         SpiderEconomicArticle spiderEconomicArticle = new SpiderEconomicArticle();
 
-        Log.d("获取到的网址网址",url);
+//        Log.d("获取到的网址网址",url);
 
         //插入数据(逆序写入保证读取到最新的）
 //        这样在多次插入数据再读取的时候会出现顺序不匹配问题
@@ -135,7 +136,7 @@ public class AcceptShare extends ActionBarActivity {
 
                         if (article != null) {
                             String title = article.getTitle();
-                            Log.d("标题", title);
+//                            Log.d("标题", title);
                             String catalogy = article.getCatalogy();
                             String level = article.getLevel();
                             String time = article.getTime();
@@ -145,25 +146,49 @@ public class AcceptShare extends ActionBarActivity {
    //                        Log.d("网络获取文章内容",body+"");
 //                          标记词性
                             String contentTagged = MyHttpPost.post(body.toString());
+//                            Log.d(getClass().getSimpleName()+"报告","标记后的内容"+contentTagged);
                             db.execSQL("INSERT INTO ShareArticle VALUES (?,?,?,?,?,?,?)", new Object[]{url, title,
                                     catalogy, contentTagged, level, difficultRatio, time});
+                            StringBuilder sbody = new StringBuilder(contentTagged);
+//                            记得要new一个对象（不需要new也可以）
+//                            article = new Article(title,sbody,catalogy);
+//                            body内容必须要替换
+                            article.setBody(contentTagged);
                             article = translate.translate(article, dbArticle);
                             Message message = new Message();
                             message.what = SHOW_DATA;
                             message.obj = article;
-   //                      注意handler是全局对象
+//                            Log.d("报告向主线程发送翻译好的文章",article.getBody()+"");
+    //                      特别注意handler是全局对象，如果new一个则收不到对象了
                             handler.sendMessage(message);
                         }else {
-                            Log.e("警告","获取文章为空");
-                            Toast.makeText(this,"获取内容为空，请重试！",Toast.LENGTH_SHORT).show();
+//                            Log.e("警告","获取文章为空");
+//                          必须在主线程运行才能执行Toast
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(AcceptShare.this,"获取内容为空，请重试！",Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     } catch (IllegalArgumentException e) {
                         Log.e("警告", "article arguments is illegal!");
                     } catch (SQLiteConstraintException e1) {
                         Log.e("警告", "Share表中已经存在！");
-                        Toast.makeText(this,"数据已经分享过了哦，去已分享看看吧。",Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AcceptShare.this, "数据已经分享过了哦，去已分享看看吧。", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     } catch (IOException e){
                         Toast.makeText(this,"获取失败，重新分享试试",Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AcceptShare.this,"获取失败，重新分享试试吧！",Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 } else {
                     db.execSQL("CREATE TABLE ShareArticle (url VARCHAR PRIMARY KEY,title VARCHAR," +
@@ -173,7 +198,7 @@ public class AcceptShare extends ActionBarActivity {
                     try {
                         article = mSpiderChinaDaily.getPassage(url);
                         String title = article.getTitle();
-                        Log.d("获取到的标题",title);
+//                        Log.d("获取到的标题",title);
                         String catalogy = article.getCatalogy();
                         String level = article.getLevel();
                         int difficultRatio = article.getDifficultRatio();
@@ -184,16 +209,25 @@ public class AcceptShare extends ActionBarActivity {
 //                        Log.d("开始翻译","ooppoo");
                         article = translate.translate(article,dbArticle);
 //                        Log.d("向主线程发送对象","ggg");
-                        Log.d("翻译好的文章",article.getBody()+"");
+//                        Log.d("报告向主线程发送翻译好的文章",article.getBody()+"");
                         Message message = new Message();
                         message.what = SHOW_DATA;
                         message.obj = article;
-                        Handler handler = new Handler();
+
+//                       注意handler是全局的此处不能再new
                         handler.sendMessage(message);
                     } catch (IllegalArgumentException e) {
                         Log.e("警告", "article arguments is illegal!");
                     } catch (SQLiteConstraintException e1) {
-                        Toast.makeText(this,"数据已经分享过了哦，去已分享看看吧。",Toast.LENGTH_SHORT).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AcceptShare.this,"数据已经分享过了哦，去已分享看看吧。",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }catch (Exception w){
+//                        防止程序挂掉接住所有异常
+                        w.printStackTrace();
                     }
                 }
             }

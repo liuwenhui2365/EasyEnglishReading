@@ -89,6 +89,8 @@ public class Translate {
         Cursor c = null;
         try {
             db = dbArticle.getReadableDatabase();
+//            开启事务
+            db.beginTransaction();
             c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='words'", null);
             String word = null;
             String meaning = null;
@@ -129,6 +131,7 @@ public class Translate {
                     }
                 }
             }
+            db.setTransactionSuccessful();
         }catch (Exception w) {
             w.printStackTrace();
         }finally {
@@ -137,6 +140,7 @@ public class Translate {
             }
 
             if(db != null){
+                db.endTransaction();
                 db.close();
             }
 
@@ -201,7 +205,11 @@ public class Translate {
         articleTagged = transContent(article.getBody());
 //        Log.d(TAG+"报告","标记词性共有"+articleTagged.size());
         article.setBody(translateUnknowWords(articleTagged, dbArticle));
-        int difficultRatio = unknownWordsNum / bodyWords.size() * 100;
+        int difficultRatio = 100;
+        if (bodyWords.size() > 0) {
+            difficultRatio = unknownWordsNum / bodyWords.size() * 100;
+        }
+
         if( difficultRatio <= PRIMARY ){
             article.setLevel("初级");
         }else if(difficultRatio <= ADVANCED){
@@ -288,6 +296,7 @@ public class Translate {
 
 //			翻译文章内容中的每一个不认识的单词
         StringBuilder body = new StringBuilder();
+
         for (int j = 0; j < articleTagged.size(); j++) {
             String word = articleTagged.get(j).getWord();
 //            Log.d(TAG+"报告","不认识的单词"+word);
@@ -329,6 +338,8 @@ public class Translate {
         Cursor c = null;
         try {
             db = dbWordTag.getReadableDatabase();
+//            开启事务提升速度
+            db.beginTransaction();
             c = db.rawQuery("select count(*) as c from sqlite_master  where type ='table' and name ='wordsTag'", null);
             if (c.moveToNext()) {
                 int count = c.getInt(0);
@@ -361,6 +372,7 @@ public class Translate {
                     }
                 }
             }
+            db.setTransactionSuccessful();
         }catch (FileNotFoundException e){
             Log.e("文件没有找到","oooo");
         }catch (Exception w) {
@@ -371,6 +383,7 @@ public class Translate {
             }
 
             if(db != null){
+                db.endTransaction();
                 db.close();
             }
 

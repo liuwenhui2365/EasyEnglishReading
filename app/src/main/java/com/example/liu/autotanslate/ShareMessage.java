@@ -81,6 +81,7 @@ public class ShareMessage extends ActionBarActivity {
                     while (c.moveToNext()) {
                         title = c.getString(c.getColumnIndex("title"));
                         String body = c.getString(c.getColumnIndex("body"));
+//                        Log.d("--分享到的文章内容",body);
                         String time = c.getString(c.getColumnIndex("time"));
                         String catalogy = c.getString(c.getColumnIndex("catalogy"));
                         StringBuilder sBody = new StringBuilder(body);
@@ -94,7 +95,7 @@ public class ShareMessage extends ActionBarActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                handlerStr(article.getBody().toString());
+                               handlerStr(article.getBody().toString());
                             }
                         }).start();
                     }
@@ -118,16 +119,19 @@ public class ShareMessage extends ActionBarActivity {
     public void handlerStr(String str){
         mss = new SpannableString(str);
         List<Integer> enStrList= Message.getENPositionList(str);
-        String tempStr=str.charAt(enStrList.get(0))+"";
-        for(int i=0;i<enStrList.size()-1;i++){
-            if(enStrList.get(i+1)-enStrList.get(i)==1){
-                tempStr=tempStr+str.charAt(enStrList.get(i+1));
-            }else{
-                setLink(enStrList.get(i)-tempStr.length()+1, enStrList.get(i)+1,tempStr);//因为此时i在循环中已经自加了
-                tempStr=str.charAt(enStrList.get(i+1))+"";
+//        防止越界异常
+        if (str.length() > 0) {
+            String tempStr = str.charAt(enStrList.get(0)) + "";
+            for (int i = 0; i < enStrList.size() - 1; i++) {
+                if (enStrList.get(i + 1) - enStrList.get(i) == 1) {
+                    tempStr = tempStr + str.charAt(enStrList.get(i + 1));
+                } else {
+                    setLink(enStrList.get(i) - tempStr.length() + 1, enStrList.get(i) + 1, tempStr);//因为此时i在循环中已经自加了
+                    tempStr = str.charAt(enStrList.get(i + 1)) + "";
+                }
             }
+            setLink(enStrList.get(enStrList.size() - 1) - tempStr.length() + 1, enStrList.get(enStrList.size() - 1) + 1, tempStr);
         }
-        setLink(enStrList.get(enStrList.size()-1)-tempStr.length()+1, enStrList.get(enStrList.size()-1)+1,tempStr);
     }
 
     /**

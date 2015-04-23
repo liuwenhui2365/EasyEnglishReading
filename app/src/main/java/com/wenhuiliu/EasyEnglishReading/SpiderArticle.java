@@ -137,10 +137,11 @@ public class SpiderArticle implements ISpiderArticle{
         String message = getMessage(url);
         String title = getTitle(message);
         StringBuilder content = getContent(message);
+//        Log.d("网络获取到的内容",content.toString());
         String catalogy = getCatalogy(message);
         String time = getTime(message);
-//        如果body为空就不要创建对象
-        if (content != null) {
+//        如果body长度为0就不要创建对象（不能以空判断，因为方法里面创建过了)
+        if (content.length() != 0) {
             Article article = new Article(title, content, catalogy);
             article.setTime(time);
             return article;
