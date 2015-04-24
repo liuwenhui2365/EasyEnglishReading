@@ -120,8 +120,8 @@ public class ShareMessage extends ActionBarActivity {
         mss = new SpannableString(str);
         List<Integer> enStrList= Message.getENPositionList(str);
 //        防止越界异常
-        if (str.length() > 0) {
-            String tempStr = str.charAt(enStrList.get(0)) + "";
+        if (enStrList.size() > 0) {
+            String tempStr = String.valueOf(str.charAt(enStrList.get(0)));
             for (int i = 0; i < enStrList.size() - 1; i++) {
                 if (enStrList.get(i + 1) - enStrList.get(i) == 1) {
                     tempStr = tempStr + str.charAt(enStrList.get(i + 1));
@@ -131,6 +131,14 @@ public class ShareMessage extends ActionBarActivity {
                 }
             }
             setLink(enStrList.get(enStrList.size() - 1) - tempStr.length() + 1, enStrList.get(enStrList.size() - 1) + 1, tempStr);
+        }else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ShareMessage.this,"分享到的文章内容为空！",Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
         }
     }
 
@@ -148,7 +156,7 @@ public class ShareMessage extends ActionBarActivity {
             public void run() {
                 mss.setSpan(new MyURLSpan(ShareMessage.this,clickStr), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
                 textView = (TextView) findViewById(R.id.sharemessage_content);
-                textView.setText(article.getBody());
+                textView.setText(mss);
 //             特别注意是LinkMovementMehond方法获取实例
                 textView.setMovementMethod(LinkMovementMethod.getInstance());
             }

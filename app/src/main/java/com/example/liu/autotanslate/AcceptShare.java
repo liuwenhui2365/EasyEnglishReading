@@ -1,5 +1,7 @@
 package com.example.liu.autotanslate;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
@@ -7,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.*;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,14 +23,19 @@ import com.wenhuiliu.EasyEnglishReading.SpiderEconomicArticle;
 import com.wenhuiliu.EasyEnglishReading.Translate;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class AcceptShare extends ActionBarActivity {
     public static final int SHOW_DATA = 0;
     private final String CHINADAILY_URL = "http://m.chinadaily.com.cn";
     private final String ECONOMIST_URL = "http://www.economist.com/";
+    private TextView textView;
     DbArticle dbArticle;
     SQLiteDatabase db = null;
+    private SpannableString mss = null;
 
     StringBuilder content = null;
 
@@ -90,15 +99,15 @@ public class AcceptShare extends ActionBarActivity {
             switch (msg.what){
                 case SHOW_DATA:
                     Article article = (Article)msg.obj;
-                    TextView textView = (TextView)findViewById(R.id.title_message);
+                    textView = (TextView)findViewById(R.id.title_message);
                     textView.setText( article.getTitle());
                     textView = (TextView)findViewById(R.id.date_message);
 //                    Log.d(getClass().getSimpleName()+"报告","线程传过来的文章时间"+article.getBody());
                     textView.setText(article.getTime());
-                    textView = (TextView)findViewById(R.id.content);
+//                    textView = (TextView)findViewById(R.id.content);
                     textView.setText("正在努力加载文章内容。。。");
 //                    Log.d(getClass().getSimpleName()+"报告","线程传过来的文章内容"+article.getBody());
-                    textView.setText( article.getBody());
+//                    textView.setText( article.getBody());
                 break;
             }
         }
@@ -178,15 +187,14 @@ public class AcceptShare extends ActionBarActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(AcceptShare.this, "数据已经分享过了哦，去已分享看看吧。", Toast.LENGTH_SHORT).show();
+                             Toast.makeText(AcceptShare.this, "数据已经分享过了哦，去已分享看看吧。", Toast.LENGTH_SHORT).show();
                             }
                         });
                     } catch (IOException e){
-                        Toast.makeText(this,"获取失败，重新分享试试",Toast.LENGTH_SHORT).show();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(AcceptShare.this,"获取失败，重新分享试试吧！",Toast.LENGTH_SHORT).show();
+                             Toast.makeText(AcceptShare.this,"获取失败，重新分享试试吧！",Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -204,12 +212,17 @@ public class AcceptShare extends ActionBarActivity {
                         int difficultRatio = article.getDifficultRatio();
                         StringBuilder body = article.getBody();
                         String time = article.getTime();
-                        db.execSQL("INSERT INTO ShareArticle VALUES (?,?,?,?,?,?,?)", new Object[]{url, title, catalogy, body
+//                      标记词性
+                        String contentTagged = MyHttpPost.post(body.toString());
+
+                        db.execSQL("INSERT INTO ShareArticle VALUES (?,?,?,?,?,?,?)", new Object[]{url, title, catalogy, contentTagged
                                 , level, difficultRatio, time});
 //                        Log.d("开始翻译","ooppoo");
                         article = translate.translate(article,dbArticle);
-//                        Log.d("向主线程发送对象","ggg");
-//                        Log.d("报告向主线程发送翻译好的文章",article.getBody()+"");
+//                      Log.d("向主线程发送对象","ggg");
+//                      Log.d("报告向主线程发送翻译好的文章",article.getBody()+"");
+//                      调用点击单词选中事件
+                        handlerStr(article.getBody().toString());
                         Message message = new Message();
                         message.what = SHOW_DATA;
                         message.obj = article;
@@ -245,5 +258,79 @@ public class AcceptShare extends ActionBarActivity {
             }
         }
 
+    }
+
+    public void handlerStr(String str){
+        mss = new SpannableString(str);
+        List<Integer> enStrList= com.example.liu.autotanslate.Message.getENPositionList(str);
+//        防止越界异常
+        if (enStrList.size() > 0) {
+            String tempStr = String.valueOf(str.charAt(enStrList.get(0)));
+            for (int i = 0; i < enStrList.size() - 1; i++) {
+                if (enStrList.get(i + 1) - enStrList.get(i) == 1) {
+                    tempStr = tempStr + str.charAt(enStrList.get(i + 1));
+                } else {
+                    setLink(enStrList.get(i) - tempStr.length() + 1, enStrList.get(i) + 1, tempStr);//因为此时i在循环中已经自加了
+                    tempStr = str.charAt(enStrList.get(i + 1)) + "";
+                }
+            }
+            setLink(enStrList.get(enStrList.size() - 1) - tempStr.length() + 1, enStrList.get(enStrList.size() - 1) + 1, tempStr);
+        }else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(AcceptShare.this,"分享到的文章内容为空！",Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+        }
+    }
+
+    /**
+     * 给指定的[start,end)字符串设置链接
+     * @param start 设置链接的开始位置
+     * @param end  设置链接的结束位置
+     * @param clickStr 点击的字符串
+     */
+    public void setLink(final int start, final int end, final String clickStr) {
+//      msp.setSpan(new URLSpan("http://www.baidu.com"), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+//      特别注意传入上下文的时候，把该类作为上下文传进去，不能传全局的，否则报空指针异常
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mss.setSpan(new MyURLSpan(AcceptShare.this,clickStr), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textView = (TextView) findViewById(R.id.sharemessage_content);
+                textView.setText(mss);
+//             特别注意是LinkMovementMehond方法获取实例
+                textView.setMovementMethod(LinkMovementMethod.getInstance());
+            }
+        });
+    }
+
+    //    英文字母在字符串中的位置，将每一个字符的位置存储到list
+    public static List<Integer> getENPositionList(String str){
+        List<Integer> list=new ArrayList<Integer>();
+        for(int i=0;i<str.length();i++){
+            char mchar=str.charAt(i);
+            //('a' <= mchar && mchar <= 'z')||('A' <= mchar && mchar <='Z')
+            if(Pattern.matches("[A-Za-z]", mchar + "")){
+                list.add(i);
+//              System.out.println(i+"位置为英文字符："+mchar);
+            }
+        }
+        return list;
+    }
+
+    class MyReciver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equalsIgnoreCase("quit")) {
+                String message = intent.getStringExtra("remind");
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 }

@@ -106,7 +106,7 @@ public class Message extends ActionBarActivity {
                         textView.setText("文章更新于"+time);
 //                        Log.d("提示","开始翻译啦");
                         article = translate.translate(article,dbArticle);
-                        Log.d(getClass().getSimpleName()+"报告","翻译加词性结束");
+//                        Log.d(getClass().getSimpleName()+"报告","翻译加词性结束");
 //                      选中每个单词,开启线程
                         new Thread(new Runnable() {
                             @Override
@@ -177,8 +177,9 @@ public class Message extends ActionBarActivity {
             public void run() {
                 mss.setSpan(new MyURLSpan(Message.this,clickStr), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
                 textView = (TextView) findViewById(R.id.content);
+//              注意如果点击事件没有响应看是不是赋值出错了
                 textView.setText(mss);
-//             特别注意是LinkMovementMehond方法获取实例
+//             特别注意是LinkMovementMehond方法获取实例，否则点击无响应
                 textView.setMovementMethod(LinkMovementMethod.getInstance());
             }
         });
