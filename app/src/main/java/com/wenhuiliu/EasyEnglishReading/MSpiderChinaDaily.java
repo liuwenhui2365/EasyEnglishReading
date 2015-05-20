@@ -1,4 +1,4 @@
-package com.wenhuiliu.EasyEnglishReading;
+﻿package com.wenhuiliu.EasyEnglishReading;
 
 import android.util.Log;
 
@@ -125,7 +125,7 @@ public class MSpiderChinaDaily implements ISpiderArticle {
             String title = getTitle(message);
 //            Log.d("标题完成", title);
             StringBuilder content = getContent(message);
-            Log.d("内容完成",content.toString());
+ //           Log.d("内容完成",content.toString());
             String catalogy = getCatalogy(message);
             String time = getTime(message);
 //            Log.d("时间完成",time);

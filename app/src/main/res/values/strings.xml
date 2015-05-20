@@ -8,7 +8,7 @@
     <string name="up">上拉图片</string>
     <string name="classify">请输入分类名称</string>
     <string name="waiting">请稍候正在加载。。。</string>
-    <string name="waitingTranslate">您的生词太多，努力加载中。。。</string>
+    <string name="waitingTranslate">正在为你努力加载中。。。</string>
     <string name="action_settings">返回</string>
     <string name="word_list">this is words list</string>
     <string name="open">打开菜单</string>

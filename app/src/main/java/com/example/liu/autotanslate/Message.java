@@ -190,8 +190,8 @@ public class Message extends ActionBarActivity {
         List<Integer> list=new ArrayList<Integer>();
 //        Log.d("报告标记后的文章大小",str.length()+"");
 //        如果长度太大截取即可，防止长时间没有响应
-        if (str.length() > 3000){
-            str = str.substring(0,3000);
+        if (str.length() > 4000){
+            str = str.substring(0,4000);
         }
         for(int i=0;i<str.length();i++){
             char mchar=str.charAt(i);

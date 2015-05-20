@@ -105,7 +105,7 @@ public class AcceptShare extends ActionBarActivity {
 //                    Log.d(getClass().getSimpleName()+"报告","线程传过来的文章时间"+article.getBody());
                     textView.setText(article.getTime());
 //                    textView = (TextView)findViewById(R.id.content);
-                    textView.setText("正在努力加载文章内容。。。");
+//                    textView.setText("正在努力加载文章。。。");
 //                    Log.d(getClass().getSimpleName()+"报告","线程传过来的文章内容"+article.getBody());
 //                    textView.setText( article.getBody());
                 break;
@@ -164,6 +164,8 @@ public class AcceptShare extends ActionBarActivity {
 //                            body内容必须要替换
                             article.setBody(contentTagged);
                             article = translate.translate(article, dbArticle);
+                            handlerStr(article.getBody().toString());
+
                             Message message = new Message();
                             message.what = SHOW_DATA;
                             message.obj = article;
@@ -298,8 +300,9 @@ public class AcceptShare extends ActionBarActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Log.d("开始赋值文章内容","......");
                 mss.setSpan(new MyURLSpan(AcceptShare.this,clickStr), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
-                textView = (TextView) findViewById(R.id.sharemessage_content);
+                textView = (TextView) findViewById(R.id.content);
                 textView.setText(mss);
 //             特别注意是LinkMovementMehond方法获取实例
                 textView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -310,6 +313,9 @@ public class AcceptShare extends ActionBarActivity {
     //    英文字母在字符串中的位置，将每一个字符的位置存储到list
     public static List<Integer> getENPositionList(String str){
         List<Integer> list=new ArrayList<Integer>();
+//        if (str.length() > 4000){
+//            str = str.substring(0,4000);
+//        }
         for(int i=0;i<str.length();i++){
             char mchar=str.charAt(i);
             //('a' <= mchar && mchar <= 'z')||('A' <= mchar && mchar <='Z')

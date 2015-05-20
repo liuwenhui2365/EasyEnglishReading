@@ -1,4 +1,4 @@
-package com.example.liu.autotanslate;
+﻿package com.example.liu.autotanslate;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -166,6 +166,9 @@ public class ShareMessage extends ActionBarActivity {
     //    英文字母在字符串中的位置，将每一个字符的位置存储到list
     public static List<Integer> getENPositionList(String str){
         List<Integer> list=new ArrayList<Integer>();
+//        if (str.length() > 4000){
+//            str = str.substring(0,4000);
+//        }
         for(int i=0;i<str.length();i++){
             char mchar=str.charAt(i);
             //('a' <= mchar && mchar <= 'z')||('A' <= mchar && mchar <='Z')
