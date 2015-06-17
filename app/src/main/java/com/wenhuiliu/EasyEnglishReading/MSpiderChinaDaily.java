@@ -1,4 +1,4 @@
-﻿package com.wenhuiliu.EasyEnglishReading;
+package com.wenhuiliu.EasyEnglishReading;
 
 import android.util.Log;
 
@@ -37,13 +37,11 @@ public class MSpiderChinaDaily implements ISpiderArticle {
 
         @Override
         public ArrayList<String> getUrlList(String catalogy) {
-            // TODO Auto-generated method stub
             return null;
         }
 
         @Override
         public String getMessage(String url) throws IOException {
-            // TODO Auto-generated method stub
             String message = null;
             HttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
@@ -59,7 +57,6 @@ public class MSpiderChinaDaily implements ISpiderArticle {
 
         @Override
         public String getTitle(String message) {
-            // TODO Auto-generated method stub
             String title = null;
             Matcher mat = titlePat.matcher(message);
             if(mat.find()){
@@ -70,7 +67,6 @@ public class MSpiderChinaDaily implements ISpiderArticle {
 
         @Override
         public StringBuilder getContent(String message) {
-            // TODO Auto-generated method stub
             StringBuilder content = new StringBuilder();
             //Log.d("过滤内容",message);
             Matcher mat = contentPat.matcher(message);
@@ -87,7 +83,7 @@ public class MSpiderChinaDaily implements ISpiderArticle {
                     if (bodyItem.length() != 0) {
 //                        Log.d("每行：", bodyItem);
                         content.append(bodyItem);
-                        content.append("^");
+                        content.append(" ^ ");
                     }
                 }
 

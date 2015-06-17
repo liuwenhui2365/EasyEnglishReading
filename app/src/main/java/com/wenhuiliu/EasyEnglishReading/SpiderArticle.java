@@ -1,9 +1,6 @@
 package com.wenhuiliu.EasyEnglishReading;
 
 import android.util.Log;
-import android.widget.Toast;
-
-import com.example.liu.autotanslate.Refresh;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SpiderArticle implements ISpiderArticle{
-
     private Matcher mat = null;
     private ArrayList<String> techURLList;
     private ArrayList<String> healthURLList;
@@ -23,8 +19,8 @@ public class SpiderArticle implements ISpiderArticle{
 
     public HashMap<String, ArrayList<String>> urlList;
     final private Pattern timePat = Pattern.compile("<SPAN class=datetime>(.*)</SPAN>", Pattern.CASE_INSENSITIVE);
-    final private Pattern titlePat = Pattern.compile("<div id=\"title\">(.*?)</div>");
-    final private Pattern contentPat = Pattern.compile("<P>([^<_]*?)</P>", Pattern.MULTILINE|Pattern.DOTALL);
+    final private Pattern titlePat = Pattern.compile("<div id=\"title\"><h1>(.*?)</h1></div>");
+    final private Pattern contentPat = Pattern.compile("<p>([^<_]*?)</p>", Pattern.MULTILINE|Pattern.DOTALL);
     final private Pattern catalogyPat = Pattern.compile("<div id=\"nav\">.*title=.*?title=\"(.*?)\">");
 
 
@@ -134,12 +130,18 @@ public class SpiderArticle implements ISpiderArticle{
     }
 
     public Article getPassage(String url){
+//        Log.d("SpiderArticle报告","获取到的网址"+url);
         String message = getMessage(url);
+//        Log.d("SpiderArticle报告","获取到网页数据"+message);
         String title = getTitle(message);
+//        Log.d("SpiderArticle报告文章标题", title);
         StringBuilder content = getContent(message);
-//        Log.d("网络获取到的内容",content.toString());
+//        Log.d("SpiderArticle报告文章内容", content.toString());
         String catalogy = getCatalogy(message);
+//        Log.d("SpiderArticle报告文章分类",catalogy);
         String time = getTime(message);
+//        Log.d("SpiderArticle报告文章更新时间",time);
+
 //        如果body长度为0就不要创建对象（不能以空判断，因为方法里面创建过了)
         if (content.length() != 0) {
             Article article = new Article(title, content, catalogy);

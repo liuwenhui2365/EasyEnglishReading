@@ -1,20 +1,13 @@
 package com.example.liu.autotanslate;
 
+import com.example.liu.autotanslate.activity.Message;
 import com.example.liu.autotanslate.util.SystemUiHider;
-import com.wenhuiliu.EasyEnglishReading.MyApplication;
 
 import android.app.Activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.method.ScrollingMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;

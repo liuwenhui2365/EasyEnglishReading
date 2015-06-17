@@ -85,7 +85,8 @@ public class Translate {
     public void getWordClassify(DbArticle dbArticle) {
 //		从数据库中获取不认识单词及意思
         HashMap<String, String> wordMeaning = new HashMap<String, String>();
-
+        BufferedReader reader = null;
+        InputStream inputStream;
         Cursor c = null;
         try {
             db = dbArticle.getReadableDatabase();
@@ -109,15 +110,28 @@ public class Translate {
 
                 } else {
 //                    一般情况是不会运行此部分
-                    wordMeaning = Words.getWord();
                     db.execSQL("CREATE TABLE words (word VARCHAR PRIMARY KEY,meaning VARCHAR,type VARCHAR)");
-                    Log.e("数据库", "单词表创建成功");
-//                  从map中读取单词和意思
-                    Iterator iter = wordMeaning.entrySet().iterator();
-                    while (iter.hasNext()) {
-                        Map.Entry entry = (Map.Entry) iter.next();
-//                 ***** 往数据库里放数据（默认是认识的）*******
-                        db.execSQL("INSERT INTO words values(?,?,?)", new String[]{entry.getKey().toString(), entry.getValue().toString(), "know"});
+//                    Log.e(TAG, "单词表创建成功");
+//                  记住这种读取方式以后会用到！！！
+                    inputStream = MyApplication.getContext().getResources().openRawResource(R.raw.sortwordlist);
+                    reader = new BufferedReader(new InputStreamReader(inputStream));
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        String[] type = line.split(":");
+//                      有些单词没有意思，考虑大部分认识，所以将全部单词以认识为准
+                        if (type.length == 2) {
+                            db.execSQL("INSERT INTO words values(?,?,?)", new String[]{type[0], type[1], "know"});
+                        }
+                    }
+//                    wordMeaning = Words.getWord();
+//                    db.execSQL("CREATE TABLE words (word VARCHAR PRIMARY KEY,meaning VARCHAR,type VARCHAR)");
+//                    Log.e("数据库", "单词表创建成功");
+////                  从map中读取单词和意思
+//                    Iterator iter = wordMeaning.entrySet().iterator();
+//                    while (iter.hasNext()) {
+//                        Map.Entry entry = (Map.Entry) iter.next();
+////                 ***** 往数据库里放数据（默认是认识的）*******
+//                        db.execSQL("INSERT INTO words values(?,?,?)", new String[]{entry.getKey().toString(), entry.getValue().toString(), "know"});
                         //                Log.d("单词：", entry.getKey().toString());
                         //                Log.d("意思：", entry.getValue().toString());
                     }
@@ -130,7 +144,7 @@ public class Translate {
                         unknownWords.put(word, meaning);
                     }
                 }
-            }
+
             db.setTransactionSuccessful();
         }catch (Exception w) {
             w.printStackTrace();
@@ -203,6 +217,7 @@ public class Translate {
         ArrayList<WordMap> articleTagged = null;
         ArrayList<String> bodyWords = article.getWords();
         articleTagged = transContent(article.getBody());
+//        Log.d(TAG+"报告","文章内容"+article.getBody());
 //        Log.d(TAG+"报告","标记词性共有"+articleTagged.size());
         article.setBody(translateUnknowWords(articleTagged, dbArticle));
         int difficultRatio = 100;
@@ -224,7 +239,7 @@ public class Translate {
 
     private  ArrayList<WordMap> transContent(StringBuilder body) {
         ArrayList<WordMap> articleTagged = new ArrayList<WordMap>();
-//        Log.d(TAG,"文章内容"+body);
+//        Log.d(TAG,"要翻译的文章内容"+body);
 //        Log.d("目标路径",OBJPATH);
 //        final File file = new File(OBJPATH);
 //        if (file.exists()){

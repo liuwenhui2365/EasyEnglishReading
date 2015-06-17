@@ -4,8 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <include layout="@layout/activity_title"
+       />
+
     <com.example.liu.autotanslate.MyListView
         android:id="@+id/mylist"
+        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"/>

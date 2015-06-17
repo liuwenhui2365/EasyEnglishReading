@@ -1,0 +1,44 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.liu.autotanslate.activity.UserTranslate">
+
+    <include
+        android:id="@+id/transtitle"
+        layout="@layout/activity_title"/>
+
+    <EditText
+        android:id="@+id/translateContent"
+        android:hint="@string/translateContent"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/translate"
+        android:text="@string/translate"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_gravity="end"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@drawable/bg_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="@string/translateResult"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/result"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

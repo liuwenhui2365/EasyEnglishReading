@@ -1,27 +1,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:background="@color/white"
-    tools:context="com.example.liu.autotanslate.WordMeaning">
+    tools:context="com.example.liu.autotanslate.activity.WordMeaning">
 
-    <TextView
-        android:id="@+id/dis_word"
-        android:textSize="30sp"
-        android:gravity="center"
-        android:text="@string/waiting"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="20dp"
+    <include
+        android:id="@+id/meaning_title"
+        layout="@layout/activity_title"/>
+
+    <LinearLayout
+        android:layout_below="@id/meaning_title"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_marginTop="2dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/meaning"
-        android:layout_below="@+id/dis_word"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/dis_word"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:text="@string/waiting"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/meaning"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </RelativeLayout>

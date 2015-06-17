@@ -61,11 +61,11 @@ public class MyURLSpan extends ClickableSpan {
 
                     }
                 });
+                dialog.show();
             }else {
                 Toast.makeText(ctx,"非常抱歉，该词还没有收录本词库，以后会更新哦！",Toast.LENGTH_SHORT).show();
             }
 
-            dialog.show();
 
         } catch (NullPointerException w) {
             w.printStackTrace();

@@ -1,53 +1,53 @@
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:paddingLeft="@dimen/activity_horizontal_margin"-->
-    <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
-    <!--android:paddingTop="@dimen/activity_vertical_margin"-->
-    <!--android:paddingBottom="@dimen/activity_vertical_margin"-->
-    <!--android:scrollbars="vertical"-->
-    <!--android:background="@color/white"-->
-    <!--tools:context="com.example.liu.autotanslate.Message">-->
-
-<ScrollView
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:background="@color/white"
-    android:scrollbarStyle="outsideInset"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
+
+    <include layout="@layout/activity_title"
+         />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/title_message"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            android:layout_marginBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="false"/>
+        android:layout_height="wrap_content"
+        android:scrollbarStyle="outsideInset">
 
-        <TextView
-            android:id="@+id/date_message"
-            android:textColor="@color/black"
-            android:layout_marginBottom="10dp"
-            android:gravity="end"
-            android:layout_marginRight="6dp"
-            android:layout_marginEnd="6dp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/content"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/waitingTranslate"
-            android:singleLine="false"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/title_message"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:padding="12dp"
+                android:background="@color/white"
+                android:layout_marginTop="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"/>
 
-</ScrollView>
+            <TextView
+                android:id="@+id/date_message"
+                android:textColor="@color/black"
+                android:gravity="end"
+                android:padding="12dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/content"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:padding="12dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/waitingTranslate"
+                android:singleLine="false"/>
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

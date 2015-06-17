@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/Base.Theme.AppCompat.Light" >
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,57 +26,53 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Classify"
+            android:name=".activity.Classify"
             android:label="@string/title_activity_classify"
             android:launchMode="singleTask" >
         </activity>
         <activity
-            android:name=".Message"
+            android:name=".activity.Message"
             android:label="@string/message" >
-
-            <!-- <meta-data -->
-            <!-- android:name="android.support.PARENT_ACTIVITY" -->
-            <!-- android:value="com.example.liu.autotanslate.Refresh" /> -->
         </activity>
         <activity
-            android:name=".Refresh"
+            android:name=".activity.Refresh"
             android:label="@string/title_activity_refresh"
-            android:parentActivityName=".Classify" >
+            android:parentActivityName=".activity.Classify" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.liu.autotanslate.Classify" />
+                android:value=".activity.Classify" />
         </activity>
         <activity
-            android:name=".WordClassify"
+            android:name=".activity.WordClassify"
             android:label="@string/title_activity_word_classify"
-            android:parentActivityName=".Classify" >
+            android:parentActivityName=".activity.Classify" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.liu.autotanslate.Classify" />
+                android:value=".activity.Classify" />
         </activity>
         <activity
-            android:name=".WordMeaning"
+            android:name=".activity.WordMeaning"
             android:label="@string/title_activity_word_meaning"
-            android:parentActivityName=".WordClassify" >
+            android:parentActivityName=".activity.WordClassify" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.liu.autotanslate.WordClassify" />
+                android:value=".activity.WordClassify" />
         </activity>
         <activity
-            android:name=".Share"
+            android:name=".activity.Share"
             android:label="@string/title_activity_share"
-            android:parentActivityName=".Classify" >
+            android:parentActivityName=".activity.Classify" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.liu.autotanslate.Classify" />
+                android:value=".activity.Classify" />
         </activity>
         <activity
-            android:name=".AcceptShare"
+            android:name=".activity.AcceptShare"
             android:label="@string/title_activity_acceptshare"
-            android:parentActivityName=".Classify" >
+            android:parentActivityName=".activity.Classify" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.liu.autotanslate.Classify" />
+                android:value=".activity.Classify" />
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -92,30 +88,38 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AlreadyAcceptShare"
+            android:name=".activity.AlreadyAcceptShare"
             android:label="@string/title_activity_already_accept_share"
-            android:parentActivityName=".Classify" >
+            android:parentActivityName=".activity.Classify" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.liu.autotanslate.Classify" />
+                android:value=".activity.Classify" />
         </activity>
         <activity
-            android:name=".ShareMessage"
+            android:name=".activity.ShareMessage"
             android:label="@string/title_activity_share_message"
-            android:parentActivityName=".AlreadyAcceptShare" >
+            android:parentActivityName=".activity.AlreadyAcceptShare" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.liu.autotanslate.AlreadyAcceptShare" />
+                android:value=".activity.AlreadyAcceptShare" />
         </activity>
         <activity
             android:name=".Web"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_web"
-            android:parentActivityName=".Classify"
+            android:parentActivityName=".activity.Classify"
             android:theme="@style/Platform.AppCompat.Light" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.liu.autotanslate.Classify" />
+                android:value=".activity.Classify" />
+        </activity>
+        <activity
+            android:name=".activity.UserTranslate"
+            android:label="@string/title_activity_user_translate"
+            android:parentActivityName=".activity.Classify" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.liu.autotanslate.activity.Classify" />
         </activity>
     </application>
 

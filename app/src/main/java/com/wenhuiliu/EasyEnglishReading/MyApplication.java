@@ -9,7 +9,7 @@ import android.content.Context;
  */
 public class MyApplication extends Application {
     private static Context context;
-
+    private static Object object;
     @Override
     public void onCreate() {
         super.onCreate();
