@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -400,7 +401,35 @@ public class Classify extends Activity implements AdapterView.OnItemClickListene
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-//   接收广播退出
+//    实现按两次退出键退出程序
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.d("Classify报告","按键按下！！");
+        long first = System.currentTimeMillis();
+        if (keyCode==KeyEvent.KEYCODE_BACK && event.getAction()==KeyEvent.ACTION_DOWN) {
+            if (System.currentTimeMillis() - first < 2000) {
+                finish();
+            } else {
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
+    }
+
+//    @Override
+//    public void onBackPressed() {
+//        long first = System.currentTimeMillis();
+//
+//        if (System.currentTimeMillis() - first < 2000) {
+//            finish();
+//        } else {
+//            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+//        }
+//        super.onBackPressed();
+//    }
+
+    //   接收广播退出
     class MyReciver extends BroadcastReceiver{
 
         @Override
@@ -414,5 +443,4 @@ public class Classify extends Activity implements AdapterView.OnItemClickListene
             }
         }
     }
-
 }

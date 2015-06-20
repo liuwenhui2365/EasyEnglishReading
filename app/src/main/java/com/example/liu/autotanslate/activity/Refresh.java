@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.liu.autotanslate.MyListView;
 import com.example.liu.autotanslate.R;
 import com.example.liu.autotanslate.util.GetNetWorkState;
+import com.example.liu.autotanslate.util.SystemUiHider;
 import com.wenhuiliu.EasyEnglishReading.Article;
 import com.wenhuiliu.EasyEnglishReading.DbArticle;
 import com.wenhuiliu.EasyEnglishReading.MyHttpPost;
@@ -251,11 +252,43 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
 //     TODO 修改为先写入数据库再显示写到一个线程里面
         new Thread(){
             public void run(){
+                long start = System.currentTimeMillis();
                 writeArticle();
-                Log.d(TAG+"报告","刷新数据写入完成！");
+                long end = System.currentTimeMillis();
+                Log.d(TAG+"报告","刷新数据写入完成！用时"+(end-start)/1000+"秒");
+//                以下代码优化到另一个线程避免用户长时间等待。
+//                refreshIndex = articleNum + 1;
+//                articleNum = getArticleNum();
+//                if (refreshIndex < articleNum){
+//                    refreshIndex = articleNum - perReadNum +1;
+//                    Log.d("下拉刷新索引开始" + refreshIndex, "结束" + articleNum);
+//                    readArticle(refreshIndex, articleNum);
+//                }else {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                        Toast.makeText(Refresh.this,"已经是最新的啦！",Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                }
+            }
+        }.start();
+
+        Toast.makeText(this,"请等待十六秒种正在从网络获取数据。。。",Toast.LENGTH_SHORT).show();
+
+//      从数据库读取
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 refreshIndex = articleNum + 1;
                 articleNum = getArticleNum();
-                if (refreshIndex < articleNum){
+//              增加判断防止数据库为空时执行此方法
+                if (refreshIndex < articleNum && articleNum > 0){
                     refreshIndex = articleNum - perReadNum +1;
                     Log.d("下拉刷新索引开始" + refreshIndex, "结束" + articleNum);
                     readArticle(refreshIndex, articleNum);
@@ -266,27 +299,17 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
                             Toast.makeText(Refresh.this,"已经是最新的啦！",Toast.LENGTH_SHORT).show();
                         }
                     });
-
                 }
             }
-        }.start();
+        }).start();
 
     }
 
 
     @Override
     public void onLoad() {
-//        试试不要handler（没区别）
-         Handler handler = new Handler();
-         handler.postDelayed(new Runnable() {
-             @Override
-             public void run () {
-                 // 获取更多数据
-                 loadData();
-                 // 更新listview显示；这样会导致从头开始显示，所以不用了
-//                 showListView(itemEntities);
-             }
-        }, 1000);
+
+         loadData();
     }
 
 
@@ -348,8 +371,6 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
                     article.setTime(time);
                     dbal.add(article);
                 }
-//                db.setTransactionSuccessful();
-            }else {
                 Toast.makeText(this,"数据读取完成",Toast.LENGTH_SHORT).show();
             }
         }catch (Exception e){
@@ -382,7 +403,7 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
                 }
                 dbal.clear();
             }else{
-                Toast.makeText(this,"当前数据库为空！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"当前数据库为空！尝试下拉刷新从网络获取。",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -518,28 +539,6 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
                 db.close();
             }
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_refresh, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement 多个菜单选项时使用
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 //    get net state
