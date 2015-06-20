@@ -38,6 +38,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class Refresh extends Activity implements MyListView.OnLoaderListener {
@@ -60,7 +64,11 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
     View footer, header;// 底顶部布局
     LayoutInflater inflater = null;
 
-//  获取网络状态
+//    添加队列
+    BlockingQueue<Article> srcArticleQue = new LinkedBlockingQueue<Article>();
+    private boolean isfinish = false;
+
+    //  获取网络状态
     private IntentFilter intentFilter;
     private SimpleAdapter mSimpleAdapter;
 //  extends BraodcastReceiver
@@ -249,17 +257,42 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
         header = inflater.inflate(R.layout.headerview, null);
 //        TextView tip = (TextView) header.findViewById(R.id.refresh_tips);
 
-//     TODO 修改为先写入数据库再显示写到一个线程里面
+//   修改为先写入数据库再显示写到一个线程里面(这样显示速度慢)
         new Thread(){
             public void run(){
                 long start = System.currentTimeMillis();
-                writeArticle();
+                writeArticle(srcArticleQue);
                 long end = System.currentTimeMillis();
                 Log.d(TAG+"报告","刷新数据写入完成！用时"+(end-start)/1000+"秒");
-//                以下代码优化到另一个线程避免用户长时间等待。
+//             读取数据代码优化到另一个线程避免用户长时间等待。
+            }
+        }.start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ReadArticleQueue(srcArticleQue);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+//        Toast.makeText(this,"请等待十六秒种正在从网络获取数据。。。",Toast.LENGTH_SHORT).show();
+
+//      添加线程从数据库读取
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(20000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
 //                refreshIndex = articleNum + 1;
 //                articleNum = getArticleNum();
-//                if (refreshIndex < articleNum){
+////              增加判断防止数据库为空时执行此方法
+//                if (refreshIndex < articleNum && articleNum > 0){
 //                    refreshIndex = articleNum - perReadNum +1;
 //                    Log.d("下拉刷新索引开始" + refreshIndex, "结束" + articleNum);
 //                    readArticle(refreshIndex, articleNum);
@@ -267,42 +300,36 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
 //                    runOnUiThread(new Runnable() {
 //                        @Override
 //                        public void run() {
-//                        Toast.makeText(Refresh.this,"已经是最新的啦！",Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(Refresh.this,"已经是最新的啦！",Toast.LENGTH_SHORT).show();
 //                        }
 //                    });
 //                }
-            }
-        }.start();
+//            }
+//        }).start();
 
-        Toast.makeText(this,"请等待十六秒种正在从网络获取数据。。。",Toast.LENGTH_SHORT).show();
+    }
 
-//      从数据库读取
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(20000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+    private void ReadArticleQueue(BlockingQueue<Article> articles) throws InterruptedException {
+//        Log.d("正在从队列中读取数据","------");
+        Article article = new Article();
+        while(!isfinish){
+            article = articles.take();
+            String title = article.getTitle();
+            String time = article.getTime();
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            map.put("ItemImage", R.drawable.ic_launcher);//加入图片
+            map.put("title", title);
+            map.put("date", time);
+//          倒序读取
+            itemEntities.add(0,map);
+//          用于动态显示，必须在主线程调用适配器的通知方法
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mSimpleAdapter.notifyDataSetChanged();
                 }
-                refreshIndex = articleNum + 1;
-                articleNum = getArticleNum();
-//              增加判断防止数据库为空时执行此方法
-                if (refreshIndex < articleNum && articleNum > 0){
-                    refreshIndex = articleNum - perReadNum +1;
-                    Log.d("下拉刷新索引开始" + refreshIndex, "结束" + articleNum);
-                    readArticle(refreshIndex, articleNum);
-                }else {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(Refresh.this,"已经是最新的啦！",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        }).start();
-
+            });
+        }
     }
 
 
@@ -408,13 +435,15 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
         }
     }
 
-    public void writeArticle(){
+//    *****添加参数--队列的对象****
+    public void writeArticle(BlockingQueue<Article> articlesQue){
 //        关于数据库的操作
         ArrayList<String>  urls = null;
         Article article = null;
         SQLiteDatabase db = null;
         Cursor myCursor = null;
-
+//      *****添加队列再次优化显示数据******
+        BlockingQueue<Article> articlesQueue = articlesQue;
         SpiderArticle spiderArticle = new SpiderArticle();
 
         //插入数据(逆序写入保证读取到最新的）
@@ -447,6 +476,9 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
 //                            Log.d("从网络获取文章时间", time);
 //                            Log.d(TAG,"文章内容"+body);
                             String contentTagged = MyHttpPost.post(body.toString());
+                            article.setBody(contentTagged);
+//                          *****添加数据到队列*******
+                            articlesQueue.put(article);
 //                            Log.d(TAG,"标记后的内容"+contentTagged);
 //                            标记好的内容放进数据库
                             db.execSQL("INSERT INTO Article VALUES (?,?,?,?,?,?,?)", new Object[]{url, title, catalogy, contentTagged
@@ -492,6 +524,7 @@ public class Refresh extends Activity implements MyListView.OnLoaderListener {
                         }
                     }
                 }
+                isfinish = true;
             }
 //            db.setTransactionSuccessful();
         }catch (Exception e) {

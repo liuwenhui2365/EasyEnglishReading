@@ -87,16 +87,20 @@ public class UserTranslate extends Activity {
                 if(content != null) {
                     if (content.length() > 0) {
                         String contentTagged = MyHttpPost.post(content);
-                        mArticle = new Article("unknow title", new StringBuilder(contentTagged), "默认");
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-//                                注意传入文章的对象的内容为已经标记过词性的。
-                                article = translate.translate(mArticle, new DbArticle(UserTranslate.this, "Articles.db", null, 1));
-//                                Log.d("UserTranslate报告", "传入处理Str传入之前大小为" + article.getBody().toString().length());
-                                handlerStr(article.getBody().toString());
-                            }
-                        }).start();
+                        if(contentTagged != null && !contentTagged.equals("")) {
+                            mArticle = new Article("unknow title", new StringBuilder(contentTagged), "默认");
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //                                注意传入文章的对象的内容为已经标记过词性的。
+                                    article = translate.translate(mArticle, new DbArticle(UserTranslate.this, "Articles.db", null, 1));
+                                    //                                Log.d("UserTranslate报告", "传入处理Str传入之前大小为" + article.getBody().toString().length());
+                                    handlerStr(article.getBody().toString());
+                                }
+                            }).start();
+                        }else{
+                            Toast.makeText(UserTranslate.this,"标记词性失败，请检查网络状态",Toast.LENGTH_SHORT).show();
+                        }
                     }else{
                         Toast.makeText(UserTranslate.this,"粘贴的内容为空！！！",Toast.LENGTH_SHORT).show();
                     }

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Timer;
 
 
 public class MainActivity extends Activity {
@@ -204,7 +205,7 @@ public class MainActivity extends Activity {
                     images.get(i).setImageResource(R.drawable.green);
                 }
             }
-
+//          延迟跳转。。。
             if(arg0==images.size()-1){
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this,Classify.class);
